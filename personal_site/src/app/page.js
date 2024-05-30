@@ -5,7 +5,7 @@ import meImage from "../../public/images/me.jpeg";
 export default function Home() {
   return (
     // <!-- Main container -->
-    <div class="bg-white h-screen ">
+    <div class="bg-white h-screen">
       {/* <!-- Flex container for centering items --> */}
       <div class="flex flex-col items-center justify-center ">
         <div class="mb-8 space-y-3">
