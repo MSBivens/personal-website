@@ -1,7 +1,7 @@
 export default function Navbar() {
   return (
     <nav className="bg-gray-800">
-      <ul className="flex justify-center space-x-4 py-4">
+      <ul className="flex flex-wrap justify-center space-x-4 py-4">
         <li>
           <a href="/" className="text-white hover:text-gray-300">
             Home

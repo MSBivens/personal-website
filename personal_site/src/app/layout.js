@@ -14,8 +14,12 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <main>
-          <Navbar />
-          {children}
+          <div class="flex flex-col items-center justify-center ">
+            <div class="mb-8 space-y-3 w-4/5 md:w-4/5 lg:w-1/3">
+              <Navbar />
+              {children}
+            </div>
+          </div>
         </main>
       </body>
     </html>
