@@ -25,7 +25,7 @@ export default function Podcasts() {
         seamless=""
         src="https://share.transistor.fm/e/alcove/playlist"
       ></iframe>
-      <h2 class="mt-4">Quest for 5</h2>
+      <h2 className="mt-4">Quest for 5</h2>
       <p>
         Join us in the world of Lorcana with Quest for 5. Explore card
         strategies, deck building, discussions, and the latest news. We&apos;re
@@ -40,7 +40,7 @@ export default function Podcasts() {
         seamless=""
         src="https://share.transistor.fm/e/quest-for-5/playlist"
       ></iframe>
-      <h2 class="mt-4">5 Questions</h2>
+      <h2 className="mt-4">5 Questions</h2>
       <p>
         5 Questions is the show where I interview activists, lawyers, writers,
         musicians and so many others to reveal the personal stories and lives of
@@ -56,7 +56,7 @@ export default function Podcasts() {
         seamless=""
         src="https://share.transistor.fm/e/5-questions/playlist"
       ></iframe>
-      <h2 class="mt-4">Silent Journeys</h2>
+      <h2 className="mt-4">Silent Journeys</h2>
       <p>
         In Silent Journeys, guests have the opportunity to share their own
         journeys with mental health. This project aims to contribute to the

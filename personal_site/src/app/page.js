@@ -5,8 +5,10 @@ import meImage from "../../public/images/me.jpeg";
 export default function Home() {
   return (
     <div>
-      <h1 class="text-3xl font-bold text-gray-800">Michael Bivens</h1>
-      <h2 class="text-gray-500">Software ENGR Student | Podcaster | Writer</h2>
+      <h1 className="text-3xl font-bold text-gray-800">Michael Bivens</h1>
+      <h2 className="text-gray-500">
+        Software ENGR Student | Podcaster | Writer
+      </h2>
       <Image src={meImage} alt="Profile Image" className="mx-auto mb-4" />
       <p>I do a lot.</p>
       <p>
@@ -23,7 +25,7 @@ export default function Home() {
         as the president.
       </p>
       <h3>Support These Projects:</h3>
-      <ul class="list-disc" style={{ color: "black", marginLeft: "2em" }}>
+      <ul className="list-disc" style={{ color: "black", marginLeft: "2em" }}>
         <li style={{ marginBottom: "1rem" }}>
           <a href="https://www.patreon.com/jelles">Jelle&apos;s Marble Runs</a>
         </li>
@@ -42,7 +44,7 @@ export default function Home() {
         </li>
       </ul>
       <h3>Websites I love</h3>
-      <ul class="list-disc" style={{ color: "black", marginLeft: "2em" }}>
+      <ul className="list-disc" style={{ color: "black", marginLeft: "2em" }}>
         <li style={{ marginBottom: "1rem" }}>
           <a href="https://indiewebify.me/">IndieWebify.Me</a>
         </li>
