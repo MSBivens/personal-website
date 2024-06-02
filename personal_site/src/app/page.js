@@ -23,6 +23,7 @@ export default function Home() {
         I volunteer for my fraternity, working on my chapter&apos;s alumni board
         as the president.
       </p>
+      <p>I also play Lorcana every weekend at my LGS.</p>
       <h3>Support These Projects:</h3>
       <ul className="list-disc" style={{ color: "black", marginLeft: "2em" }}>
         <li style={{ marginBottom: "1rem" }}>
