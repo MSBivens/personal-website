@@ -21,11 +21,8 @@ export default function Navbar() {
           </a>
         </li>
         <li>
-          <a
-            href="aracthius"
-            className="text-black hover:text-green-600 text-lg"
-          >
-            Aracthius
+          <a href="illorim" className="text-black hover:text-green-600 text-lg">
+            Illorim
           </a>
         </li>
         <li>
