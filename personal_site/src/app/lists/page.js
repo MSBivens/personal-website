@@ -6,6 +6,14 @@ export default function DSP() {
       <ul className="list-disc" style={{ color: "black", marginLeft: "2em" }}>
         <li style={{ marginBottom: "1rem" }}>
           <p>
+            <a href="https://www.podchaser.com/creators/michael-bivens-107a99qAVv">
+              Podchaser
+            </a>{" "}
+            | IMDB for Podcast
+          </p>
+        </li>
+        <li style={{ marginBottom: "1rem" }}>
+          <p>
             <a href="https://www.trueachievements.com/gamer/Fushimino">
               True Achievements
             </a>{" "}
