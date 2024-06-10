@@ -43,7 +43,7 @@ export default function DSP() {
       <h3>Alumni Roles</h3>
       <ul className="list-disc" style={{ color: "black", marginLeft: "2em" }}>
         <li style={{ marginBottom: "1rem" }}>
-          President, Alumni Corporation Board, Gamma Iota Chatper, 2022-Present
+          President, Alumni Corporation Board, Gamma Iota Chapter, 2022-Present
         </li>
         <li style={{ marginBottom: "1rem" }}>
           Lead Advisor, Collegiate Chapter Advisory Board, Gamma Iota Chapter,

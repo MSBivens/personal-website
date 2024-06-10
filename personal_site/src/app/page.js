@@ -42,6 +42,12 @@ export default function Home() {
             The Regulation Podcast
           </a>
         </li>
+        <li style={{ marginBottom: "1rem" }}>
+          <a href="https://www.patreon.com/100percenteat">100% Eat</a>
+        </li>
+        <li style={{ marginBottom: "1rem" }}>
+          <a href="https://www.youtube.com/@ImprovBroadway">ImprovBroadway</a>
+        </li>
       </ul>
       <h3>Websites I love</h3>
       <ul className="list-disc" style={{ color: "black", marginLeft: "2em" }}>
