@@ -21,7 +21,7 @@ export default function Home() {
       </p>
       <p>
         I volunteer for my fraternity, working on my chapter&apos;s alumni board
-        as the president.
+        as the Director of Development and the Webmaster.
       </p>
       <p>I also play Lorcana every weekend at my LGS.</p>
       <h3>Support These Projects:</h3>

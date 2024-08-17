@@ -35,6 +35,14 @@ export default function Navbar() {
             Lists
           </a>
         </li>
+        <li>
+          <a
+            href="fun-with-canva"
+            className="text-black hover:text-green-600 text-lg"
+          >
+            Fun W/ Canva
+          </a>
+        </li>
         {/* Future Development */}
         {/* <li>
           <a href="#" className="text-black hover:text-green-300 text-lg">

@@ -20,9 +20,8 @@ export default function DSP() {
         fundraising.
       </p>
       <p>
-        Currently, I focus on compliance, reorganizing the alumni corporation
-        board, and creating comprehensive guides and events to support our
-        undergraduate and alumni chapter&apos;s growth and success.
+        Currently, I focus on maintaining the chapter website and all
+        fundraising efforts on behalf of the chapter and the alumni.
       </p>
       <Image
         src={dspImage}
@@ -39,11 +38,31 @@ export default function DSP() {
           The Carnation - Volume 114, Issue 1
         </a>
       </p>
-      <h2>Volunteer Experience</h2>
+      <p>
+        The following is an open letter I published at the end of my ACB
+        Presidential tenure and reflects on the 9 years of continuous service at
+        that time.
+      </p>
+      <iframe
+        width="100%"
+        height="180"
+        frameborder="no"
+        scrolling="no"
+        seamless=""
+        src="https://share.transistor.fm/e/9107cf9e"
+      ></iframe>
+      <h2 className="mt-5">Volunteer Experience</h2>
       <h3>Alumni Roles</h3>
       <ul className="list-disc" style={{ color: "black", marginLeft: "2em" }}>
         <li style={{ marginBottom: "1rem" }}>
-          President, Alumni Corporation Board, Gamma Iota Chapter, 2022-Present
+          Webmaster, Alumni Corporation Board, Gamma Iota Chapter, 2024-present
+        </li>
+        <li style={{ marginBottom: "1rem" }}>
+          Director of Development, Alumni Corporation Board, Gamma Iota Chapter,
+          2024-present
+        </li>
+        <li style={{ marginBottom: "1rem" }}>
+          President, Alumni Corporation Board, Gamma Iota Chapter, 2022-2024
         </li>
         <li style={{ marginBottom: "1rem" }}>
           Lead Advisor, Collegiate Chapter Advisory Board, Gamma Iota Chapter,
