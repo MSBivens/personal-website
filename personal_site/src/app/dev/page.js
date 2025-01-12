@@ -8,10 +8,10 @@ export default function Dev() {
       </p>
       <p>
         After leaving Web3 behind, I&apos;m working on building a new portfolio
-        of projects. I&apos;ll have more shortly!
+        of live projects. I&apos;ll have more shortly!
       </p>
-      {/* <h2>Select Projects</h2>
-      <h3>TBD</h3>
+      <h2>Select Projects</h2>
+      {/* <h3>TBD</h3>
       <p>TBD</p>
       <ul className="list-disc" style={{ color: "black", marginLeft: "2em" }}>
         <li style={{ marginBottom: "1rem" }}>
@@ -25,6 +25,24 @@ export default function Dev() {
           </p>
         </li>
       </ul> */}
+      {/* PEP Website */}
+      <h3>Purple Elephant Productions Website</h3>
+      <p>
+        This website is for the umbrella that holds all of my content, including
+        YouTube channels, Twitch Streaming, and a podcast.{" "}
+      </p>
+      <ul className="list-disc" style={{ color: "black", marginLeft: "2em" }}>
+        <li style={{ marginBottom: "1rem" }}>
+          <p>
+            <a href="https://www.purpleelephant.tv/">Live Site</a>
+          </p>
+        </li>
+        <li style={{ marginBottom: "1rem" }}>
+          <p>
+            <a href="https://github.com/MSBivens/pep">Github Repo</a>
+          </p>
+        </li>
+      </ul>
       {/* DeltaSigVandals.org */}
       <h3>Fraternity Website for Alumni</h3>
       <p>

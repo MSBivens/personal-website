@@ -4,20 +4,26 @@ import meImage from "../../public/images/me.jpeg";
 export default function Home() {
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-800">Michael Bivens</h1>
-      <h2 className="text-gray-500">
-        Software ENGR Student | Podcaster | Writer
+      <h1 className="text-3xl font-bold text-gray-800 text-center">
+        Michael Bivens
+      </h1>
+      <h2 className="text-gray-500 text-center">
+        Content Creator | Software ENGR Student | A Lot More
       </h2>
       <Image src={meImage} alt="Profile Image" className="mx-auto mb-4" />
       <p>I do a lot.</p>
       <p>
-        I&apos;m a full time student again, pursuing a new bachelor&apos;s
-        degree, this time in Software Engineering.
+        I&apos;m, pursuing a new bachelor&apos;s degree, this time in Software
+        Engineering.
       </p>
-      <p>I currently produce and host two podcasts, Alcove and Quest for 5.</p>
+      <p>
+        I currently produce and host two podcasts, Alcove and Quest for 5, and
+        several YouTube Channels. I'm challenging myself to release one piece on
+        content every day this year.
+      </p>
       <p>
         I&apos;m writing several short and long form stories that take place in
-        my original fantasy world, Illorim
+        my original fantasy world, Illorim.
       </p>
       <p>
         I volunteer for my fraternity, working on my chapter&apos;s alumni board
