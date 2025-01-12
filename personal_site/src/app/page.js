@@ -18,8 +18,8 @@ export default function Home() {
       </p>
       <p>
         I currently produce and host two podcasts, Alcove and Quest for 5, and
-        several YouTube Channels. I'm challenging myself to release one piece on
-        content every day this year.
+        several YouTube Channels. I&apos;m challenging myself to release one
+        piece on content every day this year.
       </p>
       <p>
         I&apos;m writing several short and long form stories that take place in
