@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>It is now safe to turn off your computer</title>
+    <style>
+      body {
+        background-color: #000;
+        color: #aa5500; /* The classic "Safety" orange */
+        font-family: "Courier New", Courier, monospace;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        text-align: center;
+        cursor: none; /* Hide the cursor for total immersion */
+      }
+
+      .shutdown-container {
+        max-width: 600px;
+      }
+
+      h1 {
+        font-size: 24px;
+        font-weight: normal;
+        line-height: 1.5;
+        letter-spacing: 1px;
+      }
+
+      /* Subtle flicker effect for that CRT monitor feel */
+      @keyframes flicker {
+        0% {
+          opacity: 0.97;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.98;
+        }
+      }
+
+      .text-flicker {
+        animation: flicker 0.1s infinite;
+      }
+
+      .restart-hint {
+        margin-top: 50px;
+        color: #333; /* Very dark gray, almost invisible */
+        font-size: 12px;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .restart-hint:hover {
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shutdown-container text-flicker">
+      <h1>It is now safe to turn off your computer.</h1>
+    </div>
+
+    <a href="home.html" class="restart-hint"
+      >Click here to restart the system</a
+    >
+
+    <script>
+      // Disable right-click to keep the "off" vibe
+      document.oncontextmenu = (e) => e.preventDefault();
+
+      // Any key press "restarts" the site
+      document.addEventListener("keydown", () => {
+        window.location.href = "home.html";
+      });
+    </script>
+  </body>
+</html>

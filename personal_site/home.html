@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Michael Bivens</title>
+
+    <link rel="stylesheet" href="style.css" />
+
+    <script src="script.js" defer></script>
+  </head>
+  <body onclick="closeStartMenu(event)">
+    <div class="desktop">
+      <div class="icon" onclick="window.location.href = 'ReadMe.html'">
+        <img
+          src="https://win98icons.alexmeub.com/icons/png/notepad_file-0.png"
+          class="icon-img"
+          alt="ReadMe"
+        />
+        ReadMe.txt
+      </div>
+
+      <div class="icon" onclick="window.location.href = 'lists.html'">
+        <img
+          src="https://win98icons.alexmeub.com/icons/png/notepad_file-2.png"
+          class="icon-img"
+          alt="Lists"
+        />
+        lists.txt
+      </div>
+
+      <div class="icon" onclick="window.location.href = 'illorim.html'">
+        <img
+          src="https://win98icons.alexmeub.com/icons/png/world-0.png"
+          class="icon-img"
+          alt="Illorim"
+        />
+        Illorim.exe
+      </div>
+
+      <div
+        class="icon"
+        onclick="window.open('https://purpleelephant.tv/', '_blank')"
+      >
+        <div style="position: relative; width: 32px; margin: 0 auto">
+          <img
+            src="https://win98icons.alexmeub.com/icons/png/executable_script-0.png"
+            class="icon-img"
+            alt="Purple Elephant tv link"
+          />
+          <img
+            src="https://win98icons.alexmeub.com/icons/png/shortcut-0.png"
+            style="
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              width: 12px;
+              height: 12px;
+              image-rendering: pixelated;
+            "
+            alt="Shortcut Arrow"
+          />
+        </div>
+        PEP.LNK
+      </div>
+
+      <div class="icon" onclick="window.location.href = 'stories.html'">
+        <img
+          src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png"
+          class="icon-img"
+          alt="Explorer"
+        />
+        Explorer
+      </div>
+    </div>
+
+    <div id="start-menu" class="start-menu" onclick="event.stopPropagation()">
+      <div class="start-menu-sidebar">Windows 95</div>
+      <a href="home.html" class="start-item">🏠 Home Desktop</a>
+      <a href="illorim.html" class="start-item">✨ Illorim (PEP)</a>
+      <a href="lists.html" class="start-item">📚 My Lists</a>
+      <a href="404.html" class="start-item">🚧 Construction</a>
+      <hr style="width: 100%; margin: 0" />
+      <a href="shutdown.html" class="start-item">🚪 Shut Down...</a>
+    </div>
+
+    <div class="taskbar">
+      <div id="start-button" onclick="toggleStartMenu(event)">
+        <img
+          src="https://win98icons.alexmeub.com/icons/png/windows-0.png"
+          alt="Start Button"
+        />
+        Start
+      </div>
+
+      <div class="system-tray" id="clock">12:00 PM</div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ReadMe.txt - Notepad</title>
+
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body onclick="closeStartMenu()">
+    <div class="notepad-window">
+      <div class="title-bar">
+        <div style="display: flex; align-items: center; gap: 5px">
+          <img
+            src="https://win98icons.alexmeub.com/icons/png/notepad-0.png"
+            width="16"
+          />
+          ReadMe.txt - Notepad
+        </div>
+        <div class="title-controls">
+          <span onclick="window.location.href = 'home.html'">_</span>
+          <span>□</span>
+          <span onclick="window.location.href = 'home.html'">X</span>
+        </div>
+      </div>
+
+      <div class="menu-bar">
+        <span>File</span>
+        <span>Edit</span>
+        <span>Search</span>
+        <span>Help</span>
+      </div>
+
+      <div class="text-content">
+        <h2>> SUBJECT: INTRODUCTION</h2>
+        <p>
+          Welcome to my retro themed digital home. I'm a creator, world-builder,
+          and lover of retro things. I spend most of time either working on a
+          creative work or crafting lore for the world of Illorim and a little
+          bit documenting my favorite corners of human media.
+        </p>
+
+        <hr />
+
+        <h2>> WHY DOES IT LOOK LIKE THIS?</h2>
+        <p>
+          In the modern web, everything is smooth, rounded, and sanitized. I
+          built this site as a 1995 time capsule because that era represented a
+          "Wild West" of personal expression. It was a simpler time. Here, the
+          user is in control of the desktop. It's a reminder of a time when the
+          internet felt like a place you <i>went to</i>, rather than a place you
+          were <i>always trapped in</i>.
+        </p>
+
+        <hr />
+
+        <h2>> HOW TO USE THIS TERMINAL</h2>
+        <p>
+          - <b>The Desktop:</b> Use the icons to navigate to different sectors
+          (Illorim, Lists, etc).<br />
+          --- <b>.txt:</b> Simple subpages. <br />
+          --- <b>.exe:</b> Subpages with a bit more to them. <br />
+          --- <b>.LNK:</b> Redirect you to external sites. <br />
+          - <b>The Start Bar:</b> If you get lost, the Start menu in the bottom
+          left acts as your master of navigation.<br />
+          - <b>X Button:</b> Closing a window will return you to the main
+          desktop. <br />
+          - <b>The Explorer:</b> The file explorer containes various related
+          writing to Illorim. <br />
+        </p>
+
+        <br />
+        <p>*** END OF FILE ***</p>
+      </div>
+    </div>
+
+    <div id="start-menu" class="start-menu" onclick="event.stopPropagation()">
+      <div class="start-menu-sidebar">Windows 95</div>
+      <a href="home.html" class="start-item">🏠 Home Desktop</a>
+      <a href="illorim.html" class="start-item">✨ Illorim (PEP)</a>
+      <a href="lists.html" class="start-item">📚 My Lists</a>
+      <a href="404.html" class="start-item">🚧 Construction</a>
+      <hr style="width: 100%; margin: 0" />
+      <a href="shutdown.html" class="start-item">🚪 Shut Down...</a>
+    </div>
+
+    <div class="taskbar">
+      <div
+        id="start-button"
+        class="start-button"
+        onclick="toggleStartMenu(event)"
+      >
+        <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" />
+        Start
+      </div>
+
+      <div class="active-app">
+        <img
+          src="https://win98icons.alexmeub.com/icons/png/notepad-0.png"
+          width="16"
+          style="margin-left: 10px"
+        />
+        ReadMe.txt
+      </div>
+
+      <div class="system-tray" id="clock">12:00 PM</div>
+    </div>
+  </body>
+</html>

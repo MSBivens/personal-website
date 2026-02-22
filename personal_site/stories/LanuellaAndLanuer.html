@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document - WordPad</title>
+
+    <link rel="stylesheet" href="../style.css" />
+    <script src="../script.js" defer></script>
+  </head>
+  <body onclick="closeStartMenu()">
+    <div class="program-window" style="height: calc(100vh - 50px)">
+      <div class="title-bar">
+        <div style="display: flex; align-items: center; gap: 5px">
+          <img
+            src="https://win98icons.alexmeub.com/icons/png/notepad_file-0.png"
+            width="16"
+          />
+          <span>Lanuella and Lanuer.doc - WordPad</span>
+        </div>
+        <div class="title-controls">
+          <span onclick="window.location.href = '../stories.html'">_</span>
+          <span>□</span>
+          <span onclick="window.location.href = '../stories.html'">X</span>
+        </div>
+      </div>
+
+      <div class="menu-bar">
+        <span>File</span><span>Edit</span><span>View</span><span>Insert</span
+        ><span>Format</span><span>Help</span>
+      </div>
+
+      <div class="text-content" style="padding: 40px; line-height: 1.6">
+        <h1
+          style="
+            text-align: center;
+            font-family: &quot;Times New Roman&quot;, serif;
+            text-decoration: underline;
+          "
+        >
+          Lanuella and Lanuer
+        </h1>
+
+        <p
+          style="
+            font-family: &quot;Times New Roman&quot;, serif;
+            font-size: 16px;
+            max-width: 800px;
+            margin: 0 auto;
+          "
+        >
+          The Twin Moons of Illorim
+          <br /><br />
+          Long ago, when the world of Illorim was still in its dawn, the gods
+          gathered to shape its lands and inhabitants. Among these was Onsyn,
+          the goddess of knowledge and the revered creator of the High Elves.
+          She was celebrated for her fairness and as a bastion of knowledge,
+          even among the other gods, with an unyielding belief in maintaining
+          the delicate balance between the many forces that shape and govern
+          existence.
+          <br /><br />
+          Among her First Children, there were twins, Lanuella and Lanuer, who
+          were exceptionally favored by her. From the moment of their creation,
+          their souls shone with a brilliance that warmed the hearts of all who
+          encountered them. Their laughter echoed through the forests and across
+          the seas, and their eyes held wisdom beyond their mortal souls. It was
+          said that even the other gods were envious of Onsyn’s First Children.
+          <br /><br />
+          Onsyn, captivated by the pure and innocent spirits of Lanuella and
+          Lanuer, took them under her divine guidance. She showered them with
+          celestial blessings, and the twins soon became beloved by all the
+          gods. They danced among the stars, their laughter illuminating the
+          heavens like a symphony of joy.
+          <br /><br />
+          But as the world grew, so too did the darkness that crept upon it. A
+          great shadow cast itself upon Illorim, and the night skies were
+          engulfed in an abyss of blackness. Onsyn sought to bring light to the
+          darkness to balance this force that threatened to overshadow her
+          beloved children and their pursuit of knowledge.
+          <br /><br />
+          With a heavy heart, she realized that she could stand idly by and
+          watch her blessed children suffer under the encroaching darkness. She
+          made a decision that would echo through eternity and forever change
+          the celestial tapestry of the heavens. In the deepest hours of night
+          Onsyn called forth Lanuella and Lanuer.
+          <br /><br />
+          "My dear children," Onsen spoke, her voice soft as a gentle breeze.
+          "Your light is a precious gift to this world, and the darkness cannot
+          dim it. But, the time has come for a greater purpose. Will you lend
+          your brilliance to Illorim even when you can no longer walk its
+          lands?"
+          <br /><br />
+          The twins looked at each other with knowing smiles, they nodded to
+          Onsyn surrendering to their call for ascendance with unwavering
+          determination, for they understood the gravity of her request and what
+          their sacrifice would mean for their fellow children. With tears in
+          her eyes, Onsyn embraced them one last time before guiding their
+          spirits to the heavens.
+          <br /><br />
+          There, upon the celestial plane the spirits of Lanuella and Lanuer
+          were molded into twin moons. Lanuella, with her golden aura, became
+          the Moon of Dusk, casting a warm and comforting glow upon the lands
+          during the evening hours. Lanuer, with his silver brilliance, became
+          the Moon of Dawn, bringing hope and renewal to the world with the
+          break of each new day.
+          <br /><br />
+          From that moment forth, Lanuella and Lanuer adorned the night skies of
+          Illorim, their celestial light guiding travelers, illuminating the
+          beauty of the world in the darkest hours, and symbolizing the enduring
+          power of love and sacrifice. The elves, in reverence of their beloved
+          siblings, gather under the moons' shimmering light to sing songs of
+          love and remembrance, keeping alive the memory of the selfless twins
+          who shine as radiant beacons against the vast canvas of the night's
+          darkness.
+          <br /><br />
+          The souls of Lanuella and Lanuer continue to watch over Illorim, a
+          testament to the enduring power of sacrifice, and the eternal bond
+          between siblings who became celestial lights in the canvas of the
+          night sky and bring balance to the darkness of night and the favor of
+          Onsyn.
+        </p>
+
+        <p style="text-align: center; margin-top: 50px; font-style: italic">
+          *** END OF RECORD ***
+        </p>
+      </div>
+    </div>
+
+    <div id="start-menu" class="start-menu" onclick="event.stopPropagation()">
+      <div class="start-menu-sidebar">Windows 95</div>
+      <a href="home.html" class="start-item">🏠 Home Desktop</a>
+      <a href="illorim.html" class="start-item">✨ Illorim (PEP)</a>
+      <a href="lists.html" class="start-item">📚 My Lists</a>
+      <a href="404.html" class="start-item">🚧 Construction</a>
+      <hr style="width: 100%; margin: 0" />
+      <a href="shutdown.html" class="start-item">🚪 Shut Down...</a>
+    </div>
+
+    <div class="taskbar">
+      <div
+        id="start-button"
+        class="start-button"
+        onclick="toggleStartMenu(event)"
+      >
+        <img
+          src="https://win98icons.alexmeub.com/icons/png/windows-0.png"
+          width="16"
+        />
+        Start
+      </div>
+
+      <div class="active-app">
+        <img
+          src="https://win98icons.alexmeub.com/icons/png/notepad_file-0.png"
+          width="16"
+          style="margin-left: 10px"
+        />
+        WordPad
+      </div>
+
+      <div class="system-tray" id="clock">12:00 PM</div>
+    </div>
+  </body>
+</html>

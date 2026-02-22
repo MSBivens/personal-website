@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>lists.txt - Notepad</title>
+
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body onclick="closeStartMenu()">
+    <div class="notepad-window">
+      <div class="title-bar">
+        <div style="display: flex; align-items: center; gap: 5px">
+          <img
+            src="https://win98icons.alexmeub.com/icons/png/notepad-2.png"
+            width="16"
+          />
+          lists.txt - Notepad
+        </div>
+        <div class="title-controls">
+          <span onclick="window.location.href = 'home.html'">_</span>
+          <span>□</span>
+          <span onclick="window.location.href = 'home.html'">X</span>
+        </div>
+      </div>
+
+      <div class="menu-bar">
+        <span>File</span><span>Edit</span><span>Search</span><span>Help</span>
+      </div>
+
+      <div class="text-content">
+        <span class="list-header">[Support These Projects]</span>
+        <span class="list-item"
+          >-
+          <a href="https://www.patreon.com/jelles" target="_blank"
+            >Jelle's Marble Runs</a
+          ></span
+        >
+        <span class="list-item"
+          >-
+          <a href="https://www.patreon.com/naddpod" target="_blank"
+            >Not Another D&D Podcast</a
+          ></span
+        >
+        <span class="list-item"
+          >-
+          <a href="https://www.patreon.com/morningsomewhere" target="_blank"
+            >Morning Somewhere</a
+          ></span
+        >
+        <span class="list-item"
+          >-
+          <a href="https://www.patreon.com/TheRegulationPod" target="_blank"
+            >The Regulation Podcast</a
+          ></span
+        >
+        <span class="list-item"
+          >-
+          <a href="https://www.patreon.com/100percenteat" target="_blank"
+            >100% Eat</a
+          ></span
+        >
+        <span class="list-item"
+          >-
+          <a href="https://www.youtube.com/@ImprovBroadway" target="_blank"
+            >ImprovBroadway</a
+          ></span
+        >
+
+        <span class="list-header">[Websites I Love]</span>
+        <span class="list-item"
+          >-
+          <a href="https://indiewebify.me/" target="_blank"
+            >IndieWebify.Me</a
+          ></span
+        >
+        <span class="list-item"
+          >- <a href="https://indieweb.org/" target="_blank">IndieWeb</a></span
+        >
+        <span class="list-item"
+          >-
+          <a href="https://www.miniaturemarket.com/" target="_blank"
+            >Miniature Market</a
+          ></span
+        >
+        <span class="list-item"
+          >-
+          <a href="https://iwanttobeavoiceactor.com/" target="_blank"
+            >I Want to Be a Voice Actor!</a
+          ></span
+        >
+
+        <span class="list-header">[A Better Way To Know Me]</span>
+        <span class="list-item"
+          >-
+          <a
+            href="https://www.podchaser.com/creators/michael-bivens-107a99qAVv"
+            target="_blank"
+            >Podchaser</a
+          >
+          (IMDB for Podcasts)</span
+        >
+        <span class="list-item"
+          >-
+          <a
+            href="https://www.trueachievements.com/gamer/Fushimino"
+            target="_blank"
+            >True Achievements</a
+          >
+          (Xbox History)</span
+        >
+        <span class="list-item"
+          >-
+          <a
+            href="https://www.goodreads.com/user/show/178759962-michael-bivens"
+            target="_blank"
+            >Good Reads</a
+          >
+          (Book History)</span
+        >
+
+        <span class="list-header">[My Favorites]</span>
+        <span class="list-item"
+          >* Book:
+          <a href="https://www.sexualcitizens.com/" target="_blank"
+            >Sexual Citizens</a
+          ></span
+        >
+        <span class="list-item"
+          >* Game:
+          <a href="https://en.wikipedia.org/wiki/Halo_3" target="_blank"
+            >Halo 3</a
+          ></span
+        >
+        <span class="list-item"
+          >* Board Game:
+          <a href="https://en.wikipedia.org/wiki/Rummikub" target="_blank"
+            >Rummikub</a
+          ></span
+        >
+        <span class="list-item"
+          >* Podcast:
+          <a href="https://naddpod.com/" target="_blank"
+            >Not Another D&D Podcast</a
+          ></span
+        >
+
+        <br />
+        <p>*** END OF FILE ***</p>
+      </div>
+    </div>
+
+    <div id="start-menu" class="start-menu" onclick="event.stopPropagation()">
+      <div class="start-menu-sidebar">Windows 95</div>
+      <a href="home.html" class="start-item">🏠 Home Desktop</a>
+      <a href="illorim.html" class="start-item">✨ Illorim (PEP)</a>
+      <a href="lists.html" class="start-item">📚 My Lists</a>
+      <a href="404.html" class="start-item">🚧 Construction</a>
+      <hr style="width: 100%; margin: 0" />
+      <a href="shutdown.html" class="start-item">🚪 Shut Down...</a>
+    </div>
+
+    <div class="taskbar" style="margin-top: 10px">
+      <div id="start-button" onclick="toggleStartMenu(event)">
+        <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" />
+        Start
+      </div>
+
+      <div class="active-app">
+        <img
+          src="https://win98icons.alexmeub.com/icons/png/notepad-2.png"
+          width="16"
+          style="margin-left: 10px"
+        />
+        lists.txt
+      </div>
+
+      <div class="system-tray" id="clock">12:00 PM</div>
+    </div>
+  </body>
+</html>

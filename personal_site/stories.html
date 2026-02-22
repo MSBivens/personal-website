@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exploring - C:\Illorim\Stories</title>
+
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body onclick="closeStartMenu()">
+    <div class="explorer-window">
+      <div class="title-bar gradient">
+        <div style="display: flex; align-items: center; gap: 5px">
+          <img
+            src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png"
+            width="16"
+          />
+          Exploring - C:\Illorim\Stories
+        </div>
+        <div class="title-controls">
+          <span onclick="window.location.href = 'illorim.html'">X</span>
+        </div>
+      </div>
+
+      <div
+        class="address-bar"
+        style="
+          background: var(--win-gray);
+          padding: 4px;
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          font-size: 11px;
+        "
+      >
+        <span style="color: #000">Address</span>
+        <div
+          class="address-input"
+          style="
+            flex: 1;
+            background: white;
+            border: 2px inset #fff;
+            padding: 2px 5px;
+            color: #000;
+          "
+        >
+          C:\Illorim\Stories
+        </div>
+      </div>
+
+      <div class="file-grid">
+        <div
+          class="file-icon"
+          onclick="window.location.href = 'stories/LanuellaAndLanuer.html'"
+        >
+          <img
+            src="https://win98icons.alexmeub.com/icons/png/notepad_file-0.png"
+            class="icon-img"
+          />
+          <div class="file-name">LanuellaAndLanuer.doc</div>
+        </div>
+
+        <div
+          class="file-icon"
+          onclick="attemptDecrypt()"
+          oncontextmenu="openProps('Locked', event)"
+        >
+          <img
+            src="https://win98icons.alexmeub.com/icons/png/restrict-1.png"
+            class="icon-img"
+          />
+          <div class="file-name">Locked_Archive.doc</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="decrypt-modal" class="modal">
+      <div class="prop-window" style="width: 280px">
+        <div class="title-bar">
+          <span>System Decryption</span>
+          <div class="title-controls">
+            <span onclick="closeModal('decrypt-modal')">X</span>
+          </div>
+        </div>
+        <div class="prop-body">
+          <p style="margin-top: 0">Enter Decryption Key:</p>
+          <input
+            type="password"
+            id="decrypt-input"
+            style="
+              width: 100%;
+              border: 2px inset #fff;
+              padding: 3px;
+              margin-bottom: 10px;
+              font-family: monospace;
+              outline: none;
+            "
+          />
+          <div style="display: flex; justify-content: flex-end; gap: 5px">
+            <button class="win-btn" onclick="checkPassword()">Verify</button>
+            <button class="win-btn" onclick="closeModal('decrypt-modal')">
+              Cancel
+            </button>
+          </div>
+          <div
+            id="decrypt-error"
+            style="color: red; font-size: 10px; margin-top: 10px; display: none"
+          >
+            ERROR: Invalid resonance frequency. Access Denied.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="prop-modal" class="modal">
+      <div class="prop-window">
+        <div class="title-bar">
+          <span id="prop-title">Properties</span>
+          <div class="title-controls">
+            <span onclick="closeModal('prop-modal')">X</span>
+          </div>
+        </div>
+        <div class="prop-body">
+          <div style="display: flex; align-items: center; margin-bottom: 15px">
+            <img
+              id="prop-icon"
+              src=""
+              width="32"
+              style="margin-right: 15px; image-rendering: pixelated"
+            />
+            <b id="prop-filename"></b>
+          </div>
+          <hr />
+          <div class="prop-row">
+            <span class="prop-label">Type:</span> <span id="prop-type"></span>
+          </div>
+          <div class="prop-row">
+            <span class="prop-label">Location:</span>
+            <span>C:\Illorim\Stories</span>
+          </div>
+          <div class="prop-row">
+            <span class="prop-label">Size:</span> <span id="prop-size"></span>
+          </div>
+          <hr />
+          <div class="prop-row">
+            <span class="prop-label">Created:</span>
+            <span id="prop-date"></span>
+          </div>
+          <div
+            class="prop-row"
+            style="color: #cc0000; font-style: italic; font-size: 11px"
+            id="prop-note"
+          ></div>
+          <div style="text-align: right; margin-top: 10px">
+            <button class="win-btn" onclick="closeModal('prop-modal')">
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="start-menu" class="start-menu" onclick="event.stopPropagation()">
+      <div class="start-menu-sidebar">Windows 95</div>
+      <a href="home.html" class="start-item">🏠 Home Desktop</a>
+      <a href="illorim.html" class="start-item">✨ Illorim (PEP)</a>
+      <a href="lists.html" class="start-item">📚 My Lists</a>
+      <a href="404.html" class="start-item">🚧 Construction</a>
+      <hr style="width: 100%; margin: 0" />
+      <a href="shutdown.html" class="start-item">🚪 Shut Down...</a>
+    </div>
+
+    <div class="taskbar">
+      <div
+        id="start-button"
+        class="start-button"
+        onclick="toggleStartMenu(event)"
+      >
+        <img
+          src="https://win98icons.alexmeub.com/icons/png/windows-0.png"
+          width="16"
+        />
+        Start
+      </div>
+      <div class="active-app">
+        <img
+          src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png"
+          width="16"
+          style="margin-left: 10px"
+        />
+        Stories
+      </div>
+      <div class="system-tray" id="clock">12:00 PM</div>
+    </div>
+  </body>
+</html>

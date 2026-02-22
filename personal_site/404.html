@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 - File Not Found</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+    <style>
+      /* BSOD Specific Styling */
+      #bsod {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #0000aa;
+        color: #ffffff;
+        font-family: "Lucida Console", Monaco, monospace;
+        padding: 50px;
+        z-index: 10000;
+        box-sizing: border-box;
+        text-align: center;
+      }
+      .bsod-content {
+        max-width: 600px;
+        margin: 0 auto;
+        text-align: left;
+      }
+      .bsod-box {
+        background: #ffffff;
+        color: #0000aa;
+        display: inline-block;
+        padding: 0 10px;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body
+    style="
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--desktop-teal);
+      height: 100vh;
+      overflow: hidden;
+    "
+    onclick="closeStartMenu()"
+  >
+    <div id="bsod" onclick="window.location.href = 'home.html'">
+      <div class="bsod-content">
+        <div class="bsod-box">Windows</div>
+        <p>
+          A fatal exception 0E has occurred at 0028:C0011E36 in VXD VMM(01) +
+          00010E36. The current application will be terminated.
+        </p>
+        <ul style="list-style: none; padding: 0">
+          <li>* Press any key to terminate the current application.</li>
+          <li>
+            * Press CTRL+ALT+DEL again to restart your computer. You will lose
+            any unsaved information in all applications.
+          </li>
+        </ul>
+        <p style="margin-top: 50px; text-align: center">
+          Press any key to continue _
+        </p>
+      </div>
+    </div>
+
+    <div id="error-dialog" class="prop-window" style="width: 400px">
+      <div class="title-bar">
+        <span>System Error</span>
+        <div class="title-controls">
+          <span onclick="window.location.href = 'home.html'">X</span>
+        </div>
+      </div>
+      <div class="prop-body" style="padding: 20px">
+        <div
+          style="
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 20px;
+          "
+        >
+          <img
+            src="https://win98icons.alexmeub.com/icons/png/msg_error-2.png"
+            width="32"
+          />
+          <div>
+            <p style="font-weight: bold; margin-top: 0">
+              Error 404: Resource Not Found
+            </p>
+            <p style="font-size: 11px">
+              The system cannot find the file specified. Your resonance
+              frequency is out of sync with the server.
+            </p>
+          </div>
+        </div>
+        <hr />
+        <div
+          style="
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+          "
+        >
+          <button class="win-btn" onclick="window.location.href = 'home.html'">
+            Abort
+          </button>
+          <button class="win-btn" id="retry-btn" onclick="handleRetry()">
+            Retry
+          </button>
+          <button class="win-btn" onclick="window.location.href = 'home.html'">
+            Ignore
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let retryCount = 0;
+      function handleRetry() {
+        retryCount++;
+        if (retryCount >= 5) {
+          document.getElementById("bsod").style.display = "block";
+          // Optional: Play a "glitch" sound here if you have one
+        } else {
+          // Shake the window to show it's "trying"
+          const dialog = document.getElementById("error-dialog");
+          dialog.style.transform = "translateX(10px)";
+          setTimeout(() => (dialog.style.transform = "translateX(-10px)"), 50);
+          setTimeout(() => (dialog.style.transform = "translateX(0)"), 100);
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,397 @@
+/* =========================================
+   GLOBAL AUTHORITY (From home.html)
+   ========================================= */
+:root {
+  --win-gray: #c0c0c0;
+  --win-blue: #000080;
+  --desktop-teal: #008080;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* Authority */
+  background-color: var(--desktop-teal);
+  font-family: "Tahoma", sans-serif;
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================================
+   DESKTOP & ICONS (Fixes list.txt layout)
+   ========================================= */
+.desktop {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 80px);
+  grid-auto-rows: 100px;
+  gap: 20px;
+  height: calc(100vh - 40px); /* Authority */
+}
+
+.icon {
+  width: 75px;
+  text-align: center;
+  cursor: pointer;
+  color: white;
+  text-shadow: 1px 1px 1px #000;
+  font-size: 12px;
+}
+
+.icon:hover {
+  background-color: rgba(0, 0, 128, 0.5);
+  border: 1px dotted #fff;
+}
+
+.icon img,
+.icon-img {
+  width: 32px;
+  height: 32px;
+  margin: 0 auto 5px; /* Centered */
+  display: block; /* FIX: Forces text to sit below the icon image */
+  image-rendering: pixelated;
+}
+
+/* =========================================
+   TASKBAR & START BUTTON (Exact home.html Style)
+   ========================================= */
+.taskbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 35px !important;
+  background: var(--win-gray);
+  border-top: 2px solid #fff;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+/* Authority: ID selector for home.html, Class for sub-pages */
+#start-button,
+.start-button {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  font-weight: bold;
+  border: 2px outset #eee; /* Light gray outset from home.html */
+  cursor: pointer;
+  gap: 5px;
+  text-decoration: none;
+  color: black;
+  font-size: 13px;
+  background: var(--win-gray);
+}
+
+#start-button:active,
+.start-button:active {
+  border: 2px inset #fff;
+}
+
+.system-tray {
+  margin-left: auto;
+  border: 2px inset #eee;
+  padding: 2px 10px;
+  font-size: 12px;
+  background: var(--win-gray);
+}
+
+/* =========================================
+   WINDOWS & CONTAINERS (Notepad/Explorer)
+   ========================================= */
+.notepad-window,
+.program-window,
+.explorer-window {
+  flex: 1;
+  margin: 10px;
+  background: var(--win-gray);
+  border: 2px outset #fff;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 2px 0px #000; /* Authority: lists.html/ReadMe.html */
+  max-height: calc(100vh - 50px);
+  margin-bottom: 50px;
+  overflow: hidden; /* Keeps the borders from scrolling */
+}
+
+/* The ACTUAL area where the text lives needs the scrollbar */
+.text-content,
+.view-pane,
+.file-grid {
+  flex: 1; /* Grows to fill the window */
+  overflow-y: auto; /* Adds the classic scrollbar only when needed */
+  background: white;
+
+  /* Custom Classic Windows Scrollbar Styling (Optional) */
+  scrollbar-width: thin;
+  scrollbar-color: #c0c0c0 #ffffff;
+}
+
+.title-bar {
+  background: var(--win-blue);
+  color: white;
+  padding: 3px 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+/* Re-adding gradient support for pages like illorim.html */
+.title-bar.gradient {
+  background: linear-gradient(90deg, #000080, #1084d0);
+}
+
+.title-controls span {
+  background: var(--win-gray);
+  color: black;
+  border: 2px outset #fff;
+  padding: 0 4px;
+  margin-left: 2px;
+  cursor: pointer;
+}
+
+.text-content,
+.view-pane,
+.file-grid {
+  flex: 1;
+  background: white;
+  margin: 2px;
+  border: 2px inset #fff;
+  padding: 20px;
+  overflow-y: auto;
+  color: black;
+}
+
+/* =========================================
+   START MENU
+   ========================================= */
+.start-menu {
+  position: fixed;
+  bottom: 35px;
+  left: 0;
+  width: 200px;
+  background: var(--win-gray);
+  border: 2px outset #fff;
+  display: none;
+  flex-direction: column;
+  z-index: 999;
+}
+
+.start-menu-sidebar {
+  width: 25px;
+  background: linear-gradient(to top, #000080, #1084d0);
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  color: #ccc;
+  padding: 5px;
+  font-weight: bold;
+}
+
+.start-item {
+  padding: 8px 10px 8px 35px;
+  text-decoration: none;
+  color: #000;
+  font-size: 13px;
+  display: block;
+}
+
+.start-item:hover {
+  background: var(--win-blue);
+  color: #fff;
+}
+
+/* =========================================
+   LISTS.TXT SPECIFIC STYLING
+   ========================================= */
+
+/* Forces headers to be on their own line with spacing */
+.list-header {
+  display: block;
+  font-weight: bold;
+  text-decoration: underline;
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+
+/* Forces items to be on their own line and indented */
+.list-item {
+  display: block;
+  margin-left: 15px;
+  line-height: 1.4;
+}
+
+/* Link colors for the lists */
+.text-content a {
+  color: #0000ff;
+  text-decoration: underline;
+}
+
+.text-content a:hover {
+  color: #ff0000;
+}
+
+/* =========================================
+   TAB SYSTEM (Illorim.exe)
+   ========================================= */
+
+/* Container for tabs - forces them into a row */
+.tabs {
+  display: flex;
+  padding: 5px 5px 0 5px;
+  background: var(--win-gray);
+  gap: 2px;
+}
+
+/* Individual Tab Styling */
+.tab {
+  padding: 4px 12px;
+  cursor: pointer;
+  font-size: 12px;
+  background: var(--win-gray);
+  border: 2px outset #ffffff;
+  border-bottom: none; /* Merges with the pane below */
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  position: relative;
+  top: 1px;
+  z-index: 1;
+}
+
+/* The Active Tab Authority */
+.tab.active {
+  font-weight: bold;
+  padding-top: 6px; /* Makes it slightly taller */
+  top: 2px;
+  z-index: 2;
+  background: var(--win-gray);
+}
+
+/* Ensures the view pane connects to the tabs correctly */
+.view-pane {
+  flex: 1;
+  background: white;
+  margin: 0 5px 5px 5px;
+  border: 2px inset #ffffff;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* =========================================
+   FILE EXPLORER (stories.html)
+   ========================================= */
+
+/* The main container for files */
+.file-grid {
+  flex: 1;
+  background: white;
+  margin: 2px;
+  border: 2px inset #ffffff;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-auto-rows: 90px;
+  gap: 10px;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* Individual File Icon in Explorer */
+.file-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  padding: 5px;
+  border: 1px solid transparent;
+}
+
+.file-icon:hover {
+  background-color: rgba(0, 0, 128, 0.1);
+  border: 1px dotted var(--win-blue);
+}
+
+.file-name {
+  margin-top: 5px;
+  font-size: 11px;
+  color: black;
+  word-wrap: break-word;
+  max-width: 90px;
+}
+
+/* =========================================
+   MODALS & POPUPS (Windows 95 Style)
+   ========================================= */
+
+/* The overlay background */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4); /* Dim the desktop */
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+}
+
+/* The floating window itself */
+.story-popup,
+.prop-window {
+  background: var(--win-gray);
+  border: 2px outset #ffffff;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+.story-popup {
+  width: 80%;
+  height: 80%;
+}
+.prop-window {
+  width: 300px;
+}
+
+/* Property Window Rows */
+.prop-body {
+  padding: 10px;
+  font-size: 12px;
+}
+.prop-row {
+  display: flex;
+  margin-bottom: 8px;
+}
+.prop-label {
+  width: 80px;
+  color: #666;
+}
+
+/* Classic Windows 95 Buttons */
+.win-btn {
+  padding: 4px 15px;
+  background: var(--win-gray);
+  border: 2px outset #ffffff;
+  font-family: "Tahoma", sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.win-btn:active {
+  border: 2px inset #ffffff;
+  padding: 5px 14px 3px 16px; /* Mimics a physical press */
+}
