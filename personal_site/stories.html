@@ -23,30 +23,9 @@
         </div>
       </div>
 
-      <div
-        class="address-bar"
-        style="
-          background: var(--win-gray);
-          padding: 4px;
-          display: flex;
-          align-items: center;
-          gap: 5px;
-          font-size: 11px;
-        "
-      >
-        <span style="color: #000">Address</span>
-        <div
-          class="address-input"
-          style="
-            flex: 1;
-            background: white;
-            border: 2px inset #fff;
-            padding: 2px 5px;
-            color: #000;
-          "
-        >
-          C:\Illorim\Stories
-        </div>
+      <div class="address-bar">
+        <span>Address</span>
+        <div class="address-input">C:\Illorim\Stories</div>
       </div>
 
       <div class="file-grid">
@@ -85,18 +64,7 @@
         </div>
         <div class="prop-body">
           <p style="margin-top: 0">Enter Decryption Key:</p>
-          <input
-            type="password"
-            id="decrypt-input"
-            style="
-              width: 100%;
-              border: 2px inset #fff;
-              padding: 3px;
-              margin-bottom: 10px;
-              font-family: monospace;
-              outline: none;
-            "
-          />
+          <input type="password" id="decrypt-input" class="win-input" />
           <div style="display: flex; justify-content: flex-end; gap: 5px">
             <button class="win-btn" onclick="checkPassword()">Verify</button>
             <button class="win-btn" onclick="closeModal('decrypt-modal')">
