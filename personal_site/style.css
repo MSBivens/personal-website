@@ -1,5 +1,5 @@
 /* =========================================
-   GLOBAL AUTHORITY (From home.html)
+   GLOBAL AUTHORITY (From index.html)
    ========================================= */
 :root {
   --win-gray: #c0c0c0;
@@ -56,7 +56,7 @@ html {
 }
 
 /* =========================================
-   TASKBAR & START BUTTON (Exact home.html Style)
+   TASKBAR & START BUTTON (Exact index.html Style)
    ========================================= */
 .taskbar {
   position: fixed;
@@ -73,7 +73,7 @@ html {
   box-sizing: border-box;
 }
 
-/* Authority: ID selector for home.html, Class for sub-pages */
+/* Authority: ID selector for index.html, Class for sub-pages */
 #start-button,
 .start-button {
   height: 28px;
@@ -81,7 +81,7 @@ html {
   align-items: center;
   padding: 0 10px;
   font-weight: bold;
-  border: 2px outset #eee; /* Light gray outset from home.html */
+  border: 2px outset #eee; /* Light gray outset from index.html */
   cursor: pointer;
   gap: 5px;
   text-decoration: none;

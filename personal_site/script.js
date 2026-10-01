@@ -1,6 +1,6 @@
 /**
  * START MENU LOGIC
- * Source of Authority: home.html
+ * Source of Authority: index.html
  */
 function toggleStartMenu(e) {
   if (e) e.stopPropagation(); // Prevents immediate closing from body click
@@ -19,7 +19,7 @@ function closeStartMenu() {
 
 /**
  * SYSTEM CLOCK
- * Source of Authority: home.html
+ * Source of Authority: index.html
  */
 function updateClock() {
   const clockElement = document.getElementById("clock");
