@@ -131,7 +131,7 @@ function checkPassword() {
 
   if (val === SECRET_KEY) {
     // Redirect to the secret page
-    window.location.href = "secret.html";
+    window.location.href = "/secret";
   } else {
     const error = document.getElementById("decrypt-error");
     if (error) {
