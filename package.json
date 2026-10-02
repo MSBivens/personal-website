@@ -1,0 +1,10 @@
+{
+  "name": "personal-website",
+  "private": true,
+  "scripts": {
+    "tiles": "node tools/make-tiles.js"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.5"
+  }
+}

@@ -493,3 +493,110 @@ html {
   font-family: monospace;
   outline: none;
 }
+
+/* =========================================
+   INTERACTIVE MAP (one-for-all.html)
+   ========================================= */
+.map-viewer {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  margin: 2px;
+  border: 2px inset #fff;
+}
+
+#map {
+  position: absolute;
+  inset: 0;
+  background: #f0e7ca; /* matches the map's parchment border */
+  font-family: "Tahoma", sans-serif;
+}
+
+/* Hides hairline gaps between tiles at in-between zoom levels */
+#map img.leaflet-tile {
+  mix-blend-mode: plus-lighter;
+}
+
+.map-pin {
+  image-rendering: pixelated;
+  filter: drop-shadow(1px 1px 0 #fff) drop-shadow(-1px -1px 0 #fff);
+}
+
+.map-pin:focus-visible {
+  outline: 2px dotted var(--win-blue);
+  outline-offset: 2px;
+}
+
+/* ID selector so these beat Leaflet's own .leaflet-touch rules */
+#map .leaflet-control-zoom {
+  border: none;
+  border-radius: 0;
+  box-shadow: 1px 1px 0 #000;
+}
+
+#map .leaflet-control-zoom a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  background: var(--win-gray);
+  color: #000;
+  border: 2px outset #fff;
+  border-radius: 0;
+  font: bold 16px "Tahoma", sans-serif;
+}
+
+#map .leaflet-control-zoom a:active {
+  border-style: inset;
+}
+
+#map .leaflet-control-zoom a.leaflet-disabled {
+  color: #808080;
+  text-shadow: 1px 1px 0 #fff;
+}
+
+.pin-window {
+  width: 360px;
+  max-width: calc(100vw - 32px);
+}
+
+.pin-type {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pin-type img {
+  image-rendering: pixelated;
+}
+
+.pin-description {
+  max-height: 50vh;
+  overflow-y: auto;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.pin-description p:first-child {
+  margin-top: 0;
+}
+
+.place-panel {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 280px;
+  max-width: calc(100% - 20px);
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+/* .prop-window sets display:flex, which would override the hidden attribute */
+.place-panel[hidden] {
+  display: none;
+}
+
+.place-panel textarea {
+  resize: none;
+  font-size: 11px;
+}

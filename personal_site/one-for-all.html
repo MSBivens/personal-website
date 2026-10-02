@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>One For All</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
+      integrity="sha512-h9FcoyWjHcOcmEVkxOfTLnmZFWIH0iZhZT1H2TbOq55xssQGEJHEaIm+PgoUaZbRvQTNTluNOEfb1ZRy6D3BOw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="/style.css" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"
+      integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
+    ></script>
+    <script src="/script.js" defer></script>
+    <script src="/one-for-all/map.js" defer></script>
+  </head>
+  <body onclick="closeStartMenu()">
+    <div class="program-window" style="height: calc(100vh - 50px)">
+      <div class="title-bar gradient">
+        <div style="display: flex; align-items: center; gap: 5px">
+          <img
+            src="https://win98icons.alexmeub.com/icons/png/world_star-1.png"
+            width="16"
+            alt=""
+          />
+          One For All
+        </div>
+        <div class="title-controls">
+          <span>_</span>
+          <span>□</span>
+          <a href="/" aria-label="Close">X</a>
+        </div>
+      </div>
+
+      <div class="map-viewer">
+        <div id="map" aria-label="Map of Faerûn"></div>
+
+        <div id="place-panel" class="place-panel prop-window" hidden>
+          <div class="title-bar">
+            <span>Placement Mode</span>
+          </div>
+          <div class="prop-body">
+            <p id="place-hint" style="margin-top: 0">
+              Click the map where the new pin should go.
+            </p>
+            <textarea
+              id="place-snippet"
+              class="win-input"
+              rows="9"
+              readonly
+              aria-label="Pin JSON to paste into pins.json"
+            ></textarea>
+            <div style="text-align: right">
+              <button type="button" class="win-btn" id="place-copy" disabled>
+                Copy
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="pin-modal"
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="pin-name"
+    >
+      <div class="prop-window pin-window">
+        <div class="title-bar">
+          <span id="pin-name"></span>
+          <div class="title-controls">
+            <button type="button" class="pin-close" aria-label="Close">
+              X
+            </button>
+          </div>
+        </div>
+        <div class="prop-body">
+          <div class="pin-type">
+            <img id="pin-icon" src="" width="32" alt="" />
+            <b id="pin-type"></b>
+          </div>
+          <hr />
+          <div id="pin-description" class="pin-description"></div>
+          <div style="text-align: right; margin-top: 10px">
+            <button type="button" class="win-btn pin-close" id="pin-ok">
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="start-menu" class="start-menu" onclick="event.stopPropagation()">
+      <div class="start-menu-sidebar">Windows 95</div>
+      <a href="/" class="start-item">🏠 Home Desktop</a>
+      <a href="/illorim" class="start-item">✨ Illorim (PEP)</a>
+      <a href="/lists" class="start-item">📚 My Lists</a>
+      <a href="/404" class="start-item">🚧 Construction</a>
+      <hr style="width: 100%; margin: 0" />
+      <a href="/shutdown" class="start-item">🚪 Shut Down...</a>
+    </div>
+
+    <div class="taskbar">
+      <button
+        type="button"
+        id="start-button"
+        class="start-button"
+        onclick="toggleStartMenu(event)"
+        aria-controls="start-menu"
+        aria-expanded="false"
+      >
+        <img
+          src="https://win98icons.alexmeub.com/icons/png/windows-0.png"
+          width="16"
+          alt=""
+        />
+        Start
+      </button>
+
+      <div class="active-app">
+        <img
+          src="https://win98icons.alexmeub.com/icons/png/world_star-1.png"
+          width="16"
+          style="margin-left: 10px"
+          alt=""
+        />
+        OneForAll.exe
+      </div>
+
+      <div class="system-tray" id="clock">12:00 PM</div>
+    </div>
+  </body>
+</html>
