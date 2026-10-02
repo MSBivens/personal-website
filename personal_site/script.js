@@ -71,11 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setInterval(updateClock, 1000);
     updateClock();
   }
-
-  // Right-click protection for Lore pages
-  if (document.querySelector(".explorer-window")) {
-    window.oncontextmenu = (e) => e.preventDefault();
-  }
 });
 
 /* =========================================
@@ -127,7 +122,6 @@ function attemptDecrypt() {
 
 function checkPassword() {
   const val = document.getElementById("decrypt-input").value.toLowerCase();
-  const SECRET_KEY = "onsyn";
 
   if (val === SECRET_KEY) {
     // Redirect to the secret page

@@ -64,7 +64,12 @@
         </div>
         <div class="prop-body">
           <p style="margin-top: 0">Enter Decryption Key:</p>
-          <input type="password" id="decrypt-input" class="win-input" />
+          <input
+            type="password"
+            id="decrypt-input"
+            class="win-input"
+            onkeydown="if (event.key === 'Enter') checkPassword()"
+          />
           <div style="display: flex; justify-content: flex-end; gap: 5px">
             <button class="win-btn" onclick="checkPassword()">Verify</button>
             <button class="win-btn" onclick="closeModal('decrypt-modal')">

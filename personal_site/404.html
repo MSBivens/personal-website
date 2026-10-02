@@ -135,6 +135,12 @@
           setTimeout(() => (dialog.style.transform = "translateX(0)"), 100);
         }
       }
+
+      document.addEventListener("keydown", () => {
+        if (document.getElementById("bsod").style.display === "block") {
+          window.location.href = "/";
+        }
+      });
     </script>
   </body>
 </html>
