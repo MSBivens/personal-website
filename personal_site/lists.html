@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>lists.txt - Notepad</title>
 
-    <link rel="stylesheet" href="style.css" />
-    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/script.js" defer></script>
   </head>
   <body onclick="closeStartMenu()">
     <div class="notepad-window">
@@ -15,13 +15,14 @@
           <img
             src="https://win98icons.alexmeub.com/icons/png/notepad-2.png"
             width="16"
+            alt=""
           />
           lists.txt - Notepad
         </div>
         <div class="title-controls">
-          <span onclick="window.location.href = 'home.html'">_</span>
+          <a href="/" aria-label="Minimize">_</a>
           <span>□</span>
-          <span onclick="window.location.href = 'home.html'">X</span>
+          <a href="/" aria-label="Close">X</a>
         </div>
       </div>
 
@@ -153,25 +154,26 @@
 
     <div id="start-menu" class="start-menu" onclick="event.stopPropagation()">
       <div class="start-menu-sidebar">Windows 95</div>
-      <a href="home.html" class="start-item">🏠 Home Desktop</a>
-      <a href="illorim.html" class="start-item">✨ Illorim (PEP)</a>
-      <a href="lists.html" class="start-item">📚 My Lists</a>
-      <a href="404.html" class="start-item">🚧 Construction</a>
+      <a href="/" class="start-item">🏠 Home Desktop</a>
+      <a href="/illorim" class="start-item">✨ Illorim (PEP)</a>
+      <a href="/lists" class="start-item">📚 My Lists</a>
+      <a href="/404" class="start-item">🚧 Construction</a>
       <hr style="width: 100%; margin: 0" />
-      <a href="shutdown.html" class="start-item">🚪 Shut Down...</a>
+      <a href="/shutdown" class="start-item">🚪 Shut Down...</a>
     </div>
 
     <div class="taskbar" style="margin-top: 10px">
-      <div id="start-button" onclick="toggleStartMenu(event)">
-        <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" />
+      <button type="button" id="start-button" onclick="toggleStartMenu(event)" aria-controls="start-menu" aria-expanded="false">
+        <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" alt="" />
         Start
-      </div>
+      </button>
 
       <div class="active-app">
         <img
           src="https://win98icons.alexmeub.com/icons/png/notepad-2.png"
           width="16"
           style="margin-left: 10px"
+          alt=""
         />
         lists.txt
       </div>

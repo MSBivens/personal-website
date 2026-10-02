@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Illorim World Viewer v1.0</title>
 
-    <link rel="stylesheet" href="style.css" />
-    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/script.js" defer></script>
   </head>
   <body onclick="closeStartMenu()">
     <div class="program-window">
@@ -15,21 +15,24 @@
           <img
             src="https://win98icons.alexmeub.com/icons/png/world-0.png"
             width="16"
+            alt=""
           />
           Illorim World Viewer v1.0
         </div>
         <div class="title-controls">
           <span>_</span>
           <span>□</span>
-          <span onclick="window.location.href = 'home.html'">X</span>
+          <a href="/" aria-label="Close">X</a>
         </div>
       </div>
 
       <div class="tabs">
-        <div class="tab active" onclick="switchTab('lore')">
+        <button type="button" class="tab active" onclick="switchTab('lore')">
           📜 LORE REPOSITORY
-        </div>
-        <div class="tab" onclick="switchTab('map')">🗺️ INTERACTIVE MAP</div>
+        </button>
+        <button type="button" class="tab" onclick="switchTab('map')">
+          🗺️ INTERACTIVE MAP
+        </button>
       </div>
 
       <div class="view-pane" id="lore">
@@ -72,10 +75,11 @@
         >
           <b style="color: #000">SYSTEM ADVISORY:</b> Written chronicles and
           short stories are stored in the main directory. <br /><br />
-          <a href="stories.html" class="exe-button">
+          <a href="/stories" class="exe-button">
             <img
               src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png"
               width="24"
+              alt=""
             />
             BROWSE STORIES IN EXPLORER
           </a>
@@ -86,43 +90,45 @@
         <h3>World Map Visualization</h3>
         <!-- <p>Use the interface below to navigate the continents of Illorim.</p> -->
         <div class="map-frame">
-          <iframe
-            src="about:blank"
-            style="width: 100%; height: 100%; border: none"
-          ></iframe>
-          <div style="position: absolute">[ Coming Soon! ]</div>
+          <iframe src="about:blank" title="Illorim world map"></iframe>
+          <div class="map-placeholder">[ Coming Soon! ]</div>
         </div>
       </div>
     </div>
 
     <div id="start-menu" class="start-menu" onclick="event.stopPropagation()">
       <div class="start-menu-sidebar">Windows 95</div>
-      <a href="home.html" class="start-item">🏠 Home Desktop</a>
-      <a href="illorim.html" class="start-item">✨ Illorim (PEP)</a>
-      <a href="lists.html" class="start-item">📚 My Lists</a>
-      <a href="404.html" class="start-item">🚧 Construction</a>
+      <a href="/" class="start-item">🏠 Home Desktop</a>
+      <a href="/illorim" class="start-item">✨ Illorim (PEP)</a>
+      <a href="/lists" class="start-item">📚 My Lists</a>
+      <a href="/404" class="start-item">🚧 Construction</a>
       <hr style="width: 100%; margin: 0" />
-      <a href="shutdown.html" class="start-item">🚪 Shut Down...</a>
+      <a href="/shutdown" class="start-item">🚪 Shut Down...</a>
     </div>
 
     <div class="taskbar">
-      <div
+      <button
+        type="button"
         id="start-button"
         class="start-button"
         onclick="toggleStartMenu(event)"
+        aria-controls="start-menu"
+        aria-expanded="false"
       >
         <img
           src="https://win98icons.alexmeub.com/icons/png/windows-0.png"
           width="16"
+          alt=""
         />
         Start
-      </div>
+      </button>
 
       <div class="active-app">
         <img
           src="https://win98icons.alexmeub.com/icons/png/world-0.png"
           width="16"
           style="margin-left: 10px"
+          alt=""
         />
         Illorim.exe
       </div>

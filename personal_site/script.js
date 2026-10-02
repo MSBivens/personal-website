@@ -1,25 +1,30 @@
 /**
  * START MENU LOGIC
- * Source of Authority: home.html
+ * Source of Authority: index.html
  */
 function toggleStartMenu(e) {
   if (e) e.stopPropagation(); // Prevents immediate closing from body click
   const menu = document.getElementById("start-menu");
   if (menu) {
-    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+    setStartMenuOpen(menu.style.display !== "flex");
   }
 }
 
 function closeStartMenu() {
+  setStartMenuOpen(false);
+}
+
+function setStartMenuOpen(open) {
   const menu = document.getElementById("start-menu");
-  if (menu) {
-    menu.style.display = "none";
-  }
+  if (!menu) return;
+  menu.style.display = open ? "flex" : "none";
+  const button = document.getElementById("start-button");
+  if (button) button.setAttribute("aria-expanded", String(open));
 }
 
 /**
  * SYSTEM CLOCK
- * Source of Authority: home.html
+ * Source of Authority: index.html
  */
 function updateClock() {
   const clockElement = document.getElementById("clock");
@@ -70,11 +75,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("clock")) {
     setInterval(updateClock, 1000);
     updateClock();
-  }
-
-  // Right-click protection for Lore pages
-  if (document.querySelector(".explorer-window")) {
-    window.oncontextmenu = (e) => e.preventDefault();
   }
 });
 
@@ -127,11 +127,10 @@ function attemptDecrypt() {
 
 function checkPassword() {
   const val = document.getElementById("decrypt-input").value.toLowerCase();
-  const SECRET_KEY = "onsyn";
 
   if (val === SECRET_KEY) {
     // Redirect to the secret page
-    window.location.href = "secret.html";
+    window.location.href = "/secret";
   } else {
     const error = document.getElementById("decrypt-error");
     if (error) {

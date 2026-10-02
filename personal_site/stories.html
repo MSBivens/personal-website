@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Exploring - C:\Illorim\Stories</title>
 
-    <link rel="stylesheet" href="style.css" />
-    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/script.js" defer></script>
   </head>
   <body onclick="closeStartMenu()">
     <div class="explorer-window">
@@ -15,53 +15,32 @@
           <img
             src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png"
             width="16"
+            alt=""
           />
           Exploring - C:\Illorim\Stories
         </div>
         <div class="title-controls">
-          <span onclick="window.location.href = 'illorim.html'">X</span>
+          <a href="/illorim" aria-label="Close">X</a>
         </div>
       </div>
 
-      <div
-        class="address-bar"
-        style="
-          background: var(--win-gray);
-          padding: 4px;
-          display: flex;
-          align-items: center;
-          gap: 5px;
-          font-size: 11px;
-        "
-      >
-        <span style="color: #000">Address</span>
-        <div
-          class="address-input"
-          style="
-            flex: 1;
-            background: white;
-            border: 2px inset #fff;
-            padding: 2px 5px;
-            color: #000;
-          "
-        >
-          C:\Illorim\Stories
-        </div>
+      <div class="address-bar">
+        <span>Address</span>
+        <div class="address-input">C:\Illorim\Stories</div>
       </div>
 
       <div class="file-grid">
-        <div
-          class="file-icon"
-          onclick="window.location.href = 'stories/LanuellaAndLanuer.html'"
-        >
+        <a class="file-icon" href="/stories/LanuellaAndLanuer">
           <img
             src="https://win98icons.alexmeub.com/icons/png/notepad_file-0.png"
             class="icon-img"
+            alt=""
           />
-          <div class="file-name">LanuellaAndLanuer.doc</div>
-        </div>
+          <span class="file-name">LanuellaAndLanuer.doc</span>
+        </a>
 
-        <div
+        <button
+          type="button"
           class="file-icon"
           onclick="attemptDecrypt()"
           oncontextmenu="openProps('Locked', event)"
@@ -69,9 +48,10 @@
           <img
             src="https://win98icons.alexmeub.com/icons/png/restrict-1.png"
             class="icon-img"
+            alt=""
           />
-          <div class="file-name">Locked_Archive.doc</div>
-        </div>
+          <span class="file-name">Locked_Archive.doc</span>
+        </button>
       </div>
     </div>
 
@@ -80,7 +60,7 @@
         <div class="title-bar">
           <span>System Decryption</span>
           <div class="title-controls">
-            <span onclick="closeModal('decrypt-modal')">X</span>
+            <button type="button" onclick="closeModal('decrypt-modal')" aria-label="Close">X</button>
           </div>
         </div>
         <div class="prop-body">
@@ -88,14 +68,8 @@
           <input
             type="password"
             id="decrypt-input"
-            style="
-              width: 100%;
-              border: 2px inset #fff;
-              padding: 3px;
-              margin-bottom: 10px;
-              font-family: monospace;
-              outline: none;
-            "
+            class="win-input"
+            onkeydown="if (event.key === 'Enter') checkPassword()"
           />
           <div style="display: flex; justify-content: flex-end; gap: 5px">
             <button class="win-btn" onclick="checkPassword()">Verify</button>
@@ -118,7 +92,7 @@
         <div class="title-bar">
           <span id="prop-title">Properties</span>
           <div class="title-controls">
-            <span onclick="closeModal('prop-modal')">X</span>
+            <button type="button" onclick="closeModal('prop-modal')" aria-label="Close">X</button>
           </div>
         </div>
         <div class="prop-body">
@@ -128,6 +102,7 @@
               src=""
               width="32"
               style="margin-right: 15px; image-rendering: pixelated"
+              alt=""
             />
             <b id="prop-filename"></b>
           </div>
@@ -163,31 +138,36 @@
 
     <div id="start-menu" class="start-menu" onclick="event.stopPropagation()">
       <div class="start-menu-sidebar">Windows 95</div>
-      <a href="home.html" class="start-item">🏠 Home Desktop</a>
-      <a href="illorim.html" class="start-item">✨ Illorim (PEP)</a>
-      <a href="lists.html" class="start-item">📚 My Lists</a>
-      <a href="404.html" class="start-item">🚧 Construction</a>
+      <a href="/" class="start-item">🏠 Home Desktop</a>
+      <a href="/illorim" class="start-item">✨ Illorim (PEP)</a>
+      <a href="/lists" class="start-item">📚 My Lists</a>
+      <a href="/404" class="start-item">🚧 Construction</a>
       <hr style="width: 100%; margin: 0" />
-      <a href="shutdown.html" class="start-item">🚪 Shut Down...</a>
+      <a href="/shutdown" class="start-item">🚪 Shut Down...</a>
     </div>
 
     <div class="taskbar">
-      <div
+      <button
+        type="button"
         id="start-button"
         class="start-button"
         onclick="toggleStartMenu(event)"
+        aria-controls="start-menu"
+        aria-expanded="false"
       >
         <img
           src="https://win98icons.alexmeub.com/icons/png/windows-0.png"
           width="16"
+          alt=""
         />
         Start
-      </div>
+      </button>
       <div class="active-app">
         <img
           src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png"
           width="16"
           style="margin-left: 10px"
+          alt=""
         />
         Stories
       </div>

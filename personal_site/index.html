@@ -5,53 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Michael Bivens</title>
 
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="/style.css" />
     <link
       rel="icon"
       type="image/png"
       href="https://win98icons.alexmeub.com/icons/png/windows-0.png"
     />
 
-    <script src="script.js" defer></script>
+    <script src="/script.js" defer></script>
   </head>
   <body onclick="closeStartMenu(event)">
     <div class="desktop">
-      <div class="icon" onclick="window.location.href = 'ReadMe.html'">
+      <a class="icon" href="/ReadMe">
         <img
           src="https://win98icons.alexmeub.com/icons/png/notepad_file-0.png"
           class="icon-img"
-          alt="ReadMe"
+          alt=""
         />
         ReadMe.txt
-      </div>
+      </a>
 
-      <div class="icon" onclick="window.location.href = 'lists.html'">
+      <a class="icon" href="/lists">
         <img
           src="https://win98icons.alexmeub.com/icons/png/notepad_file-2.png"
           class="icon-img"
-          alt="Lists"
+          alt=""
         />
         lists.txt
-      </div>
+      </a>
 
-      <div class="icon" onclick="window.location.href = 'illorim.html'">
+      <a class="icon" href="/illorim">
         <img
           src="https://win98icons.alexmeub.com/icons/png/world-0.png"
           class="icon-img"
-          alt="Illorim"
+          alt=""
         />
         Illorim.exe
-      </div>
+      </a>
 
-      <div
+      <a
         class="icon"
-        onclick="window.open('https://purpleelephant.tv/', '_blank')"
+        href="https://purpleelephant.tv/"
+        target="_blank"
+        rel="noopener"
       >
         <div style="position: relative; width: 32px; margin: 0 auto">
           <img
             src="https://win98icons.alexmeub.com/icons/png/executable_script-0.png"
             class="icon-img"
-            alt="Purple Elephant tv link"
+            alt=""
           />
           <img
             src="https://win98icons.alexmeub.com/icons/png/shortcut-0.png"
@@ -63,40 +65,40 @@
               height: 12px;
               image-rendering: pixelated;
             "
-            alt="Shortcut Arrow"
+            alt=""
           />
         </div>
         PEP.LNK
-      </div>
+      </a>
 
-      <div class="icon" onclick="window.location.href = 'stories.html'">
+      <a class="icon" href="/stories">
         <img
           src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png"
           class="icon-img"
-          alt="Explorer"
+          alt=""
         />
         Explorer
-      </div>
+      </a>
     </div>
 
     <div id="start-menu" class="start-menu" onclick="event.stopPropagation()">
       <div class="start-menu-sidebar">Windows 95</div>
-      <a href="home.html" class="start-item">🏠 Home Desktop</a>
-      <a href="illorim.html" class="start-item">✨ Illorim (PEP)</a>
-      <a href="lists.html" class="start-item">📚 My Lists</a>
-      <a href="404.html" class="start-item">🚧 Construction</a>
+      <a href="/" class="start-item">🏠 Home Desktop</a>
+      <a href="/illorim" class="start-item">✨ Illorim (PEP)</a>
+      <a href="/lists" class="start-item">📚 My Lists</a>
+      <a href="/404" class="start-item">🚧 Construction</a>
       <hr style="width: 100%; margin: 0" />
-      <a href="shutdown.html" class="start-item">🚪 Shut Down...</a>
+      <a href="/shutdown" class="start-item">🚪 Shut Down...</a>
     </div>
 
     <div class="taskbar">
-      <div id="start-button" onclick="toggleStartMenu(event)">
+      <button type="button" id="start-button" onclick="toggleStartMenu(event)" aria-controls="start-menu" aria-expanded="false">
         <img
           src="https://win98icons.alexmeub.com/icons/png/windows-0.png"
-          alt="Start Button"
+          alt=""
         />
         Start
-      </div>
+      </button>
 
       <div class="system-tray" id="clock">12:00 PM</div>
     </div>

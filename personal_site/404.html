@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>404 - File Not Found</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/script.js" defer></script>
     <style>
       /* BSOD Specific Styling */
       #bsod {
@@ -48,7 +48,7 @@
     "
     onclick="closeStartMenu()"
   >
-    <div id="bsod" onclick="window.location.href = 'home.html'">
+    <div id="bsod" onclick="window.location.href = '/'">
       <div class="bsod-content">
         <div class="bsod-box">Windows</div>
         <p>
@@ -72,7 +72,7 @@
       <div class="title-bar">
         <span>System Error</span>
         <div class="title-controls">
-          <span onclick="window.location.href = 'home.html'">X</span>
+          <a href="/" aria-label="Close">X</a>
         </div>
       </div>
       <div class="prop-body" style="padding: 20px">
@@ -87,6 +87,7 @@
           <img
             src="https://win98icons.alexmeub.com/icons/png/msg_error-2.png"
             width="32"
+            alt=""
           />
           <div>
             <p style="font-weight: bold; margin-top: 0">
@@ -107,13 +108,13 @@
             margin-top: 15px;
           "
         >
-          <button class="win-btn" onclick="window.location.href = 'home.html'">
+          <button class="win-btn" onclick="window.location.href = '/'">
             Abort
           </button>
           <button class="win-btn" id="retry-btn" onclick="handleRetry()">
             Retry
           </button>
-          <button class="win-btn" onclick="window.location.href = 'home.html'">
+          <button class="win-btn" onclick="window.location.href = '/'">
             Ignore
           </button>
         </div>
@@ -135,6 +136,12 @@
           setTimeout(() => (dialog.style.transform = "translateX(0)"), 100);
         }
       }
+
+      document.addEventListener("keydown", () => {
+        if (document.getElementById("bsod").style.display === "block") {
+          window.location.href = "/";
+        }
+      });
     </script>
   </body>
 </html>
