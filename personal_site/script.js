@@ -6,15 +6,20 @@ function toggleStartMenu(e) {
   if (e) e.stopPropagation(); // Prevents immediate closing from body click
   const menu = document.getElementById("start-menu");
   if (menu) {
-    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+    setStartMenuOpen(menu.style.display !== "flex");
   }
 }
 
 function closeStartMenu() {
+  setStartMenuOpen(false);
+}
+
+function setStartMenuOpen(open) {
   const menu = document.getElementById("start-menu");
-  if (menu) {
-    menu.style.display = "none";
-  }
+  if (!menu) return;
+  menu.style.display = open ? "flex" : "none";
+  const button = document.getElementById("start-button");
+  if (button) button.setAttribute("aria-expanded", String(open));
 }
 
 /**

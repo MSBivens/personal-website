@@ -15,13 +15,14 @@
           <img
             src="https://win98icons.alexmeub.com/icons/png/notepad_file-0.png"
             width="16"
+            alt=""
           />
           <span>Lanuella and Lanuer.doc - WordPad</span>
         </div>
         <div class="title-controls">
-          <span onclick="window.location.href = '/stories'">_</span>
+          <a href="/stories" aria-label="Minimize">_</a>
           <span>□</span>
-          <span onclick="window.location.href = '/stories'">X</span>
+          <a href="/stories" aria-label="Close">X</a>
         </div>
       </div>
 
@@ -137,23 +138,28 @@
     </div>
 
     <div class="taskbar">
-      <div
+      <button
+        type="button"
         id="start-button"
         class="start-button"
         onclick="toggleStartMenu(event)"
+        aria-controls="start-menu"
+        aria-expanded="false"
       >
         <img
           src="https://win98icons.alexmeub.com/icons/png/windows-0.png"
           width="16"
+          alt=""
         />
         Start
-      </div>
+      </button>
 
       <div class="active-app">
         <img
           src="https://win98icons.alexmeub.com/icons/png/notepad_file-0.png"
           width="16"
           style="margin-left: 10px"
+          alt=""
         />
         WordPad
       </div>

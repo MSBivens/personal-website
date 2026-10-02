@@ -15,21 +15,24 @@
           <img
             src="https://win98icons.alexmeub.com/icons/png/world-0.png"
             width="16"
+            alt=""
           />
           Illorim World Viewer v1.0
         </div>
         <div class="title-controls">
           <span>_</span>
           <span>□</span>
-          <span onclick="window.location.href = '/'">X</span>
+          <a href="/" aria-label="Close">X</a>
         </div>
       </div>
 
       <div class="tabs">
-        <div class="tab active" onclick="switchTab('lore')">
+        <button type="button" class="tab active" onclick="switchTab('lore')">
           📜 LORE REPOSITORY
-        </div>
-        <div class="tab" onclick="switchTab('map')">🗺️ INTERACTIVE MAP</div>
+        </button>
+        <button type="button" class="tab" onclick="switchTab('map')">
+          🗺️ INTERACTIVE MAP
+        </button>
       </div>
 
       <div class="view-pane" id="lore">
@@ -76,6 +79,7 @@
             <img
               src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png"
               width="24"
+              alt=""
             />
             BROWSE STORIES IN EXPLORER
           </a>
@@ -103,23 +107,28 @@
     </div>
 
     <div class="taskbar">
-      <div
+      <button
+        type="button"
         id="start-button"
         class="start-button"
         onclick="toggleStartMenu(event)"
+        aria-controls="start-menu"
+        aria-expanded="false"
       >
         <img
           src="https://win98icons.alexmeub.com/icons/png/windows-0.png"
           width="16"
+          alt=""
         />
         Start
-      </div>
+      </button>
 
       <div class="active-app">
         <img
           src="https://win98icons.alexmeub.com/icons/png/world-0.png"
           width="16"
           style="margin-left: 10px"
+          alt=""
         />
         Illorim.exe
       </div>

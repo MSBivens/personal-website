@@ -15,13 +15,14 @@
           <img
             src="https://win98icons.alexmeub.com/icons/png/notepad-0.png"
             width="16"
+            alt=""
           />
           ReadMe.txt - Notepad
         </div>
         <div class="title-controls">
-          <span onclick="window.location.href = '/'">_</span>
+          <a href="/" aria-label="Minimize">_</a>
           <span>□</span>
-          <span onclick="window.location.href = '/'">X</span>
+          <a href="/" aria-label="Close">X</a>
         </div>
       </div>
 
@@ -86,20 +87,24 @@
     </div>
 
     <div class="taskbar">
-      <div
+      <button
+        type="button"
         id="start-button"
         class="start-button"
         onclick="toggleStartMenu(event)"
+        aria-controls="start-menu"
+        aria-expanded="false"
       >
-        <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" />
+        <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" alt="" />
         Start
-      </div>
+      </button>
 
       <div class="active-app">
         <img
           src="https://win98icons.alexmeub.com/icons/png/notepad-0.png"
           width="16"
           style="margin-left: 10px"
+          alt=""
         />
         ReadMe.txt
       </div>

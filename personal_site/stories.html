@@ -15,11 +15,12 @@
           <img
             src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png"
             width="16"
+            alt=""
           />
           Exploring - C:\Illorim\Stories
         </div>
         <div class="title-controls">
-          <span onclick="window.location.href = '/illorim'">X</span>
+          <a href="/illorim" aria-label="Close">X</a>
         </div>
       </div>
 
@@ -29,18 +30,17 @@
       </div>
 
       <div class="file-grid">
-        <div
-          class="file-icon"
-          onclick="window.location.href = '/stories/LanuellaAndLanuer'"
-        >
+        <a class="file-icon" href="/stories/LanuellaAndLanuer">
           <img
             src="https://win98icons.alexmeub.com/icons/png/notepad_file-0.png"
             class="icon-img"
+            alt=""
           />
-          <div class="file-name">LanuellaAndLanuer.doc</div>
-        </div>
+          <span class="file-name">LanuellaAndLanuer.doc</span>
+        </a>
 
-        <div
+        <button
+          type="button"
           class="file-icon"
           onclick="attemptDecrypt()"
           oncontextmenu="openProps('Locked', event)"
@@ -48,9 +48,10 @@
           <img
             src="https://win98icons.alexmeub.com/icons/png/restrict-1.png"
             class="icon-img"
+            alt=""
           />
-          <div class="file-name">Locked_Archive.doc</div>
-        </div>
+          <span class="file-name">Locked_Archive.doc</span>
+        </button>
       </div>
     </div>
 
@@ -59,7 +60,7 @@
         <div class="title-bar">
           <span>System Decryption</span>
           <div class="title-controls">
-            <span onclick="closeModal('decrypt-modal')">X</span>
+            <button type="button" onclick="closeModal('decrypt-modal')" aria-label="Close">X</button>
           </div>
         </div>
         <div class="prop-body">
@@ -91,7 +92,7 @@
         <div class="title-bar">
           <span id="prop-title">Properties</span>
           <div class="title-controls">
-            <span onclick="closeModal('prop-modal')">X</span>
+            <button type="button" onclick="closeModal('prop-modal')" aria-label="Close">X</button>
           </div>
         </div>
         <div class="prop-body">
@@ -101,6 +102,7 @@
               src=""
               width="32"
               style="margin-right: 15px; image-rendering: pixelated"
+              alt=""
             />
             <b id="prop-filename"></b>
           </div>
@@ -145,22 +147,27 @@
     </div>
 
     <div class="taskbar">
-      <div
+      <button
+        type="button"
         id="start-button"
         class="start-button"
         onclick="toggleStartMenu(event)"
+        aria-controls="start-menu"
+        aria-expanded="false"
       >
         <img
           src="https://win98icons.alexmeub.com/icons/png/windows-0.png"
           width="16"
+          alt=""
         />
         Start
-      </div>
+      </button>
       <div class="active-app">
         <img
           src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png"
           width="16"
           style="margin-left: 10px"
+          alt=""
         />
         Stories
       </div>
