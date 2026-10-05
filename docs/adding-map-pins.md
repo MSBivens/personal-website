@@ -51,16 +51,32 @@ Players can do this too, so they can send you a spot. The old `?place` link stil
 | **Name** | Shown in the pop-up's title bar and when hovering the pin. |
 | **Type** | One of your Pin Types. |
 | **Location** | *Optional.* Pick a town or region from your Locations, or create one from the field. |
+| **Map Visibility** | **Map Pin** (its own marker), **Attached to Location** (shown only inside its Location's Hub; see below) or **Hidden** (kept off the map). |
 | **Status** | One of that type's statuses, e.g. a Member is Active, Compromised or Dead. Statuses with a Dimmed or Faded map style grey the pin out. |
 | **Rank** | *Members only.* Pick one of your ranks. |
 | **Reports to** | *Members only.* The member or safe house they report to. This draws a network line on the map. |
 | **Icon override** | *Optional.* An icon for this pin only. |
-| **X**, **Y** | The numbers from **Locate**. |
+| **X**, **Y** | The numbers from **Locate**. Only asked for on Map Pins (and Post Offices). |
 | **Description** | Your notes. Leave a blank line between paragraphs. |
 
 Click **Publish**. Refresh the map and the pin is there. It can take up to a minute to show up.
 
 > **Drafts don't show on the map.** Studio saves your changes as you type, but the map only shows pins (and changes) once you click **Publish**.
+
+## Hubs: crowded places
+
+When several pins are too close together to read, turn their Location into a **Hub**: one marker (a folder, with a badge counting what's inside) that opens a panel listing everything there.
+
+1. Open the Location under **Locations**, turn on **Show as Hub**, give it an **X** and **Y** (from **Locate**), and optionally a **Hub icon** and **Description**. Publish.
+2. On each pin that belongs there, set **Location** to that place and **Map Visibility** to **Attached to Location**. Publish. The pin's own marker disappears and it shows up in the Hub's panel instead.
+
+The panel lists every pin at that Location, grouped by type. Pins there that are still Map Pins are marked *on map*. Click any of them to open its pop-up, which has a **◀ Back to …** button. In any pop-up, the **Location** name is a link to that Location's panel, Hub or not.
+
+Network lines from attached pins start at their Hub. A line between two pins in the same Hub would have no length, so it's listed in the Hub's panel under **Reporting lines here** instead.
+
+If you turn **Show as Hub** off while pins are attached to it, Studio warns you: those pins won't appear on the map until it's a Hub again or you switch them back to Map Pin.
+
+**Hidden** pins don't appear anywhere on the map, but the data is still public. For real secrets, use unpublished drafts.
 
 ## The network lines
 
@@ -68,7 +84,7 @@ Tick **Network lines** in the map's **Legend** box (bottom-left) to draw a line 
 
 In a pop-up, the **Reports to** and **Direct reports** names are links. Click one to fly to that pin.
 
-The Legend's other checkboxes show or hide each pin type. The map remembers your choices on that browser.
+The Legend's other checkboxes show or hide each pin type and the Hubs. They only affect the map; Hub panels always list everything. The map remembers your choices on that browser.
 
 ## Moving or removing a pin
 
@@ -80,7 +96,7 @@ The Legend's other checkboxes show or hide each pin type. The map remembers your
 
 | Problem | Fix |
 |---|---|
-| A pin doesn't appear | Check that it's **published**, not just saved as a draft. Then refresh the map. |
+| A pin doesn't appear | Check that it's **published**, not just saved as a draft, and that its **Map Visibility** isn't Hidden. If it's Attached, it's inside its Location's Hub (and its Location must be a Hub). Then refresh the map. |
 | A member's line is missing | The pin they report to must also be published. Also check that **Network lines** is ticked and both pin types are shown in the Legend. |
 | A member shows the plain Member icon | Their rank has no icon, or they have no rank. |
 | A pin shows a red question mark | Neither the pin, its rank nor its Pin Type has an icon. Add one under **Settings → Pin Types**. |
