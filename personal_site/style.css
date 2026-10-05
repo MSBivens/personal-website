@@ -523,17 +523,20 @@ html {
   filter: drop-shadow(1px 1px 0 #fff) drop-shadow(-1px -1px 0 #fff);
 }
 
-/* Rank icons are uploaded art, not Win98 pixel icons, so scale them smoothly */
-.map-pin.rank-pin {
+/* Icons uploaded larger than 64px are drawn art, not pixel icons, so scale them smoothly */
+.map-pin.smooth,
+.legend-row img.smooth,
+.pin-type img.smooth,
+.pin-rank-icon.smooth {
   image-rendering: auto;
 }
 
-/* Members whose Status isn't Active. Repeats the drop-shadow because filter doesn't merge. */
-.map-pin.is-compromised {
+/* Statuses with a Dimmed or Faded map style. Repeats the drop-shadow because filter doesn't merge. */
+.map-pin.is-dimmed {
   filter: grayscale(1) opacity(0.8) drop-shadow(1px 1px 0 #fff) drop-shadow(-1px -1px 0 #fff);
 }
 
-.map-pin.is-dead {
+.map-pin.is-faded {
   filter: grayscale(1) opacity(0.45) drop-shadow(1px 1px 0 #fff) drop-shadow(-1px -1px 0 #fff);
 }
 
@@ -640,10 +643,6 @@ html {
   object-fit: contain;
 }
 
-.pin-type img.is-rank {
-  image-rendering: auto;
-}
-
 .pin-details .prop-row {
   margin-bottom: 4px;
 }
@@ -666,6 +665,7 @@ html {
   vertical-align: middle;
   margin-right: 4px;
   object-fit: contain;
+  image-rendering: pixelated;
 }
 
 /* Reports to / Direct reports: buttons that look like links */

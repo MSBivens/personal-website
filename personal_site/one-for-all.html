@@ -22,7 +22,8 @@
       defer
     ></script>
     <script src="/script.js" defer></script>
-    <script src="/one-for-all/map.js" defer></script>
+    <!-- A module, so it runs after the deferred Leaflet script above -->
+    <script type="module" src="/one-for-all/map.js"></script>
   </head>
   <body onclick="closeStartMenu()">
     <div class="program-window" style="height: calc(100vh - 50px)">
