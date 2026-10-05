@@ -6,6 +6,8 @@ import { anchorOf } from "./markers.js";
 import { closePlace, isPlaceOpen, showPlace } from "./hubs.js";
 import { stopLocating } from "./locate.js";
 
+const ATTITUDES = { friendly: "Friendly", neutral: "Neutral", hostile: "Hostile", unknown: "Unknown" };
+
 const pinModal = document.getElementById("pin-modal");
 const backButton = document.getElementById("pin-back");
 let returnFocusTo = null;
@@ -93,11 +95,22 @@ export function showPin(entry, { from = null } = {}) {
     rows.push(detailRow("Rank", img, pin.rank.title || "Unnamed rank"));
   }
   if (pin.status && pin.status.title) rows.push(detailRow("Status", pin.status.title));
+  // Unpublished party members come back as null.
+  const recruiters = (pin.recruitedBy || []).filter(Boolean);
+  if (recruiters.length) rows.push(detailRow("Recruited by", recruiters.join(", ")));
+  if (pin.partyMember) rows.push(detailRow("Party member", pin.partyMember));
+  if (pin.attitude) rows.push(detailRow("Attitude", ATTITUDES[pin.attitude] || pin.attitude));
+  const giver = pinsById.get(pin.questGiver);
+  if (giver) rows.push(detailRow("Quest giver", pinLink(giver)));
   const superior = pinsById.get(pin.reportsTo);
   if (superior) rows.push(detailRow("Reports to", pinLink(superior)));
   if (entry.reports && entry.reports.length) {
     const links = entry.reports.flatMap((report, i) => (i ? [", ", pinLink(report)] : [pinLink(report)]));
     rows.push(detailRow("Direct reports", ...links));
+  }
+  // Free-form Details rows from Studio; rows left empty are skipped.
+  for (const { label, value } of pin.details || []) {
+    if (label && value && value.trim()) rows.push(detailRow(label, value.trim()));
   }
   document.getElementById("pin-details").replaceChildren(...rows);
   document.getElementById("pin-description").replaceChildren(...paragraphs(pin.description));

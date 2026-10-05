@@ -12,8 +12,8 @@ Pins on the map at `/one-for-all` are edited in **Sanity Studio**:
 |---|---|
 | **Pins** | Every record, in one list per Pin Type plus **All pins**. Use the create button at the top of a type's list and the new pin starts with that type (and its first status) already chosen. |
 | **Locations** | Towns and regions. A pin's Location is picked from this list. |
-| **Party Members** | The player characters. |
-| **Settings → Pin Types** | Each type's name, plural, icon and position in the legend. Add a new type here and it gets its own list and legend entry, no code needed. |
+| **Party Members** | The player characters. Members link to them (**Recruited By**) and so do Soul Items; each party member's page shows their Soul Item. |
+| **Settings → Pin Types** | Each type's name, plural, icon, position in the legend, and **Suggested details** (the Details rows a new pin of that type starts with). Add a new type here and it gets its own list and legend entry, no code needed. |
 | **Settings → Statuses** | Each type's statuses and how they look on the map (Normal, Dimmed or Faded). |
 | **Settings → Ranks** | Member ranks and their icons. |
 
@@ -55,7 +55,12 @@ Players can do this too, so they can send you a spot. The old `?place` link stil
 | **Status** | One of that type's statuses, e.g. a Member is Active, Compromised or Dead. Statuses with a Dimmed or Faded map style grey the pin out. |
 | **Rank** | *Members only.* Pick one of your ranks. |
 | **Reports to** | *Members only.* The member or safe house they report to. This draws a network line on the map. |
+| **Recruited By** | *Members only.* The party members who recruited them. Pick one or more. |
+| **Party member** | *Soul Items only.* Whose Soul Item it is. Each party member can have only one. |
+| **Attitude** | *NPCs only.* Friendly, Neutral, Hostile or Unknown. |
+| **Quest giver** | *Quests only.* The NPC or member who gave it. Shown as a link in the pop-up. |
 | **Icon override** | *Optional.* An icon for this pin only. |
+| **Details** | Short labelled facts shown as rows in the pop-up, e.g. *Reward: 500 gp*. A new pin starts with its type's suggested rows (a Quest gets Reward and Objectives); add, rename or remove rows freely. Rows left empty aren't shown. |
 | **X**, **Y** | The numbers from **Locate**. Only asked for on Map Pins (and Post Offices). |
 | **Description** | Your notes. Leave a blank line between paragraphs. |
 
