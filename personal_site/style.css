@@ -593,10 +593,113 @@ html {
   color: #666;
 }
 
-.legend-line {
-  display: inline-block;
-  width: 16px;
-  border-top: 2px solid var(--win-blue);
+.line-sample {
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.legend-section + .legend-section {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid #808080;
+  box-shadow: inset 0 1px 0 #fff;
+}
+
+.legend-heading {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-bottom: 2px;
+}
+
+.legend-fold {
+  flex: 1;
+  padding: 0;
+  background: none;
+  border: 0;
+  font: bold 12px "Tahoma", sans-serif;
+  text-align: left;
+  cursor: pointer;
+}
+
+.legend-fold:focus-visible {
+  outline: 1px dotted #000;
+}
+
+.win-btn.legend-mini,
+.win-btn.legend-mini:active {
+  padding: 0 4px;
+  font-size: 10px;
+}
+
+.legend-rows[hidden] {
+  display: none;
+}
+
+/* Relationship lines: flowing ones march their dashes toward the far end. The distance is
+   one full dash pattern, set per line in --flow-offset (lines.js), so the loop is seamless. */
+@keyframes line-flow {
+  to {
+    stroke-dashoffset: var(--flow-offset, -16px);
+  }
+}
+
+.line-flow {
+  animation: line-flow 1s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line-flow {
+    animation: none;
+  }
+}
+
+.line-arrow svg {
+  display: block;
+  transform-origin: 50% 50%;
+}
+
+/* Connections listed in pop-ups and Location panels */
+.pin-connections {
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+
+.conn-list {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+}
+
+.conn-list li + li {
+  margin-top: 5px;
+}
+
+.conn-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0 5px;
+}
+
+.conn-type {
+  color: #444;
+}
+
+.conn-meta,
+.conn-notes {
+  margin-left: 29px;
+  color: #666;
+  font-size: 11px;
+}
+
+.conn-notes {
+  white-space: pre-line;
+  color: #000;
+}
+
+.place-records .pin-connections {
+  margin-bottom: 0;
 }
 
 /* ID selector so these beat Leaflet's own .leaflet-touch rules */

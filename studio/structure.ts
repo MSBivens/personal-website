@@ -78,6 +78,7 @@ export const structure: StructureResolver = (S, context) =>
                     ),
                 ),
               S.documentTypeListItem('rank').title('Ranks'),
+              S.documentTypeListItem('relationshipType').title('Relationship Types'),
             ]),
         ),
     ])

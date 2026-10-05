@@ -14,6 +14,9 @@ export const TYPE = {
 };
 
 const ASSET = `{ url, extension, "width": metadata.dimensions.width }`;
+const CONNECTIONS = `connections[defined(type._ref) && defined(to._ref)]{
+  "typeId": type._ref, "to": to._ref, "via": via[]._ref, label, notes
+}`;
 
 // Pins migrated in Phase 2 store type / location / status as references. Older pins
 // stored them as text ("member", "Crimmor", "active"); the query maps both onto the
@@ -24,8 +27,13 @@ const QUERY = `{
   "types": *[_type == "pinType"] | order(legendOrder asc){
     "id": _id, title, plural, legendOrder, "icon": icon.asset->${ASSET}
   },
+  "relationshipTypes": *[_type == "relationshipType"] | order(legendOrder asc){
+    "id": _id, title, color, pattern, width, direction, shape, legendOrder,
+    "shownByDefault": coalesce(shownByDefault, true)
+  },
   "locations": *[_type == "location"]{
-    "id": _id, name, description, "isHub": showAsHub == true, x, y, "icon": icon.asset->${ASSET}
+    "id": _id, name, description, "isHub": showAsHub == true, x, y, "icon": icon.asset->${ASSET},
+    "connections": ${CONNECTIONS}
   },
   "pins": *[_type == "pin" && coalesce(visibility, "pin") != "hidden"]{
     "id": _id, name, x, y, description,
@@ -42,6 +50,7 @@ const QUERY = `{
       }
     ),
     "details": details[defined(value)]{ label, value },
+    "connections": ${CONNECTIONS},
     (type == "member" || type._ref == "${TYPE.member}") => {
       "reportsTo": reportsTo._ref,
       "rank": rank->{ title, order, "icon": icon.asset->${ASSET} },

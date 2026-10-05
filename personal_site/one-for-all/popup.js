@@ -4,6 +4,7 @@ import { ICON_BASE, sanityIcon } from "./icons.js";
 import { pinsById } from "./state.js";
 import { anchorOf } from "./markers.js";
 import { closePlace, isPlaceOpen, showPlace } from "./hubs.js";
+import { relSample } from "./lines.js";
 import { stopLocating } from "./locate.js";
 
 const ATTITUDES = { friendly: "Friendly", neutral: "Neutral", hostile: "Hostile", unknown: "Unknown" };
@@ -47,6 +48,38 @@ export const pinButton = (entry, from) =>
 
 const placeLink = (place) =>
   linkButton(place.location.name, () => showPlace(place, { returnFocus: returnFocusTo }));
+
+const el = (tag, className, ...children) => {
+  const node = document.createElement(tag);
+  node.className = className;
+  node.append(...children);
+  return node;
+};
+
+// One Connection as seen from one of its ends: "[line] Communication → Jenna", then any
+// Via stops and Label, then the Notes. `linkFor(endpoint)` makes the link to the other end.
+function connectionItem({ conn, dir }, linkFor) {
+  const other = dir === "out" ? conn.to : conn.from;
+  const arrow = conn.rel.direction === "none" ? "—" : dir === "out" ? "→" : "←";
+  const item = el("li", "", el("div", "conn-head", relSample(conn.rel), el("span", "conn-type", conn.rel.title), ` ${arrow} `, linkFor(other)));
+  const meta = [conn.via.length && `via ${conn.via.map((po) => po.name).join(", ")}`, conn.label].filter(Boolean);
+  if (meta.length) item.append(el("div", "conn-meta", meta.join(" · ")));
+  if (conn.notes && conn.notes.trim()) item.append(el("div", "conn-notes", conn.notes.trim()));
+  return item;
+}
+
+// A "Connections" block, or nothing if there are none.
+export function connectionSection(links, linkFor) {
+  if (!links || !links.length) return [];
+  const otherName = ({ conn, dir }) => (dir === "out" ? conn.to : conn.from).name;
+  const sorted = [...links].sort(
+    (a, b) => (a.conn.rel.legendOrder ?? 0) - (b.conn.rel.legendOrder ?? 0) || otherName(a).localeCompare(otherName(b)),
+  );
+  return [el("div", "pin-connections", el("b", "", "Connections"), el("ul", "conn-list", ...sorted.map((link) => connectionItem(link, linkFor))))];
+}
+
+// In a pop-up, pins fly-to-and-open and Locations open their panel.
+const popupLinkFor = (end) => (end.entry ? pinLink(end.entry) : placeLink(end.place));
 
 // Studio descriptions are plain text; a blank line starts a new paragraph.
 export function paragraphs(description) {
@@ -113,6 +146,7 @@ export function showPin(entry, { from = null } = {}) {
     if (label && value && value.trim()) rows.push(detailRow(label, value.trim()));
   }
   document.getElementById("pin-details").replaceChildren(...rows);
+  document.getElementById("pin-connections").replaceChildren(...connectionSection(entry.links, popupLinkFor));
   document.getElementById("pin-description").replaceChildren(...paragraphs(pin.description));
 
   openModal("pin-modal");
