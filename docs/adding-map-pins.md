@@ -1,8 +1,8 @@
-# Adding pins to the One For All map
+# Editing the One For All map
 
-Pins on the map at `/one-for-all` are edited in **Sanity Studio**:
+Everything on the campaign map at `/one-for-all` (pins, Hubs and the lines between them) is edited in **Sanity Studio**:
 <https://mikeybivs.sanity.studio>. Log in with the account that owns the
-"Personal Site" Sanity project. Publish a pin and it appears on the map. There's no code to edit and nothing to deploy.
+"Personal Site" Sanity project. Publish a change and it appears on the map. There's no code to edit and nothing to deploy.
 
 ---
 
@@ -14,7 +14,7 @@ Pins on the map at `/one-for-all` are edited in **Sanity Studio**:
 | **Locations** | Towns and regions. A pin's Location is picked from this list. |
 | **Party Members** | The player characters. Members link to them (**Recruited By**) and so do Soul Items; each party member's page shows their Soul Item. |
 | **Settings → Pin Types** | Each type's name, plural, icon, position in the legend, and **Suggested details** (the Details rows a new pin of that type starts with). Add a new type here and it gets its own list and legend entry, no code needed. |
-| **Settings → Statuses** | Each type's statuses and how they look on the map (Normal, Dimmed or Faded). |
+| **Settings → Statuses** | Each type's statuses and how they look on the map (Normal, Dimmed or Faded). The first one (lowest **Order**) is the default for new pins. |
 | **Settings → Ranks** | Member ranks and their icons. |
 | **Settings → Relationship Types** | The kinds of lines you can draw between records, and how each looks. See *Relationship lines* below. |
 
@@ -78,7 +78,7 @@ When several pins are too close together to read, turn their Location into a **H
 
 The panel lists every pin at that Location, grouped by type. Pins there that are still Map Pins are marked *on map*. Click any of them to open its pop-up, which has a **◀ Back to …** button. In any pop-up, the **Location** name is a link to that Location's panel, Hub or not.
 
-Network lines from attached pins start at their Hub. A line between two pins in the same Hub would have no length, so it's listed in the Hub's panel under **Reporting lines here** instead.
+Network lines from attached pins start at their Hub. A line between two pins in the same Hub would have no length, so it's listed in the Hub's panel under **Lines here** instead.
 
 If you turn **Show as Hub** off while pins are attached to it, Studio warns you: those pins won't appear on the map until it's a Hub again or you switch them back to Map Pin.
 
@@ -134,7 +134,7 @@ The legend only affects the map: pop-ups and Hub panels always list everything. 
 ## Moving or removing a pin
 
 - **To move a pin:** get new coordinates with **Locate**, change **X** and **Y**, and click **Publish**.
-- **To remove a pin:** open it, open the menu next to **Publish**, and choose **Delete**. If anyone reports to that pin, Studio won't let you delete it until you change their **Reports to**.
+- **To remove a pin:** open it, open the menu next to **Publish**, and choose **Delete**. If another record links to it (a **Reports to**, a connection, a **Quest giver**…), Studio lists those records and won't delete it until you remove the links.
 - **To hide a pin without deleting it:** use **Unpublish** from the same menu. It stays in Studio as a draft.
 
 ## Troubleshooting
@@ -143,6 +143,7 @@ The legend only affects the map: pop-ups and Hub panels always list everything. 
 |---|---|
 | A pin doesn't appear | Check that it's **published**, not just saved as a draft, and that its **Map Visibility** isn't Hidden. If it's Attached, it's inside its Location's Hub (and its Location must be a Hub). Then refresh the map. |
 | A member's line is missing | The pin they report to must also be published. Also check that **Network lines** is ticked and both pin types are shown in the Legend. |
+| A connection's line is missing | Both ends must be published and not Hidden, and a Location end needs a Hub or an X/Y. Check its relationship type and both ends' pin types are ticked in the Legend. If both ends are in the same Hub, it's listed in the Hub's panel instead. |
 | A member shows the plain Member icon | Their rank has no icon, or they have no rank. |
 | A pin shows a red question mark | Neither the pin, its rank nor its Pin Type has an icon. Add one under **Settings → Pin Types**. |
 | An **Error** pop-up saying *Map data could not be loaded* | Sanity didn't answer. Try again in a minute. If the site has moved to a new address, add it under **API → CORS origins** at <https://www.sanity.io/manage/project/ohnkcmr7>. |
