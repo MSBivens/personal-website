@@ -42,33 +42,52 @@
         </div>
       </div>
 
+      <div class="map-toolbar" role="toolbar" aria-label="Map tools">
+        <button
+          type="button"
+          class="win-btn toolbar-btn"
+          id="locate-toggle"
+          aria-pressed="false"
+          aria-controls="locate-panel"
+          title="Click a spot on the map to get its coordinates"
+        >
+          <img
+            src="https://win98icons.alexmeub.com/icons/png/magnifying_glass-1.png"
+            width="16"
+            height="16"
+            alt=""
+          />
+          Locate
+        </button>
+      </div>
+
       <div class="map-viewer">
         <div id="map" aria-label="Map of Faerûn"></div>
 
-        <div id="place-panel" class="place-panel prop-window" hidden>
+        <div id="locate-panel" class="locate-panel prop-window" hidden>
           <div class="title-bar">
-            <span>Placement Mode</span>
-          </div>
-          <div class="prop-body">
-            <p id="place-hint" style="margin-top: 0">
-              Click the map where the new pin should go.
-            </p>
-            <div class="place-coords">
-              <label for="place-x">X</label>
-              <input id="place-x" class="win-input" readonly />
-              <button type="button" class="win-btn place-copy" data-target="place-x" disabled>
-                Copy
-              </button>
-              <label for="place-y">Y</label>
-              <input id="place-y" class="win-input" readonly />
-              <button type="button" class="win-btn place-copy" data-target="place-y" disabled>
-                Copy
+            <span>Locate</span>
+            <div class="title-controls">
+              <button type="button" id="locate-close" aria-label="Exit locate mode">
+                X
               </button>
             </div>
-            <p style="margin-bottom: 0">
-              Enter these in the pin's <b>X</b> and <b>Y</b> fields in
-              <a id="place-studio" href="#" target="_blank" rel="noopener">Sanity Studio</a>.
-            </p>
+          </div>
+          <div class="prop-body">
+            <p id="locate-hint" style="margin-top: 0">Click the map to mark a spot.</p>
+            <label for="locate-note">Note (optional)</label>
+            <input
+              id="locate-note"
+              class="win-input"
+              maxlength="80"
+              placeholder="e.g. Frank's shop"
+              autocomplete="off"
+            />
+            <label for="locate-output">Text to send</label>
+            <input id="locate-output" class="win-input" readonly />
+            <div style="text-align: right">
+              <button type="button" class="win-btn" id="locate-copy" disabled>Copy</button>
+            </div>
           </div>
         </div>
       </div>

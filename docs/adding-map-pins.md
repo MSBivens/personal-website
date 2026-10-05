@@ -32,11 +32,14 @@ Click **Publish**.
 
 ## 2. Get the pin's coordinates
 
-1. Open the map in **placement mode**: <https://www.msbivens.com/one-for-all?place>
+1. Open the map (<https://www.msbivens.com/one-for-all>) and click **Locate** in the toolbar above it.
 2. Zoom in on the spot. The closer you zoom, the more precise the pin will be.
-3. Click exactly where the pin should go. The **Placement Mode** box in the top-right shows **X** and **Y**. Use the **Copy** buttons next to them.
+3. Click exactly where the pin should go. A red crosshair marks the spot, and the **Locate** box in the top-right shows text like `X: 3503, Y: 2618`. Add a note if you like (it goes in front of the coordinates), then click **Copy**.
+4. Click **Locate** again, the box's **X**, or press Esc to go back to browsing.
 
-You can click again as many times as you like. The box always shows the latest spot.
+You can click again as many times as you like. The box always shows the latest spot. While Locate is on, clicking a pin moves the crosshair instead of opening the pin.
+
+Players can do this too, so they can send you a spot. The old `?place` link still works and opens the map with Locate already on.
 
 ## 3. Create the pin
 
@@ -48,7 +51,7 @@ You can click again as many times as you like. The box always shows the latest s
 | **Rank** | *Members only.* Pick one of your ranks. |
 | **Status** | *Members only.* Active, Compromised or Dead. Compromised and dead members are greyed out on the map. |
 | **Reports to** | *Members only.* The member or safe house they report to. This draws a network line on the map. |
-| **X**, **Y** | The numbers from placement mode. |
+| **X**, **Y** | The numbers from **Locate**. |
 | **Description** | Your notes. Leave a blank line between paragraphs. |
 
 Click **Publish**. Refresh the map and the pin is there. It can take up to a minute to show up.
@@ -65,7 +68,7 @@ The Legend's other checkboxes show or hide each pin type. The map remembers your
 
 ## Moving or removing a pin
 
-- **To move a pin:** get new coordinates from placement mode, change **X** and **Y**, and click **Publish**.
+- **To move a pin:** get new coordinates with **Locate**, change **X** and **Y**, and click **Publish**.
 - **To remove a pin:** open it, open the menu next to **Publish**, and choose **Delete**. If anyone reports to that pin, Studio won't let you delete it until you change their **Reports to**.
 - **To hide a pin without deleting it:** use **Unpublish** from the same menu. It stays in Studio as a draft.
 
@@ -81,5 +84,5 @@ The Legend's other checkboxes show or hide each pin type. The map remembers your
 ## Good to know
 
 - The page is hidden but **not private**. The Sanity dataset is public so the map can read it. Anyone who finds the link can read every published pin, so keep anything players shouldn't see out of the descriptions.
-- Placement mode works on the live site. You don't need to run anything on your computer to add pins.
+- **Locate** works on the live site. You don't need to run anything on your computer to add pins.
 - The Studio's code lives in [`studio/`](../studio/). Run `npm run dev` there to try schema changes locally (at `http://localhost:3333`), and `npx sanity deploy` to update the hosted Studio.

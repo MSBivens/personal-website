@@ -698,7 +698,37 @@ html {
   margin-top: 0;
 }
 
-.place-panel {
+.map-toolbar {
+  display: flex;
+  gap: 4px;
+  padding: 3px 4px;
+  border-bottom: 1px solid #808080;
+  box-shadow: 0 1px 0 #fff;
+}
+
+.toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+}
+
+.toolbar-btn img {
+  image-rendering: pixelated;
+}
+
+/* Pressed-in toggle with the Win95 dithered face */
+.toolbar-btn:active,
+.toolbar-btn[aria-pressed="true"] {
+  border-style: inset;
+  padding: 3px 7px 1px 9px;
+}
+
+.toolbar-btn[aria-pressed="true"] {
+  background: repeating-conic-gradient(var(--win-gray) 0% 25%, #fff 0% 50%) 0 0 / 2px 2px;
+}
+
+.locate-panel {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -709,17 +739,42 @@ html {
 }
 
 /* .prop-window sets display:flex, which would override the hidden attribute */
-.place-panel[hidden] {
+.locate-panel[hidden] {
   display: none;
 }
 
-.place-coords {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 6px;
+.locate-panel label {
+  display: block;
+  margin-bottom: 2px;
 }
 
-.place-coords .win-input {
-  margin-bottom: 0;
+#map.is-locating,
+#map.is-locating .leaflet-interactive {
+  cursor: crosshair;
+}
+
+/* Clicks go through pins and lines to the map, so they move the locate mark */
+#map.is-locating .leaflet-marker-icon,
+#map.is-locating .leaflet-overlay-pane path {
+  pointer-events: none;
+}
+
+.locate-marker::before,
+.locate-marker::after {
+  content: "";
+  position: absolute;
+  background: #c00000;
+  box-shadow: 0 0 0 1px #fff;
+}
+
+.locate-marker::before {
+  left: 11px;
+  width: 2px;
+  height: 100%;
+}
+
+.locate-marker::after {
+  top: 11px;
+  width: 100%;
+  height: 2px;
 }
