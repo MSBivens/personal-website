@@ -5,6 +5,7 @@ import {
   type ConditionalPropertyCallback,
   type NumberRule,
 } from 'sanity'
+import {connectionsField} from './connection'
 import {API_VERSION, TYPE_IDS, publishedId, typeIdOf} from './ids'
 
 const MAP_URL = 'https://www.msbivens.com/one-for-all'
@@ -277,6 +278,7 @@ export const pin = defineType({
       description: 'Leave a blank line between paragraphs.',
       hidden: isPostOffice,
     }),
+    connectionsField(isPostOffice),
   ],
   preview: {
     select: {

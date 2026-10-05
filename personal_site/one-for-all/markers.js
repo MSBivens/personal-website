@@ -2,7 +2,7 @@
 // Pins attached to a Hub get no marker of their own; they're listed in the Hub's panel.
 import { toLatLng, isLocating } from "./view.js";
 import { FALLBACK_ICON, pinIcon, sanityIcon } from "./icons.js";
-import { pinsById, placesById, typesById } from "./state.js";
+import { pinsById, placesById, typesById, waypointsById } from "./state.js";
 import { showPin } from "./popup.js";
 import { TYPE } from "./data.js";
 
@@ -13,11 +13,12 @@ export const typeLayers = new Map();
 export const isDimmed = (pin) => Boolean(pin.status && pin.status.style && pin.status.style !== "normal");
 
 // Where a pin sits for drawing lines: its own spot, or its Hub's spot if it's attached
-// (`hub` is then that place). Null when it isn't on the map at all.
+// (`hub` is then that place). x/y are image pixels. Null when it isn't on the map at all.
 export function anchorOf(entry) {
-  if (entry.pin.visibility !== "attached") return { latlng: toLatLng(entry.pin.x, entry.pin.y), hub: null };
-  const { place } = entry;
-  return place && place.isHub ? { latlng: toLatLng(place.location.x, place.location.y), hub: place } : null;
+  const { pin, place } = entry;
+  const at = (x, y, hub) => ({ x, y, latlng: toLatLng(x, y), hub });
+  if (pin.visibility !== "attached") return at(pin.x, pin.y, null);
+  return place && place.isHub ? at(place.location.x, place.location.y, place) : null;
 }
 
 export function addPin(pin) {
@@ -28,14 +29,17 @@ export function addPin(pin) {
     return;
   }
   // Post Offices are only waypoints for communication lines; they never get a marker.
-  if (pin.typeId === TYPE.postOffice) return;
+  if (pin.typeId === TYPE.postOffice) {
+    waypointsById.set(pin.id, pin);
+    return;
+  }
 
   const place = placesById.get(pin.locationId) || null;
   if (attached && !(place && place.isHub)) {
     console.warn(`${pin.name} is attached to a Location that isn't a Hub, so it only shows in that Location's panel.`);
   }
   const icon = sanityIcon(pin.icon) || sanityIcon(pin.rank && pin.rank.icon) || type.icon || FALLBACK_ICON;
-  const entry = { pin, type, marker: null, icon, place, reports: [] };
+  const entry = { pin, type, marker: null, icon, place, reports: [], links: [] };
   pinsById.set(pin.id, entry);
   if (place) place.entries.push(entry);
   if (attached) return;

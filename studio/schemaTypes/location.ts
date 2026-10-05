@@ -1,4 +1,5 @@
 import {defineField, defineType, type NumberRule} from 'sanity'
+import {connectionsField} from './connection'
 import {API_VERSION, publishedId} from './ids'
 
 const isHub = (document: unknown) => Boolean((document as {showAsHub?: boolean} | undefined)?.showAsHub)
@@ -94,6 +95,8 @@ export const location = defineType({
       rows: 4,
       description: 'Notes about this place, shown in its panel on the map. Leave a blank line between paragraphs.',
     }),
+    // Lines from a Location start at its Hub, or at its X/Y if it isn't one (no X/Y, no line).
+    connectionsField(),
   ],
   orderings: [{title: 'Name', name: 'nameAsc', by: [{field: 'name', direction: 'asc'}]}],
   preview: {

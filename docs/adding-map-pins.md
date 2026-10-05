@@ -16,6 +16,7 @@ Pins on the map at `/one-for-all` are edited in **Sanity Studio**:
 | **Settings → Pin Types** | Each type's name, plural, icon, position in the legend, and **Suggested details** (the Details rows a new pin of that type starts with). Add a new type here and it gets its own list and legend entry, no code needed. |
 | **Settings → Statuses** | Each type's statuses and how they look on the map (Normal, Dimmed or Faded). |
 | **Settings → Ranks** | Member ranks and their icons. |
+| **Settings → Relationship Types** | The kinds of lines you can draw between records, and how each looks. See *Relationship lines* below. |
 
 The starting types are Member, Enemy, Resource, Safe House, Landmark, NPC, Soul Item, Rumor, World Event, Dungeon, Quest and Post Office, with Win98 placeholder icons you can replace. Those twelve can be renamed but not deleted, because the map's code relies on them. Post Offices never appear on the map; they're waypoints for communication lines.
 
@@ -85,11 +86,50 @@ If you turn **Show as Hub** off while pins are attached to it, Studio warns you:
 
 ## The network lines
 
-Tick **Network lines** in the map's **Legend** box (bottom-left) to draw a line from each member to whoever they report to. Lines from members whose status is Dimmed or Faded (e.g. Compromised or Dead) are dashed. Hover over a line to see who it connects.
+Tick **Network lines** in the **Lines** section of the map's **Legend** box (bottom-left) to draw a line from each member to whoever they report to. Lines from members whose status is Dimmed or Faded (e.g. Compromised or Dead) are dashed. Hover over a line to see who it connects.
 
 In a pop-up, the **Reports to** and **Direct reports** names are links. Click one to fly to that pin.
 
-The Legend's other checkboxes show or hide each pin type and the Hubs. They only affect the map; Hub panels always list everything. The map remembers your choices on that browser.
+## Relationship lines
+
+Besides who-reports-to-whom, you can draw any relationship between two records, for example an NPC's tie to a Dungeon, or the route a member's letters take.
+
+**1. Set up the kinds of line** under **Settings → Relationship Types**. Two starters exist (*Communication* and *Significant tie*); change or delete them freely. Each type has:
+
+| Field | Options |
+|---|---|
+| **Colour** | One of ten colours chosen to stay readable on the map. (Navy is kept for the network lines.) |
+| **Pattern** | Solid, Dashed, Dotted, Dash-dot or Long dash. |
+| **Width** | Thin, Normal or Thick. |
+| **Direction** | None, **Arrow** (an arrowhead at the far end) or **Flowing** (the line animates toward the far end). |
+| **Shape** | Straight or Curved. |
+| **Shown by default** | Whether it's ticked in the legend the first time someone opens the map. |
+
+**2. Add the connection** on the record it starts from (pins and Locations both have a **Connections** list):
+
+| Field | What to put |
+|---|---|
+| **Relationship** | One of your Relationship Types. |
+| **To** | Any pin or Location. |
+| **Via** | *Optional.* Post Offices the line passes through, in order. Use this for letter routes: the line goes from the sender through each Post Office to the recipient. |
+| **Label** | *Optional.* Shown when hovering the line. |
+| **Notes** | *Optional.* Shown with the connection in pop-ups. |
+
+A record can have as many connections as you like. Each one shows in **both ends'** pop-ups (→ on the record it's on, ← on the other end), and the names there are links.
+
+How lines are placed:
+- Lines from a pin **attached to a Hub** start at the Hub. Lines between two pins in the **same Hub** are listed in the Hub's panel under **Lines here** instead.
+- A line to a **Location** ends at its Hub, or at the Location's **X/Y** if it isn't a Hub (no X/Y, no line; it's still listed in pop-ups).
+- Connections to **Hidden** or unpublished records aren't drawn or listed.
+- When several lines join the same two points they're bowed apart automatically, so they don't sit on top of each other.
+
+## The legend
+
+The **Legend** (bottom-left) has two sections, each with **All** / **None** buttons and a ▾ to fold it away:
+- **Pins** shows or hides each pin type and the Hubs.
+- **Lines** shows or hides the network lines and each relationship type. A line only shows when the pins at both ends are shown too.
+
+The legend only affects the map: pop-ups and Hub panels always list everything. The map remembers your choices on that browser. On a phone the legend starts minimised.
 
 ## Moving or removing a pin
 
