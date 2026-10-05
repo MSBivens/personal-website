@@ -1,8 +1,12 @@
 // The Legend box: show or hide each Pin Type, and toggle the network lines.
 import { map } from "./view.js";
-import { pinsById, typesById } from "./state.js";
+import { pinsById, placesById, typesById } from "./state.js";
 import { typeLayers } from "./markers.js";
 import { networkLayer, networkLinks } from "./network.js";
+import { HUB_ICON, hubLayer } from "./hubs.js";
+
+// Legend key for the Hubs row (Pin Type ids never look like this).
+const HUBS = "hubs";
 
 // v2: types are keyed by their Pin Type id now, so older saved choices don't apply.
 const LEGEND_KEY = "one-for-all-legend-v2";
@@ -28,16 +32,20 @@ function saveLegendState() {
 }
 
 function refreshMap() {
+  const { hidden } = legendState;
   for (const [typeId, layer] of typeLayers) {
-    if (legendState.hidden.has(typeId)) layer.remove();
+    if (hidden.has(typeId)) layer.remove();
     else layer.addTo(map);
   }
+  if (hidden.has(HUBS)) hubLayer.remove();
+  else hubLayer.addTo(map);
+
+  // A line shows when both ends' types are shown, and their Hubs too if they sit in one.
+  const showing = (entry, hub) => !hidden.has(entry.pin.typeId) && !(hub && hidden.has(HUBS));
   networkLayer.clearLayers();
   if (!legendState.network) return;
-  for (const { line, from, to } of networkLinks) {
-    if (!legendState.hidden.has(from.pin.typeId) && !legendState.hidden.has(to.pin.typeId)) {
-      networkLayer.addLayer(line);
-    }
+  for (const { line, from, to, fromHub, toHub } of networkLinks) {
+    if (showing(from, fromHub) && showing(to, toHub)) networkLayer.addLayer(line);
   }
 }
 
@@ -92,7 +100,8 @@ const Legend = L.Control.extend({
     controls.append(toggle);
     titleBar.append(title, controls);
 
-    // Only types that have pins on the map, in each type's legend order.
+    // Only types that have pins (on the map or inside Hubs), in each type's legend order.
+    // Unticking a type hides its markers and lines; Hub panels still list everything.
     const counts = new Map();
     for (const { pin } of pinsById.values()) counts.set(pin.typeId, (counts.get(pin.typeId) || 0) + 1);
     const types = [...typesById.values()]
@@ -113,6 +122,20 @@ const Legend = L.Control.extend({
         legendRow([icon, type.title, count], !legendState.hidden.has(type.id), (checked) => {
           if (checked) legendState.hidden.delete(type.id);
           else legendState.hidden.add(type.id);
+        }),
+      );
+    }
+    const hubCount = [...placesById.values()].filter((place) => place.isHub).length;
+    if (hubCount) {
+      const icon = Object.assign(new Image(16, 16), { src: HUB_ICON.src, alt: "" });
+      const count = Object.assign(document.createElement("span"), {
+        className: "legend-count",
+        textContent: `(${hubCount})`,
+      });
+      body.append(
+        legendRow([icon, "Hubs", count], !legendState.hidden.has(HUBS), (checked) => {
+          if (checked) legendState.hidden.delete(HUBS);
+          else legendState.hidden.add(HUBS);
         }),
       );
     }

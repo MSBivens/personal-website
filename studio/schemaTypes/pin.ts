@@ -1,4 +1,4 @@
-import {defineField, defineType, type ConditionalPropertyCallback} from 'sanity'
+import {defineField, defineType, type ConditionalPropertyCallback, type NumberRule} from 'sanity'
 import {API_VERSION, TYPE_IDS, publishedId, typeIdOf} from './ids'
 
 const MAP_URL = 'https://www.msbivens.com/one-for-all'
@@ -8,6 +8,26 @@ const notMember: ConditionalPropertyCallback = ({document}) => typeIdOf(document
 const isPostOffice: ConditionalPropertyCallback = ({document}) =>
   typeIdOf(document) === TYPE_IDS.postOffice
 
+const VISIBILITY = [
+  {title: 'Map Pin', value: 'pin'},
+  {title: 'Attached to Location', value: 'attached'},
+  {title: 'Hidden', value: 'hidden'},
+]
+// Pins saved before Map Visibility existed count as Map Pins.
+const visibilityOf = (document: unknown) =>
+  (document as {visibility?: string} | undefined)?.visibility ?? 'pin'
+// X/Y are only used by Map Pins and Post Offices; Attached pins sit at their Hub.
+const needsPosition = (document: unknown) =>
+  typeIdOf(document) === TYPE_IDS.postOffice || visibilityOf(document) === 'pin'
+const positionRule = (max: number) => (rule: NumberRule) =>
+  rule
+    .integer()
+    .min(0)
+    .max(max)
+    .custom((value, context) =>
+      value === undefined && needsPosition(context.document) ? 'Map Pins need a position.' : true,
+    )
+
 export const pin = defineType({
   name: 'pin',
   title: 'Pin',
@@ -16,7 +36,7 @@ export const pin = defineType({
     {
       name: 'position',
       title: 'Map position',
-      description: `Open ${MAP_URL}, click Locate, then click the spot and copy the numbers here.`,
+      description: `Open ${MAP_URL}, click Locate, then click the spot and copy the numbers here. Not needed for pins attached to a Hub.`,
       options: {columns: 2},
     },
   ],
@@ -42,6 +62,32 @@ export const pin = defineType({
       type: 'reference',
       to: [{type: 'location'}],
       description: 'The town or region. Optional. Add new ones under Locations.',
+    }),
+    defineField({
+      name: 'visibility',
+      title: 'Map Visibility',
+      type: 'string',
+      description:
+        'Map Pin: its own marker. Attached to Location: shown only inside its Location\'s Hub. Hidden: kept off the map, but still public; keep secrets as unpublished drafts.',
+      options: {list: VISIBILITY, layout: 'radio', direction: 'horizontal'},
+      initialValue: 'pin',
+      hidden: isPostOffice,
+      validation: (rule) =>
+        rule.custom(async (value, context) => {
+          if (value !== 'attached') return true
+          const locationId = (context.document?.location as {_ref?: string} | undefined)?._ref
+          if (!locationId) return 'Attached pins need a Location: pick the Hub this belongs to.'
+          // The map reads published data, so the published Location must be a Hub.
+          const place = await context
+            .getClient({apiVersion: API_VERSION})
+            .withConfig({perspective: 'published'})
+            .fetch<{name?: string; showAsHub?: boolean} | null>('*[_id == $id][0]{name, showAsHub}', {
+              id: locationId,
+            })
+          return place?.showAsHub
+            ? true
+            : `${place?.name ?? 'This Location'} isn't a Hub yet. Turn on "Show as Hub" on it and publish it, or choose Map Pin.`
+        }),
     }),
     defineField({
       name: 'status',
@@ -110,14 +156,16 @@ export const pin = defineType({
       title: 'X',
       type: 'number',
       fieldset: 'position',
-      validation: (rule) => rule.required().integer().min(0).max(8192),
+      hidden: ({document}) => !needsPosition(document),
+      validation: positionRule(8192),
     }),
     defineField({
       name: 'y',
       title: 'Y',
       type: 'number',
       fieldset: 'position',
-      validation: (rule) => rule.required().integer().min(0).max(5837),
+      hidden: ({document}) => !needsPosition(document),
+      validation: positionRule(5837),
     }),
     defineField({
       name: 'icon',
@@ -147,15 +195,17 @@ export const pin = defineType({
       rankTitle: 'rank.title',
       rankIcon: 'rank.icon',
       icon: 'icon',
+      visibility: 'visibility',
     },
-    prepare({title, typeId, typeTitle, typeIcon, location, statusTitle, statusStyle, rankTitle, rankIcon, icon}) {
+    prepare({title, typeId, typeTitle, typeIcon, location, statusTitle, statusStyle, rankTitle, rankIcon, icon, visibility}) {
       const isMember = typeId === TYPE_IDS.member
       const label = isMember && rankTitle ? `${typeTitle} (${rankTitle})` : typeTitle
       // Only call out statuses that change how the pin looks, e.g. "Compromised".
       const status = statusStyle && statusStyle !== 'normal' ? statusTitle : undefined
+      const where = visibility === 'attached' ? `in ${location ?? '?'} hub` : location
       return {
         title,
-        subtitle: [label, status, location].filter(Boolean).join(' · '),
+        subtitle: [label, status, where, visibility === 'hidden' && 'Hidden'].filter(Boolean).join(' · '),
         media: icon?.asset ? icon : isMember && rankIcon?.asset ? rankIcon : typeIcon,
       }
     },

@@ -16,13 +16,19 @@ const ASSET = `{ url, extension, "width": metadata.dimensions.width }`;
 // stored them as text ("member", "Crimmor", "active"); the query maps both onto the
 // same shape so the map works before and after the migration.
 // TODO(phase 6): drop the text fallbacks once production is migrated.
+// Hidden pins aren't fetched at all (they're still public through Sanity's API, though).
 const QUERY = `{
   "types": *[_type == "pinType"] | order(legendOrder asc){
     "id": _id, title, plural, legendOrder, "icon": icon.asset->${ASSET}
   },
-  "pins": *[_type == "pin"]{
+  "locations": *[_type == "location"]{
+    "id": _id, name, description, "isHub": showAsHub == true, x, y, "icon": icon.asset->${ASSET}
+  },
+  "pins": *[_type == "pin" && coalesce(visibility, "pin") != "hidden"]{
     "id": _id, name, x, y, description,
+    "visibility": coalesce(visibility, "pin"),
     "typeId": coalesce(type._ref, "pinType-" + type),
+    "locationId": location._ref,
     "location": coalesce(location->name, location),
     "icon": icon.asset->${ASSET},
     "status": select(

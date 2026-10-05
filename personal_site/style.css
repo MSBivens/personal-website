@@ -632,6 +632,130 @@ html {
   max-width: calc(100vw - 32px);
 }
 
+.place-window {
+  width: 380px;
+  max-width: calc(100vw - 32px);
+}
+
+.dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* "◀ Back to <Hub>" sits on the left, OK on the right */
+#pin-back {
+  margin-right: auto;
+}
+
+/* Hub marker: the icon with a count badge in the corner */
+.hub-pin .hub-icon {
+  position: relative;
+  display: block;
+  width: 32px;
+  height: 32px;
+}
+
+.hub-pin img {
+  display: block;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.hub-count {
+  position: absolute;
+  right: -6px;
+  bottom: -5px;
+  min-width: 14px;
+  padding: 0 2px;
+  box-sizing: border-box;
+  background: var(--win-blue);
+  color: #fff;
+  border: 1px solid #fff;
+  font: bold 10px/12px "Tahoma", sans-serif;
+  text-align: center;
+}
+
+/* Location panel: a white Explorer-style list, grouped by type */
+.place-records {
+  background: #fff;
+  border: 2px inset #fff;
+  padding: 4px;
+  margin-top: 8px;
+  max-height: 45vh;
+  overflow-y: auto;
+  font-size: 12px;
+}
+
+.place-group {
+  font-weight: bold;
+  margin: 8px 2px 2px;
+}
+
+.place-group:first-child {
+  margin-top: 0;
+}
+
+.place-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.place-list li {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 1px 0;
+}
+
+.place-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 1px 3px;
+  background: none;
+  border: 1px dotted transparent;
+  font: inherit;
+  color: #000;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Win95 selection: navy highlight */
+.place-item:hover,
+.place-item:focus-visible {
+  background: var(--win-blue);
+  color: #fff;
+  border-color: #fff;
+  outline: none;
+}
+
+.place-item img {
+  image-rendering: pixelated;
+  object-fit: contain;
+}
+
+.place-item img.smooth {
+  image-rendering: auto;
+}
+
+.place-item img.is-dimmed {
+  filter: grayscale(1) opacity(0.8);
+}
+
+.place-item img.is-faded {
+  filter: grayscale(1) opacity(0.45);
+}
+
+.place-tag {
+  color: #666;
+  font-size: 11px;
+}
+
 .pin-type {
   display: flex;
   align-items: center;
