@@ -53,18 +53,22 @@
             <p id="place-hint" style="margin-top: 0">
               Click the map where the new pin should go.
             </p>
-            <textarea
-              id="place-snippet"
-              class="win-input"
-              rows="9"
-              readonly
-              aria-label="Pin JSON to paste into pins.json"
-            ></textarea>
-            <div style="text-align: right">
-              <button type="button" class="win-btn" id="place-copy" disabled>
+            <div class="place-coords">
+              <label for="place-x">X</label>
+              <input id="place-x" class="win-input" readonly />
+              <button type="button" class="win-btn place-copy" data-target="place-x" disabled>
+                Copy
+              </button>
+              <label for="place-y">Y</label>
+              <input id="place-y" class="win-input" readonly />
+              <button type="button" class="win-btn place-copy" data-target="place-y" disabled>
                 Copy
               </button>
             </div>
+            <p style="margin-bottom: 0">
+              Enter these in the pin's <b>X</b> and <b>Y</b> fields in
+              <a id="place-studio" href="#" target="_blank" rel="noopener">Sanity Studio</a>.
+            </p>
           </div>
         </div>
       </div>
@@ -88,10 +92,11 @@
         </div>
         <div class="prop-body">
           <div class="pin-type">
-            <img id="pin-icon" src="" width="32" alt="" />
+            <img id="pin-icon" src="" width="32" height="32" alt="" />
             <b id="pin-type"></b>
           </div>
           <hr />
+          <div id="pin-details" class="pin-details"></div>
           <div id="pin-description" class="pin-description"></div>
           <div style="text-align: right; margin-top: 10px">
             <button type="button" class="win-btn pin-close" id="pin-ok">

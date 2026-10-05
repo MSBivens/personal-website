@@ -519,12 +519,81 @@ html {
 
 .map-pin {
   image-rendering: pixelated;
+  object-fit: contain;
   filter: drop-shadow(1px 1px 0 #fff) drop-shadow(-1px -1px 0 #fff);
+}
+
+/* Rank icons are uploaded art, not Win98 pixel icons, so scale them smoothly */
+.map-pin.rank-pin {
+  image-rendering: auto;
+}
+
+/* Members whose Status isn't Active. Repeats the drop-shadow because filter doesn't merge. */
+.map-pin.is-compromised {
+  filter: grayscale(1) opacity(0.8) drop-shadow(1px 1px 0 #fff) drop-shadow(-1px -1px 0 #fff);
+}
+
+.map-pin.is-dead {
+  filter: grayscale(1) opacity(0.45) drop-shadow(1px 1px 0 #fff) drop-shadow(-1px -1px 0 #fff);
 }
 
 .map-pin:focus-visible {
   outline: 2px dotted var(--win-blue);
   outline-offset: 2px;
+}
+
+/* Win95 tooltip, used for the network line labels */
+#map .leaflet-tooltip {
+  background: #ffffe1;
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 2px 4px;
+  font: 11px "Tahoma", sans-serif;
+}
+
+#map .leaflet-tooltip::before {
+  display: none;
+}
+
+.map-legend {
+  width: auto;
+  min-width: 150px;
+}
+
+.map-legend .prop-body[hidden] {
+  display: none;
+}
+
+.map-legend hr {
+  margin: 6px 0;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 1px 0;
+  cursor: pointer;
+}
+
+.legend-row input {
+  margin: 0;
+}
+
+.legend-row img {
+  image-rendering: pixelated;
+}
+
+.legend-count {
+  color: #666;
+}
+
+.legend-line {
+  display: inline-block;
+  width: 16px;
+  border-top: 2px solid var(--win-blue);
 }
 
 /* ID selector so these beat Leaflet's own .leaflet-touch rules */
@@ -568,6 +637,50 @@ html {
 
 .pin-type img {
   image-rendering: pixelated;
+  object-fit: contain;
+}
+
+.pin-type img.is-rank {
+  image-rendering: auto;
+}
+
+.pin-details .prop-row {
+  margin-bottom: 4px;
+}
+
+.pin-details .prop-label {
+  width: 95px;
+  flex-shrink: 0;
+}
+
+.pin-details .prop-value {
+  flex: 1;
+  min-width: 0;
+}
+
+.pin-details:not(:empty) {
+  margin-bottom: 10px;
+}
+
+.pin-rank-icon {
+  vertical-align: middle;
+  margin-right: 4px;
+  object-fit: contain;
+}
+
+/* Reports to / Direct reports: buttons that look like links */
+.pin-link {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--win-blue);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.pin-link:focus-visible {
+  outline: 1px dotted #000;
 }
 
 .pin-description {
@@ -575,6 +688,10 @@ html {
   overflow-y: auto;
   font-size: 13px;
   line-height: 1.5;
+}
+
+.pin-description p {
+  white-space: pre-line;
 }
 
 .pin-description p:first-child {
@@ -596,7 +713,13 @@ html {
   display: none;
 }
 
-.place-panel textarea {
-  resize: none;
-  font-size: 11px;
+.place-coords {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 6px;
+}
+
+.place-coords .win-input {
+  margin-bottom: 0;
 }
