@@ -7,6 +7,9 @@ const SANITY = { projectId: "ohnkcmr7", dataset: "production", apiVersion: "2025
 // Pin Types the code treats specially. Same IDs as studio/schemaTypes/ids.ts.
 export const TYPE = {
   member: "pinType-member",
+  npc: "pinType-npc",
+  soulItem: "pinType-soulItem",
+  quest: "pinType-quest",
   postOffice: "pinType-postOffice",
 };
 
@@ -38,10 +41,15 @@ const QUERY = `{
         "style": select(status == "compromised" => "dimmed", status == "dead" => "faded", "normal")
       }
     ),
+    "details": details[defined(value)]{ label, value },
     (type == "member" || type._ref == "${TYPE.member}") => {
       "reportsTo": reportsTo._ref,
-      "rank": rank->{ title, order, "icon": icon.asset->${ASSET} }
-    }
+      "rank": rank->{ title, order, "icon": icon.asset->${ASSET} },
+      "recruitedBy": recruitedBy[]->name
+    },
+    type._ref == "${TYPE.soulItem}" => { "partyMember": partyMember->name },
+    type._ref == "${TYPE.npc}" => { attitude },
+    type._ref == "${TYPE.quest}" => { "questGiver": questGiver._ref }
   }
 }`;
 

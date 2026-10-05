@@ -25,5 +25,8 @@ export const FIXED_TYPE_IDS: string[] = Object.values(TYPE_IDS)
 export const typeIdOf = (document: unknown) =>
   (document as {type?: {_ref?: string}} | undefined)?.type?._ref
 
+/** A short random `_key` for array items Studio didn't create itself. */
+export const randomKey = () => Math.random().toString(36).slice(2, 12)
+
 /** A document's published ID, whether it's open as a draft or not. */
 export const publishedId = (id: string) => id.replace(/^drafts\./, '')

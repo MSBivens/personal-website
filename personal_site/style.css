@@ -779,6 +779,7 @@ html {
 .pin-details .prop-value {
   flex: 1;
   min-width: 0;
+  white-space: pre-line; /* Details values can span lines */
 }
 
 .pin-details:not(:empty) {

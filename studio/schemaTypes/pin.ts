@@ -1,12 +1,30 @@
-import {defineField, defineType, type ConditionalPropertyCallback, type NumberRule} from 'sanity'
+import {
+  defineArrayMember,
+  defineField,
+  defineType,
+  type ConditionalPropertyCallback,
+  type NumberRule,
+} from 'sanity'
 import {API_VERSION, TYPE_IDS, publishedId, typeIdOf} from './ids'
 
 const MAP_URL = 'https://www.msbivens.com/one-for-all'
 
-const notMember: ConditionalPropertyCallback = ({document}) => typeIdOf(document) !== TYPE_IDS.member
+// Hides a field unless the pin is of the given type (for the type-specific fields).
+const onlyFor =
+  (typeId: string): ConditionalPropertyCallback =>
+  ({document}) =>
+    typeIdOf(document) !== typeId
+const notMember = onlyFor(TYPE_IDS.member)
 // Post Offices are only waypoints for communication lines, so they just need a name and a spot.
 const isPostOffice: ConditionalPropertyCallback = ({document}) =>
   typeIdOf(document) === TYPE_IDS.postOffice
+
+const ATTITUDES = [
+  {title: 'Friendly', value: 'friendly'},
+  {title: 'Neutral', value: 'neutral'},
+  {title: 'Hostile', value: 'hostile'},
+  {title: 'Unknown', value: 'unknown'},
+]
 
 const VISIBILITY = [
   {title: 'Map Pin', value: 'pin'},
@@ -152,6 +170,58 @@ export const pin = defineType({
       },
     }),
     defineField({
+      name: 'recruitedBy',
+      title: 'Recruited By',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'partyMember'}], options: {disableNew: true}}],
+      description: 'The party members who brought them into the OFA. Add them under Party Members.',
+      hidden: notMember,
+      validation: (rule) => rule.unique(),
+    }),
+    defineField({
+      name: 'partyMember',
+      title: 'Party member',
+      type: 'reference',
+      to: [{type: 'partyMember'}],
+      description: 'Whose Soul Item this is. Each party member has one.',
+      hidden: onlyFor(TYPE_IDS.soulItem),
+      options: {disableNew: true},
+      validation: (rule) =>
+        rule.custom(async (value, context) => {
+          if (typeIdOf(context.document) !== TYPE_IDS.soulItem) return true
+          if (!value?._ref) return 'Soul Items need a party member.'
+          const id = publishedId(context.document?._id ?? '')
+          const other = await context
+            .getClient({apiVersion: API_VERSION})
+            .withConfig({perspective: 'raw'})
+            .fetch<string | null>(
+              '*[_type == "pin" && type._ref == $type && partyMember._ref == $member && !(_id in [$id, $draftId])][0].name',
+              {type: TYPE_IDS.soulItem, member: value._ref, id, draftId: `drafts.${id}`},
+            )
+          return other ? `This party member already has a Soul Item: ${other}.` : true
+        }),
+    }),
+    defineField({
+      name: 'attitude',
+      title: 'Attitude',
+      type: 'string',
+      description: 'How they feel about the party.',
+      options: {list: ATTITUDES, layout: 'radio', direction: 'horizontal'},
+      hidden: onlyFor(TYPE_IDS.npc),
+    }),
+    defineField({
+      name: 'questGiver',
+      title: 'Quest giver',
+      type: 'reference',
+      to: [{type: 'pin'}],
+      description: 'The NPC or member who gave this quest.',
+      hidden: onlyFor(TYPE_IDS.quest),
+      options: {
+        filter: 'type._ref in [$npc, $member]',
+        filterParams: {npc: TYPE_IDS.npc, member: TYPE_IDS.member},
+      },
+    }),
+    defineField({
       name: 'x',
       title: 'X',
       type: 'number',
@@ -175,6 +245,31 @@ export const pin = defineType({
       hidden: isPostOffice,
     }),
     defineField({
+      name: 'details',
+      title: 'Details',
+      type: 'array',
+      description:
+        'Short facts shown as rows in the pop-up, e.g. Reward: 500 gp. New pins start with their type\'s suggested rows; empty rows are left out.',
+      hidden: isPostOffice,
+      of: [
+        defineArrayMember({
+          name: 'detail',
+          title: 'Detail',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'label',
+              title: 'Label',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({name: 'value', title: 'Value', type: 'text', rows: 2}),
+          ],
+          preview: {select: {title: 'label', subtitle: 'value'}},
+        }),
+      ],
+    }),
+    defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
@@ -196,10 +291,17 @@ export const pin = defineType({
       rankIcon: 'rank.icon',
       icon: 'icon',
       visibility: 'visibility',
+      owner: 'partyMember.name',
+      attitude: 'attitude',
     },
-    prepare({title, typeId, typeTitle, typeIcon, location, statusTitle, statusStyle, rankTitle, rankIcon, icon, visibility}) {
+    prepare({title, typeId, typeTitle, typeIcon, location, statusTitle, statusStyle, rankTitle, rankIcon, icon, visibility, owner, attitude}) {
       const isMember = typeId === TYPE_IDS.member
-      const label = isMember && rankTitle ? `${typeTitle} (${rankTitle})` : typeTitle
+      // e.g. "Member (Hand)", "Soul Item (Caelmorn)", "NPC (Hostile)"
+      const extra =
+        (isMember && rankTitle) ||
+        (typeId === TYPE_IDS.soulItem && owner) ||
+        (typeId === TYPE_IDS.npc && ATTITUDES.find((a) => a.value === attitude)?.title)
+      const label = extra ? `${typeTitle} (${extra})` : typeTitle
       // Only call out statuses that change how the pin looks, e.g. "Compromised".
       const status = statusStyle && statusStyle !== 'normal' ? statusTitle : undefined
       const where = visibility === 'attached' ? `in ${location ?? '?'} hub` : location

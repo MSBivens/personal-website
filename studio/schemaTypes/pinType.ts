@@ -33,6 +33,15 @@ export const pinType = defineType({
       description: 'Lower numbers come first in the legend and the Studio list.',
       validation: (rule) => rule.required().integer(),
     }),
+    defineField({
+      name: 'suggestedDetails',
+      title: 'Suggested details',
+      type: 'array',
+      of: [{type: 'string'}],
+      description:
+        'Labels for the Details rows a new pin of this type starts with, e.g. "Reward". You can still add, remove or rename rows on each pin.',
+      options: {layout: 'tags'},
+    }),
   ],
   orderings: [
     {title: 'Legend order', name: 'legendOrderAsc', by: [{field: 'legendOrder', direction: 'asc'}]},

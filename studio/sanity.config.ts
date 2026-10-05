@@ -2,7 +2,7 @@ import {defineConfig, type InitialValueResolverContext} from 'sanity'
 import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
-import {API_VERSION, FIXED_TYPE_IDS} from './schemaTypes/ids'
+import {API_VERSION, FIXED_TYPE_IDS, randomKey} from './schemaTypes/ids'
 import {structure} from './structure'
 
 // Used by the per-type lists in structure.ts; they need a type, so they're kept out of
@@ -28,15 +28,25 @@ export default defineConfig({
         title: 'Pin',
         schemaType: 'pin',
         parameters: [{name: 'typeId', type: 'string'}],
-        // A new pin starts with the list's type and that type's first status.
+        // A new pin starts with the list's type, that type's first status, and a Details
+        // row for each of the type's suggested details.
         value: async ({typeId}: {typeId: string}, {getClient}: InitialValueResolverContext) => {
-          const firstStatus = await getClient({apiVersion: API_VERSION}).fetch<string | null>(
-            '*[_type == "pinStatus" && pinType._ref == $typeId] | order(order asc)[0]._id',
+          const {firstStatus, suggested} = await getClient({apiVersion: API_VERSION}).fetch<{
+            firstStatus: string | null
+            suggested: string[] | null
+          }>(
+            `{
+              "firstStatus": *[_type == "pinStatus" && pinType._ref == $typeId] | order(order asc)[0]._id,
+              "suggested": *[_id == $typeId][0].suggestedDetails
+            }`,
             {typeId},
           )
           return {
             type: {_type: 'reference', _ref: typeId},
             ...(firstStatus ? {status: {_type: 'reference', _ref: firstStatus}} : {}),
+            ...(suggested?.length
+              ? {details: suggested.map((label) => ({_key: randomKey(), _type: 'detail', label}))}
+              : {}),
           }
         },
       },
