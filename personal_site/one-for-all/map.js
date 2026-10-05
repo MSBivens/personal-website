@@ -5,7 +5,6 @@ const TILE_URL = "/one-for-all/tiles/{z}/{y}/{x}.webp";
 // Pins are edited in Sanity Studio (see docs/adding-map-pins.md). The dataset is
 // public, so published pins are read straight from Sanity's CDN without a token.
 const SANITY = { projectId: "ohnkcmr7", dataset: "production", apiVersion: "2025-02-19" };
-const STUDIO_URL = "https://mikeybivs.sanity.studio";
 const PINS_QUERY = `*[_type == "pin"]{
   "id": _id, name, type, location, x, y, description,
   type == "member" => {
@@ -60,6 +59,8 @@ const map = L.map("map", {
 
 const toLatLng = (x, y) => map.unproject([x, y], MAP_IMAGE.maxZoom);
 const toImagePoint = (latlng) => map.project(latlng, MAP_IMAGE.maxZoom);
+// In locate mode, clicks place the locate mark instead of opening pins.
+const isLocating = () => map.getContainer().classList.contains("is-locating");
 const imageBounds = L.latLngBounds(
   toLatLng(0, MAP_IMAGE.height),
   toLatLng(MAP_IMAGE.width, 0),
@@ -182,7 +183,9 @@ pinModal.addEventListener("click", (e) => {
   if (e.target === pinModal) closePin();
 });
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") closePin();
+  if (e.key !== "Escape") return;
+  if (pinModal.style.display === "flex") closePin();
+  else if (isLocating()) stopLocating();
 });
 
 function showError(message) {
@@ -215,12 +218,14 @@ function addPin(pin) {
 
   const entry = { pin, type, marker, iconSrc, reports: [] };
   pinsById.set(pin.id, entry);
-  marker.on("click", () => showPin(entry));
+  marker.on("click", () => {
+    if (!isLocating()) showPin(entry);
+  });
   // Leaflet 1.9 makes markers focusable but doesn't treat Enter/Space as a click.
   // The element is recreated whenever a legend filter re-adds the marker, so listen on each add.
   marker.on("add", () => {
     marker.getElement().addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
+      if ((e.key === "Enter" || e.key === " ") && !isLocating()) {
         e.preventDefault();
         showPin(entry);
       }
@@ -388,42 +393,73 @@ fetch(PINS_URL)
   })
   .catch((err) => showError(err.message));
 
-/* ---------- Placement mode (/one-for-all?place) ---------- */
-if (new URLSearchParams(location.search).has("place")) {
-  const panel = document.getElementById("place-panel");
-  const hint = document.getElementById("place-hint");
-  const copyButtons = document.querySelectorAll(".place-copy");
-  let placeMarker = null;
-  document.getElementById("place-studio").href = STUDIO_URL;
-  panel.hidden = false;
+/* ---------- Locate mode: click the map to get X/Y to send to whoever updates it ---------- */
+const locateToggle = document.getElementById("locate-toggle");
+const locatePanel = document.getElementById("locate-panel");
+const locateHint = document.getElementById("locate-hint");
+const locateNote = document.getElementById("locate-note");
+const locateOutput = document.getElementById("locate-output");
+const locateCopy = document.getElementById("locate-copy");
+const LOCATE_HINT = locateHint.textContent;
+const locateIcon = L.divIcon({ className: "locate-marker", iconSize: [24, 24], iconAnchor: [12, 12] });
+let locateMarker = null;
+let locatePoint = null;
 
-  map.on("click", (e) => {
-    const p = toImagePoint(e.latlng);
-    const x = Math.round(p.x);
-    const y = Math.round(p.y);
-    if (x < 0 || y < 0 || x > MAP_IMAGE.width || y > MAP_IMAGE.height) return;
-
-    if (placeMarker) placeMarker.setLatLng(toLatLng(x, y));
-    else placeMarker = L.marker(toLatLng(x, y), { icon: pinIcon(PIN_TYPES.landmark.src), keyboard: false }).addTo(map);
-
-    hint.textContent = "Click again to move the marker.";
-    document.getElementById("place-x").value = x;
-    document.getElementById("place-y").value = y;
-    copyButtons.forEach((b) => {
-      b.disabled = false;
-      b.textContent = "Copy";
-    });
-  });
-
-  copyButtons.forEach((button) =>
-    button.addEventListener("click", () => {
-      const field = document.getElementById(button.dataset.target);
-      copyButtons.forEach((b) => (b.textContent = "Copy"));
-      field.select();
-      navigator.clipboard
-        .writeText(field.value)
-        .then(() => (button.textContent = "Copied!"))
-        .catch(() => (button.textContent = "Ctrl+C"));
-    }),
-  );
+function updateLocateOutput() {
+  if (!locatePoint) return;
+  const coords = `X: ${locatePoint.x}, Y: ${locatePoint.y}`;
+  const note = locateNote.value.trim();
+  locateOutput.value = note ? `${note}: ${coords}` : coords;
+  locateCopy.textContent = "Copy";
 }
+
+function onLocateClick(e) {
+  const p = toImagePoint(e.latlng);
+  const x = Math.round(p.x);
+  const y = Math.round(p.y);
+  if (x < 0 || y < 0 || x > MAP_IMAGE.width || y > MAP_IMAGE.height) return;
+
+  locatePoint = { x, y };
+  if (locateMarker) locateMarker.setLatLng(toLatLng(x, y));
+  else locateMarker = L.marker(toLatLng(x, y), { icon: locateIcon, interactive: false, keyboard: false }).addTo(map);
+  locateHint.textContent = "Click again to move the mark. Copy the text and send it to whoever updates the map.";
+  locateCopy.disabled = false;
+  updateLocateOutput();
+}
+
+function startLocating() {
+  locatePanel.hidden = false;
+  locateToggle.setAttribute("aria-pressed", "true");
+  map.getContainer().classList.add("is-locating");
+  map.on("click", onLocateClick);
+}
+
+function stopLocating() {
+  if (locatePanel.contains(document.activeElement)) locateToggle.focus();
+  locatePanel.hidden = true;
+  locateToggle.setAttribute("aria-pressed", "false");
+  map.getContainer().classList.remove("is-locating");
+  map.off("click", onLocateClick);
+  if (locateMarker) locateMarker.remove();
+  locateMarker = null;
+  locatePoint = null;
+  locateHint.textContent = LOCATE_HINT;
+  locateNote.value = "";
+  locateOutput.value = "";
+  locateCopy.disabled = true;
+  locateCopy.textContent = "Copy";
+}
+
+locateToggle.addEventListener("click", () => (isLocating() ? stopLocating() : startLocating()));
+document.getElementById("locate-close").addEventListener("click", stopLocating);
+locateNote.addEventListener("input", updateLocateOutput);
+locateCopy.addEventListener("click", () => {
+  locateOutput.select();
+  navigator.clipboard
+    .writeText(locateOutput.value)
+    .then(() => (locateCopy.textContent = "Copied!"))
+    .catch(() => (locateCopy.textContent = "Press Ctrl+C"));
+});
+
+// Old /one-for-all?place links open straight into locate mode.
+if (new URLSearchParams(location.search).has("place")) startLocating();
