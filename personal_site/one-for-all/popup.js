@@ -115,7 +115,6 @@ export function showPin(entry, { from = null } = {}) {
 
   const rows = [];
   if (place) rows.push(detailRow("Location", placeLink(place)));
-  else if (pin.location) rows.push(detailRow("Location", pin.location));
   if (pin.rank) {
     const rankIcon = sanityIcon(pin.rank.icon);
     const img = rankIcon

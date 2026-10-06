@@ -18,11 +18,8 @@ const CONNECTIONS = `connections[defined(type._ref) && defined(to._ref)]{
   "typeId": type._ref, "to": to._ref, "via": via[]._ref, label, notes
 }`;
 
-// Pins migrated in Phase 2 store type / location / status as references. Older pins
-// stored them as text ("member", "Crimmor", "active"); the query maps both onto the
-// same shape so the map works before and after the migration.
-// TODO(phase 6): drop the text fallbacks once production is migrated.
 // Hidden pins aren't fetched at all (they're still public through Sanity's API, though).
+// A pin without a Map Visibility counts as a Map Pin.
 const QUERY = `{
   "types": *[_type == "pinType"] | order(legendOrder asc){
     "id": _id, title, plural, legendOrder, "icon": icon.asset->${ASSET}
@@ -38,20 +35,13 @@ const QUERY = `{
   "pins": *[_type == "pin" && coalesce(visibility, "pin") != "hidden"]{
     "id": _id, name, x, y, description,
     "visibility": coalesce(visibility, "pin"),
-    "typeId": coalesce(type._ref, "pinType-" + type),
+    "typeId": type._ref,
     "locationId": location._ref,
-    "location": coalesce(location->name, location),
     "icon": icon.asset->${ASSET},
-    "status": select(
-      defined(status._ref) => status->{ title, style },
-      type == "member" && defined(status) => {
-        "title": select(status == "compromised" => "Compromised", status == "dead" => "Dead", "Active"),
-        "style": select(status == "compromised" => "dimmed", status == "dead" => "faded", "normal")
-      }
-    ),
+    "status": status->{ title, style },
     "details": details[defined(value)]{ label, value },
     "connections": ${CONNECTIONS},
-    (type == "member" || type._ref == "${TYPE.member}") => {
+    type._ref == "${TYPE.member}" => {
       "reportsTo": reportsTo._ref,
       "rank": rank->{ title, order, "icon": icon.asset->${ASSET} },
       "recruitedBy": recruitedBy[]->name
