@@ -72,14 +72,14 @@ export const location = defineType({
       title: 'X',
       type: 'number',
       fieldset: 'position',
-      validation: positionRule(8192),
+      validation: positionRule(4763),
     }),
     defineField({
       name: 'y',
       title: 'Y',
       type: 'number',
       fieldset: 'position',
-      validation: positionRule(5837),
+      validation: positionRule(3185),
     }),
     defineField({
       name: 'icon',
