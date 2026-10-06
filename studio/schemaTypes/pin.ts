@@ -228,7 +228,7 @@ export const pin = defineType({
       type: 'number',
       fieldset: 'position',
       hidden: ({document}) => !needsPosition(document),
-      validation: positionRule(8192),
+      validation: positionRule(4763),
     }),
     defineField({
       name: 'y',
@@ -236,7 +236,7 @@ export const pin = defineType({
       type: 'number',
       fieldset: 'position',
       hidden: ({document}) => !needsPosition(document),
-      validation: positionRule(5837),
+      validation: positionRule(3185),
     }),
     defineField({
       name: 'icon',

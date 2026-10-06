@@ -38,7 +38,7 @@ Click **Publish**.
 
 1. Open the map (<https://www.msbivens.com/one-for-all>) and click **Locate** in the toolbar above it.
 2. Zoom in on the spot. The closer you zoom, the more precise the pin will be.
-3. Click exactly where the pin should go. A red crosshair marks the spot, and the **Locate** box in the top-right shows text like `X: 3503, Y: 2618`. Add a note if you like (it goes in front of the coordinates), then click **Copy**.
+3. Click exactly where the pin should go. A red crosshair marks the spot, and the **Locate** box in the top-right shows text like `X: 1490, Y: 1196`. Add a note if you like (it goes in front of the coordinates), then click **Copy**.
 4. Click **Locate** again, the box's **X**, or press Esc to go back to browsing.
 
 You can click again as many times as you like. The box always shows the latest spot. While Locate is on, clicking a pin moves the crosshair instead of opening the pin.

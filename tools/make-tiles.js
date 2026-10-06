@@ -4,7 +4,7 @@ const path = require("path");
 const sharp = require("sharp");
 
 const TILE = 256;
-const PAD = { r: 240, g: 231, b: 202 };
+const PAD = { r: 196, g: 222, b: 239 }; // the map's sea blue, also #map's background in style.css
 
 const [src, outArg] = process.argv.slice(2);
 if (!src) {

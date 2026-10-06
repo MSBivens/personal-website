@@ -1,7 +1,7 @@
 // The Leaflet map itself, plus conversions between map positions and image pixels (X/Y).
 
 // Must match the output of `npm run tiles` (see tools/make-tiles.js).
-export const MAP_IMAGE = { width: 8192, height: 5837, maxZoom: 5 };
+export const MAP_IMAGE = { width: 4763, height: 3185, maxZoom: 5 };
 const TILE_URL = "/one-for-all/tiles/{z}/{y}/{x}.webp";
 
 export const map = L.map("map", {

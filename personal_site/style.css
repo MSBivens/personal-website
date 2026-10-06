@@ -508,7 +508,7 @@ html {
 #map {
   position: absolute;
   inset: 0;
-  background: #f0e7ca; /* matches the map's parchment border */
+  background: #c4deef; /* matches the sea at the map's edges (and the tile padding) */
   font-family: "Tahoma", sans-serif;
 }
 
