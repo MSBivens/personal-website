@@ -45,12 +45,12 @@ const QUERY = `{
     "shownByDefault": coalesce(shownByDefault, true)
   },
   "locations": *[_type == "location"]{
-    "id": _id, name, description, x, y, "icon": icon.asset->${ASSET},
+    "id": _id, "createdAt": _createdAt, name, description, x, y, "icon": icon.asset->${ASSET},
     "details": details[defined(value)]{ label, value },
     "connections": ${CONNECTIONS}
   },
   "pins": *[_type == "pin" && (type._ref == "${TYPE.postOffice}" || ${ON_MAP})]{
-    "id": _id, name, description, "x": ${OWN_X}, "y": ${OWN_Y},
+    "id": _id, "createdAt": _createdAt, name, description, "x": ${OWN_X}, "y": ${OWN_Y},
     "typeId": type._ref,
     "locationId": location._ref,
     "icon": icon.asset->${ASSET},

@@ -1,6 +1,6 @@
 // The party's trail: a dotted line through the stops in Campaign Settings (oldest first) to
 // the party pin, with a dot at each stop. A stop sits at its own X/Y, or at its Location's.
-import { map, toLatLng } from "./view.js";
+import { map, plainText, toLatLng } from "./view.js";
 import { campaign, pinsById, placesById } from "./state.js";
 import { legendState } from "./filters.js";
 
@@ -34,7 +34,7 @@ export function drawTrail() {
   stops.forEach((stop, i) => {
     const label = [stop.date || `Stop ${i + 1}`, stop.place && stop.place.location.name, stop.note].filter(Boolean).join(" · ");
     trailLayer.addLayer(
-      L.circleMarker(stop.latlng, { radius: 5, color: TRAIL_COLOR, weight: 2, fillColor: "#fff", fillOpacity: 1 }).bindTooltip(label),
+      L.circleMarker(stop.latlng, { radius: 5, color: TRAIL_COLOR, weight: 2, fillColor: "#fff", fillOpacity: 1 }).bindTooltip(plainText(label)),
     );
   });
 }

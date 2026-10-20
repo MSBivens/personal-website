@@ -6,6 +6,7 @@ import { reveal } from "./markers.js";
 import { closePlace, isPlaceOpen, showPlace } from "./places.js";
 import { relSample } from "./lines.js";
 import { stopLocating } from "./locate.js";
+import { linkTo, showInAddress } from "./links.js";
 
 const ATTITUDES = { friendly: "Friendly", neutral: "Neutral", hostile: "Hostile", unknown: "Unknown" };
 
@@ -36,8 +37,8 @@ function linkButton(text, onClick) {
   return button;
 }
 
-// Reports to / Direct reports: fly to the other pin (or its Hub), then open it.
-const pinLink = (entry) => linkButton(entry.pin.name, () => goToPin(entry));
+// Reports to / Direct reports: fly to the other pin (out of any cluster), then open it.
+const pinLink = (entry) => linkButton(entry.pin.name, () => goTo(entry));
 
 // From a Location panel: open the pin's pop-up straight away, with a way back to the panel.
 export const pinButton = (entry, from) =>
@@ -148,20 +149,36 @@ export function showPin(entry, { from = null } = {}) {
   document.getElementById("pin-description").replaceChildren(...paragraphs(pin.description));
 
   openModal("pin-modal");
+  setCopyLink(pinCopyLink, entry);
+  showInAddress(entry.pin.id ? entry : null);
   document.getElementById("pin-ok").focus();
 }
 
 export function closePin({ restoreFocus = true } = {}) {
   if (pinModal.style.display !== "flex") return;
   closeModal("pin-modal");
+  showInAddress(null);
   if (restoreFocus && returnFocusTo) returnFocusTo.focus();
 }
 
-// Fly to the pin (out of any cluster) and open it. Pins that aren't drawn (filtered out,
-// or with no position) just open.
-function goToPin(entry) {
+/** Fly to a pin or Location (out of any cluster) and open it. Ones that aren't drawn
+ *  (filtered out, or with no position) just open. */
+export function goTo(record) {
   closePin({ restoreFocus: false });
-  reveal(entry.rep, () => showPin(entry));
+  closePlace({ restoreFocus: false });
+  reveal(record.rep, () => (record.pin ? showPin(record) : showPlace(record)));
+}
+
+// "Copy link" in the pop-up and Location panel copies a link that opens this record.
+const pinCopyLink = document.getElementById("pin-copy-link");
+export function setCopyLink(button, record) {
+  button.textContent = "Copy link";
+  button.hidden = !record.pin?.id && !record.location;
+  button.onclick = () =>
+    navigator.clipboard
+      .writeText(linkTo(record))
+      .then(() => (button.textContent = "Copied!"))
+      .catch(() => (button.textContent = "Couldn't copy"));
 }
 
 export function showError(message) {

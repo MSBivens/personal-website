@@ -10,7 +10,10 @@ import { collectNetwork } from "./network.js";
 import { collectConnections } from "./lines.js";
 import { addLegend } from "./legend.js";
 import { render } from "./render.js";
-import { showError } from "./popup.js";
+import { goTo, showError } from "./popup.js";
+import { assignSlugs, recordFromAddress } from "./links.js";
+import { buildSearchIndex } from "./search.js";
+import { buildRecords } from "./records.js";
 import "./locate.js";
 
 if (TEST_DATA) {
@@ -46,12 +49,22 @@ loadMapData()
     collectConnections();
     addLegend();
     render();
+    assignSlugs();
+    buildSearchIndex();
+    buildRecords();
 
-    // Open on the party, close enough to read place names. Without one, the whole map shows.
+    // A link to a record (#slug) opens it. Otherwise open on the party, close enough to
+    // read place names; without a party, the whole map shows.
     const party = pinsById.get(campaign.partyId);
-    if (party && party.marker) {
-      map.setView(party.marker.getLatLng(), READABLE_ZOOM, { animate: false });
-      setUpPartyButton(party);
-    }
+    if (party && party.marker) setUpPartyButton(party);
+    const linked = recordFromAddress();
+    const start = (linked && linked.rep) || (party && party.marker);
+    if (start) map.setView(start.getLatLng(), READABLE_ZOOM, { animate: false });
+    if (linked) goTo(linked);
+    // A link pasted into this tab's address bar.
+    window.addEventListener("hashchange", () => {
+      const record = recordFromAddress();
+      if (record) goTo(record);
+    });
   })
   .catch((err) => showError(err.message));

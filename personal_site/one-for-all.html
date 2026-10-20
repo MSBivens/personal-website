@@ -86,6 +86,39 @@
           <img id="party-button-icon" src="" width="16" height="16" alt="" />
           Party
         </button>
+        <button
+          type="button"
+          class="win-btn toolbar-btn"
+          id="records-button"
+          aria-haspopup="dialog"
+          aria-expanded="false"
+          title="List every record"
+          hidden
+        >
+          <img
+            src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png"
+            width="16"
+            height="16"
+            alt=""
+          />
+          Records
+        </button>
+        <div class="find-box" role="search">
+          <label for="find-input">Find:</label>
+          <input
+            id="find-input"
+            class="win-input"
+            type="search"
+            placeholder="Name, place or word…  ( / )"
+            autocomplete="off"
+            spellcheck="false"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-expanded="false"
+            aria-controls="find-results"
+          />
+          <ul id="find-results" class="find-results" role="listbox" aria-label="Matching records" hidden></ul>
+        </div>
       </div>
 
       <div class="map-viewer">
@@ -147,6 +180,7 @@
           <div id="pin-description" class="pin-description"></div>
           <div class="dialog-buttons">
             <button type="button" class="win-btn" id="pin-back" hidden></button>
+            <button type="button" class="win-btn" id="pin-copy-link">Copy link</button>
             <button type="button" class="win-btn pin-close" id="pin-ok">
               OK
             </button>
@@ -180,9 +214,51 @@
           <div id="place-description" class="pin-description"></div>
           <div id="place-contents"></div>
           <div class="dialog-buttons">
+            <button type="button" class="win-btn" id="place-copy-link">Copy link</button>
             <button type="button" class="win-btn place-close" id="place-ok">
               OK
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="records-modal"
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="records-title"
+    >
+      <div class="prop-window records-window">
+        <div class="title-bar">
+          <span id="records-title">Records</span>
+          <div class="title-controls">
+            <button type="button" class="records-close" aria-label="Close">X</button>
+          </div>
+        </div>
+        <div class="prop-body">
+          <div class="records-filters">
+            <label>Type <select id="records-type"></select></label>
+            <label>Status <select id="records-status"></select></label>
+          </div>
+          <div class="records-table-wrap">
+            <table class="records-table">
+              <thead>
+                <tr>
+                  <th data-sort="name" class="records-name"><button type="button">Name</button></th>
+                  <th data-sort="type" class="records-type"><button type="button">Type</button></th>
+                  <th data-sort="location" class="records-location"><button type="button">Location</button></th>
+                  <th data-sort="status" class="records-status"><button type="button">Status</button></th>
+                  <th data-sort="added" class="records-added"><button type="button">Added</button></th>
+                </tr>
+              </thead>
+              <tbody id="records-rows"></tbody>
+            </table>
+          </div>
+          <div class="records-footer">
+            <span id="records-count" class="records-count" aria-live="polite"></span>
+            <button type="button" class="win-btn records-close">OK</button>
           </div>
         </div>
       </div>

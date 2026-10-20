@@ -1064,6 +1064,216 @@ html {
   background: repeating-conic-gradient(var(--win-gray) 0% 25%, #fff 0% 50%) 0 0 / 2px 2px;
 }
 
+/* Find box: a Win95 text box with a drop-down list of matches */
+.map-toolbar {
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.find-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+}
+
+.find-box label {
+  font: 12px "Tahoma", sans-serif;
+}
+
+.find-box input {
+  width: 230px;
+  max-width: 50vw;
+  margin: 0;
+  font-family: "Tahoma", sans-serif;
+  font-size: 12px;
+}
+
+.find-box input:focus-visible {
+  outline: 1px dotted #000;
+  outline-offset: 1px;
+}
+
+.find-results {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1500;
+  width: 320px;
+  max-width: calc(100vw - 24px);
+  max-height: 60vh;
+  overflow-y: auto;
+  margin: 2px 0 0;
+  padding: 2px;
+  list-style: none;
+  background: #fff;
+  border: 2px inset #fff;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+  font-size: 12px;
+}
+
+.find-results[hidden] {
+  display: none;
+}
+
+.find-option {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  column-gap: 6px;
+  align-items: center;
+  padding: 3px 4px;
+  cursor: pointer;
+}
+
+.find-option img {
+  grid-row: span 2;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.find-option img.smooth {
+  image-rendering: auto;
+}
+
+.find-kind {
+  color: #666;
+  font-size: 11px;
+}
+
+.find-option[aria-selected="true"],
+.find-option:hover {
+  background: var(--win-blue);
+  color: #fff;
+}
+
+.find-option[aria-selected="true"] .find-kind,
+.find-option:hover .find-kind {
+  color: #ddd;
+}
+
+.find-none {
+  padding: 3px 4px;
+  color: #666;
+}
+
+/* Records window: an Explorer-style table */
+.records-window {
+  width: 680px;
+  max-width: calc(100vw - 32px);
+}
+
+.records-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-bottom: 8px;
+}
+
+.records-filters select {
+  margin-left: 4px;
+  font: 12px "Tahoma", sans-serif;
+}
+
+.records-table-wrap {
+  max-height: 60vh;
+  overflow: auto;
+  background: #fff;
+  border: 2px inset #fff;
+}
+
+.records-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.records-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 0;
+  background: var(--win-gray);
+  text-align: left;
+}
+
+.records-table th button {
+  width: 100%;
+  padding: 2px 6px;
+  background: var(--win-gray);
+  border: 1px outset #fff;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.records-table th button:focus-visible {
+  outline: 1px dotted #000;
+  outline-offset: -3px;
+}
+
+.records-table th[aria-sort="ascending"] button::after {
+  content: " ▲";
+  font-size: 9px;
+}
+
+.records-table th[aria-sort="descending"] button::after {
+  content: " ▼";
+  font-size: 9px;
+}
+
+.records-table td {
+  padding: 1px 6px;
+  white-space: nowrap;
+}
+
+.records-table td.records-name {
+  padding-left: 2px;
+}
+
+.records-table tbody tr:nth-child(even) {
+  background: #f4f4f4;
+}
+
+.records-added,
+.records-type,
+.records-status {
+  color: #333;
+}
+
+.records-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.records-count {
+  padding: 1px 6px;
+  border: 1px inset #fff;
+}
+
+@media (max-width: 600px) {
+  .records-location,
+  .records-added {
+    display: none;
+  }
+}
+
+/* Names under markers, shown once zoomed in (markers.js toggles .show-labels) */
+#map .leaflet-tooltip.map-label {
+  display: none;
+  padding: 0 3px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid #808080;
+  font: 10px/14px "Tahoma", sans-serif;
+  white-space: nowrap;
+}
+
+#map.show-labels .leaflet-tooltip.map-label {
+  display: block;
+}
+
 .locate-panel {
   position: absolute;
   top: 10px;

@@ -5,8 +5,9 @@
 import { toLatLng, isLocating } from "./view.js";
 import { sanityIcon } from "./icons.js";
 import { placesById } from "./state.js";
-import { isDimmed } from "./markers.js";
-import { closePin, connectionSection, detailRow, paragraphs, pinButton } from "./popup.js";
+import { isDimmed, nameLabel } from "./markers.js";
+import { closePin, connectionSection, detailRow, paragraphs, pinButton, setCopyLink } from "./popup.js";
+import { showInAddress } from "./links.js";
 import { relSample } from "./lines.js";
 
 export const PLACE_ICON = { src: "/one-for-all/icons/hub.png", pixelated: true };
@@ -42,6 +43,7 @@ function placeMarker(place) {
     // Stands in for its whole spot, so it sits above any pin right next to it.
     zIndexOffset: 1000,
   });
+  nameLabel(marker, place.location.name);
   marker.on("click", () => {
     if (!isLocating()) showPlace(place);
   });
@@ -185,6 +187,8 @@ export function showPlace(place, { returnFocus } = {}) {
     .replaceChildren(...detailBox, recordList(place), ...connections, ...innerLineList(place));
 
   openModal("place-modal");
+  setCopyLink(document.getElementById("place-copy-link"), place);
+  showInAddress(place);
   (placeModal.querySelector(".place-item") || document.getElementById("place-ok")).focus();
 }
 
@@ -193,6 +197,7 @@ export const isPlaceOpen = () => placeModal.style.display === "flex";
 export function closePlace({ restoreFocus = true } = {}) {
   if (!isPlaceOpen()) return;
   closeModal("place-modal");
+  showInAddress(null);
   if (restoreFocus && returnFocusTo) returnFocusTo.focus();
 }
 

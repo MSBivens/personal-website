@@ -114,6 +114,13 @@ Stops added automatically show straight away. After editing the list yourself, p
 
 **Where they're heading:** add a **Travel Destination** connection from the party pin to the place (see *Relationship lines*). It's drawn as an arrow.
 
+## Finding things
+
+- **Find** (top-right of the toolbar, or press **/**): type part of a name, or a word from a record's Location, Details, status or description. Pick a result with the mouse or the arrow keys and Enter. The map flies to it, zooming in past any numbered box, and opens it.
+- **Records** (toolbar): every pin and Location in one table. Click a column heading to sort (click **Added** for newest first), narrow it with **Type** and **Status**, and click a name to go to it.
+- **Names on the map** appear under the markers once you zoom in far enough.
+- **Links to a record:** opening a pin or Location puts its name in the address bar (e.g. `…/one-for-all#jenna`), and **Copy link** in its pop-up copies that link. Anyone who opens it lands on that record. Renaming a record changes its link; two records with the same name get `-2`, `-3` and so on.
+
 ## The network lines
 
 Tick **Network lines** in the **Lines** section of the map's **Legend** box (bottom-left) to draw a line from each member to whoever they report to. Lines from members whose status is Dimmed or Faded (e.g. Compromised or Dead) are dashed. Hover over a line to see who it connects.

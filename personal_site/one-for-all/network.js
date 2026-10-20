@@ -1,6 +1,6 @@
 // Network lines: one from each member to whoever they report to, drawn from whatever
 // currently stands for each end (its own marker, its Location's marker, or a cluster).
-import { map } from "./view.js";
+import { map, plainText } from "./view.js";
 import { pinsById } from "./state.js";
 import { entryAnchor, isDimmed, sameSpot } from "./markers.js";
 import { pairKey } from "./lines.js";
@@ -50,7 +50,7 @@ export function drawNetwork() {
       weight: 2,
       opacity: 0.8,
       dashArray: isDimmed(from.pin) ? "6 6" : null,
-    }).bindTooltip(`${from.pin.name} → ${to.pin.name}`, { sticky: true });
+    }).bindTooltip(plainText(`${from.pin.name} → ${to.pin.name}`), { sticky: true });
     networkLayer.addLayer(line);
     pairs.add(pairKey(a, b)[0]);
   }

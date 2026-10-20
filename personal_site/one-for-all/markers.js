@@ -2,7 +2,7 @@
 // A pin sits at its own X/Y, or at its Location's position if it has none. Pins sharing a
 // Location's spot are drawn as one Location marker (places.js); a lone one is drawn as itself.
 // Nearby markers then merge into numbered clusters when zoomed out (Leaflet.markercluster).
-import { map, toLatLng, toImagePoint, isLocating } from "./view.js";
+import { map, plainText, toLatLng, toImagePoint, isLocating } from "./view.js";
 import { FALLBACK_ICON, pinIcon, sanityIcon } from "./icons.js";
 import { campaign, pinsById, placesById, typesById, waypointsById } from "./state.js";
 import { showPin } from "./popup.js";
@@ -64,6 +64,14 @@ function partyIcon(icon) {
   return L.divIcon({ html: ring, className: "map-pin party-pin", iconSize: [44, 44], iconAnchor: [22, 22] });
 }
 
+// Names under the markers once you're zoomed in far enough for them to fit.
+const LABEL_ZOOM = 3.5;
+export const nameLabel = (marker, name, gap = 14) =>
+  marker.bindTooltip(plainText(name), { permanent: true, direction: "bottom", offset: [0, gap], className: "map-label" });
+const syncLabels = () => map.getContainer().classList.toggle("show-labels", map.getZoom() >= LABEL_ZOOM);
+map.on("zoomend", syncLabels);
+syncLabels();
+
 /** Where a pin sits: its own X/Y, else its Location's. Null if neither has one. */
 export function positionOf(pin, place) {
   if (Number.isFinite(pin.x) && Number.isFinite(pin.y)) return { x: pin.x, y: pin.y, own: true };
@@ -109,6 +117,7 @@ export function addPin(pin) {
     zIndexOffset: party ? 2000 : 0,
   });
   entry.marker = marker;
+  nameLabel(marker, pin.name, party ? 20 : 14);
   marker.on("click", () => {
     if (!isLocating()) showPin(entry);
   });
