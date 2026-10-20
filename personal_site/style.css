@@ -730,16 +730,6 @@ html {
   text-shadow: 1px 1px 0 #fff;
 }
 
-.pin-window {
-  width: 360px;
-  max-width: calc(100vw - 32px);
-}
-
-.place-window {
-  width: 380px;
-  max-width: calc(100vw - 32px);
-}
-
 .dialog-buttons {
   display: flex;
   justify-content: flex-end;
@@ -747,9 +737,103 @@ html {
   margin-top: 10px;
 }
 
-/* "◀ Back to <Hub>" sits on the left, OK on the right */
-#pin-back {
-  margin-right: auto;
+/* Record panel: a Properties window docked on the right of the map (a sheet along the
+   bottom on phones). The map stays usable around it. */
+.record-panel {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  bottom: 8px;
+  z-index: 1001;
+  width: 340px;
+  max-width: calc(100% - 16px);
+  box-sizing: border-box;
+}
+
+/* .prop-window sets display:flex, which would override the hidden attribute */
+.record-panel[hidden] {
+  display: none;
+}
+
+.record-panel .title-bar span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.panel-nav {
+  display: flex;
+  gap: 4px;
+  padding: 4px 6px;
+  border-bottom: 1px solid #808080;
+  box-shadow: 0 1px 0 #fff;
+}
+
+.panel-nav .win-btn {
+  padding: 1px 8px;
+}
+
+.panel-nav .win-btn:active {
+  padding: 2px 7px 0 9px;
+}
+
+.panel-nav .win-btn:disabled {
+  color: #808080;
+  text-shadow: 1px 1px 0 #fff;
+  cursor: default;
+}
+
+#panel-copy-link {
+  margin-left: auto;
+}
+
+.panel-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.panel-body:focus {
+  outline: none;
+}
+
+.panel-body .pin-description,
+.panel-body .place-records {
+  max-height: none;
+}
+
+.panel-body > #panel-content > * + * {
+  margin-top: 10px;
+}
+
+.title-controls .panel-expand {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .record-panel {
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    max-width: none;
+    height: 50%;
+  }
+
+  .record-panel.is-expanded {
+    height: calc(100% - 8px);
+  }
+
+  .title-controls .panel-expand {
+    display: inline-block;
+  }
+}
+
+/* The marker for the record open in the panel */
+.leaflet-marker-icon.is-selected {
+  outline: 3px solid #ffd700;
+  outline-offset: 3px;
 }
 
 /* Location marker: its icon, with a count badge when it stands for several pins */

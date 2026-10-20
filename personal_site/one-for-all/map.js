@@ -10,7 +10,7 @@ import { collectNetwork } from "./network.js";
 import { collectConnections } from "./lines.js";
 import { addLegend } from "./legend.js";
 import { render } from "./render.js";
-import { goTo, showError } from "./popup.js";
+import { goTo, showError } from "./panel.js";
 import { assignSlugs, recordFromAddress } from "./links.js";
 import { buildSearchIndex } from "./search.js";
 import { buildRecords } from "./records.js";
