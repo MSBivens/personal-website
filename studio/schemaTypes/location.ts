@@ -1,16 +1,18 @@
 import {defineField, defineType, type NumberRule} from 'sanity'
 import {connectionsField} from './connection'
+import {detailsField} from './details'
 import {API_VERSION, publishedId} from './ids'
 
-const isHub = (document: unknown) => Boolean((document as {showAsHub?: boolean} | undefined)?.showAsHub)
-const positionRule = (max: number) => (rule: NumberRule) =>
+// Optional, but X and Y go together.
+const positionRule = (max: number, axis: 'x' | 'y') => (rule: NumberRule) =>
   rule
     .integer()
     .min(0)
     .max(max)
-    .custom((value, context) =>
-      value === undefined && isHub(context.document) ? 'Hubs need a position.' : true,
-    )
+    .custom((value, context) => {
+      const other = (context.document as {x?: number; y?: number} | undefined)?.[axis === 'x' ? 'y' : 'x']
+      return value === undefined && other !== undefined ? 'Fill in both X and Y, or leave both empty.' : true
+    })
 
 export const location = defineType({
   name: 'location',
@@ -21,7 +23,7 @@ export const location = defineType({
       name: 'position',
       title: 'Map position',
       description:
-        'Where the Hub marker goes. Use Locate on the map to get the numbers. Optional unless this is a Hub.',
+        "Pins at this Location sit here unless they have their own position. Use Locate on the map to get the numbers. Leave empty for a region with no single spot; its pins then need their own.",
       options: {columns: 2},
     },
   ],
@@ -45,48 +47,25 @@ export const location = defineType({
         }),
     }),
     defineField({
-      name: 'showAsHub',
-      title: 'Show as Hub',
-      type: 'boolean',
-      description:
-        'Shows this Location on the map as one marker that opens a list of everything here. Use it where pins are too close together to read.',
-      initialValue: false,
-      validation: (rule) =>
-        rule
-          .custom(async (value, context) => {
-            if (value) return true
-            const attached = await context
-              .getClient({apiVersion: API_VERSION})
-              .withConfig({perspective: 'published'})
-              .fetch<string[]>('*[_type == "pin" && location._ref == $id && visibility == "attached"].name', {
-                id: publishedId(context.document?._id ?? ''),
-              })
-            return attached.length
-              ? `Attached to this Location, so hidden from the map while it isn't a Hub: ${attached.join(', ')}.`
-              : true
-          })
-          .warning(),
-    }),
-    defineField({
       name: 'x',
       title: 'X',
       type: 'number',
       fieldset: 'position',
-      validation: positionRule(4763),
+      validation: positionRule(4763, 'x'),
     }),
     defineField({
       name: 'y',
       title: 'Y',
       type: 'number',
       fieldset: 'position',
-      validation: positionRule(3185),
+      validation: positionRule(3185, 'y'),
     }),
     defineField({
       name: 'icon',
-      title: 'Hub icon',
+      title: 'Map icon',
       type: 'image',
-      description: 'Optional. Without one, the Hub shows a folder icon.',
-      hidden: ({document}) => !isHub(document),
+      description:
+        "Optional. Shown on the marker that groups this Location's pins (or on its own marker if nothing is here yet). Without one, a folder icon.",
     }),
     defineField({
       name: 'description',
@@ -95,16 +74,20 @@ export const location = defineType({
       rows: 4,
       description: 'Notes about this place, shown in its panel on the map. Leave a blank line between paragraphs.',
     }),
-    // Lines from a Location start at its Hub, or at its X/Y if it isn't one (no X/Y, no line).
+    detailsField({
+      description:
+        'Short facts about the place, shown as rows in its panel, e.g. Restorative pool: heals once per long rest. Empty rows are left out.',
+    }),
+    // Lines from a Location start wherever its pins are drawn, or at its X/Y (no X/Y, no line).
     connectionsField(),
   ],
   orderings: [{title: 'Name', name: 'nameAsc', by: [{field: 'name', direction: 'asc'}]}],
   preview: {
-    select: {title: 'name', showAsHub: 'showAsHub', media: 'icon'},
-    prepare: ({title, showAsHub, media}) => ({
+    select: {title: 'name', x: 'x', media: 'icon'},
+    prepare: ({title, x, media}) => ({
       title,
-      subtitle: showAsHub ? 'Hub' : undefined,
-      media: showAsHub ? media : undefined,
+      subtitle: x === undefined ? 'No map position' : undefined,
+      media,
     }),
   },
 })

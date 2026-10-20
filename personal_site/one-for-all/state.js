@@ -7,16 +7,23 @@ export const typesById = new Map();
 // shownByDefault, legendOrder, count: connections of this type }
 export const relTypesById = new Map();
 
-// Pin id → { pin, type, marker, icon, place, reports, links }
-// `marker` is null for pins attached to a Hub (they only appear in its panel).
+// Pin id → { pin, type, icon, place, grouped, marker, rep, reports, links }
+// `grouped`: it has no position of its own, so it sits at its Location's spot.
+// `marker`: its own marker (null if it has no position at all).
+// `rep`: what currently stands for it on the map: its own marker, its Location's marker, or
+// null if it's filtered out.
 // `links`: [{ conn, dir: "out" | "in" }], the pin's Connections both ways.
 export const pinsById = new Map();
 
-// Post Office id → its pin. They have no marker; lines bend through them.
+// Post Office id → its pin, with x/y filled in from its Location if needed. They have no
+// marker; lines bend through them.
 export const waypointsById = new Map();
 
-// Location id → { location, icon, isHub, marker, entries: [pins there], links,
+// Location id → { location, icon, point: {x, y} | null, readable, marker, rep,
+//   entries: [pins with this Location], grouped: [those sitting at its spot], links,
 //   innerReports: [{ from, to }], innerLinks: [conn] }
-// The `inner…` lists are lines between two pins in the same Hub, listed in its panel
+// `marker`: the Location marker (null without a position). `rep`: what currently stands
+// for the Location: its marker, its one shown pin, or null.
+// The `inner…` lists are lines between two records at its spot, listed in its panel
 // instead of drawn.
 export const placesById = new Map();

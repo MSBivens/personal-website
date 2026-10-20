@@ -1,6 +1,6 @@
 # Editing the One For All map
 
-Everything on the campaign map at `/one-for-all` (pins, Hubs and the lines between them) is edited in **Sanity Studio**:
+Everything on the campaign map at `/one-for-all` (pins, Locations and the lines between them) is edited in **Sanity Studio**:
 <https://mikeybivs.sanity.studio>. Log in with the account that owns the
 "Personal Site" Sanity project. Publish a change and it appears on the map. There's no code to edit and nothing to deploy.
 
@@ -11,7 +11,7 @@ Everything on the campaign map at `/one-for-all` (pins, Hubs and the lines betwe
 | Sidebar | What it holds |
 |---|---|
 | **Pins** | Every record, in one list per Pin Type plus **All pins**. Use the create button at the top of a type's list and the new pin starts with that type (and its first status) already chosen. |
-| **Locations** | Towns and regions. A pin's Location is picked from this list. |
+| **Locations** | Named places, from cities and regions down to a single lair. A pin's Location is picked from this list, and the pin sits at the Location's spot. |
 | **Party Members** | The player characters. Members link to them (**Recruited By**) and so do Soul Items; each party member's page shows their Soul Item. |
 | **Settings → Pin Types** | Each type's name, plural, icon, position in the legend, and **Suggested details** (the Details rows a new pin of that type starts with). Add a new type here and it gets its own list and legend entry, no code needed. |
 | **Settings → Statuses** | Each type's statuses and how they look on the map (Normal, Dimmed or Faded). The first one (lowest **Order**) is the default for new pins. |
@@ -34,7 +34,9 @@ Members need a rank, so set the ranks up before adding members. Go to **Settings
 
 Click **Publish**.
 
-## 2. Get the pin's coordinates
+## 2. Get coordinates (only when you need them)
+
+Most pins don't need coordinates: a pin with a **Location** sits at that Location's spot. You only need X/Y for a Location itself, or for a pin somewhere specific away from its Location (a dungeon in the hills outside town).
 
 1. Open the map (<https://www.msbivens.com/one-for-all>) and click **Locate** in the toolbar above it.
 2. Zoom in on the spot. The closer you zoom, the more precise the pin will be.
@@ -51,8 +53,8 @@ Players can do this too, so they can send you a spot. The old `?place` link stil
 |---|---|
 | **Name** | Shown in the pop-up's title bar and when hovering the pin. |
 | **Type** | One of your Pin Types. |
-| **Location** | *Optional.* Pick a town or region from your Locations, or create one from the field. |
-| **Map Visibility** | **Map Pin** (its own marker), **Attached to Location** (shown only inside its Location's Hub; see below) or **Hidden** (kept off the map). |
+| **Location** | The town, region or place it's at. The pin sits at the Location's spot unless you give it its own position. Pick one from your Locations, or create one from the field. |
+| **Show on map** | On by default. Untick it to keep the pin off the map (it's still public; see *Good to know*). |
 | **Status** | One of that type's statuses, e.g. a Member is Active, Compromised or Dead. Statuses with a Dimmed or Faded map style grey the pin out. |
 | **Rank** | *Members only.* Pick one of your ranks. |
 | **Reports to** | *Members only.* The member or safe house they report to. This draws a network line on the map. |
@@ -62,27 +64,37 @@ Players can do this too, so they can send you a spot. The old `?place` link stil
 | **Quest giver** | *Quests only.* The NPC or member who gave it. Shown as a link in the pop-up. |
 | **Icon override** | *Optional.* An icon for this pin only. |
 | **Details** | Short labelled facts shown as rows in the pop-up, e.g. *Reward: 500 gp*. A new pin starts with its type's suggested rows (a Quest gets Reward and Objectives); add, rename or remove rows freely. Rows left empty aren't shown. |
-| **X**, **Y** | The numbers from **Locate**. Only asked for on Map Pins (and Post Offices). |
+| **Own position** (**X**, **Y**) | *Optional.* Leave empty to use the Location's spot. Fill in both (from **Locate**) for a spot of its own. A pin on the map needs one or the other: Studio tells you if it has neither. |
 | **Description** | Your notes. Leave a blank line between paragraphs. |
 
 Click **Publish**. Refresh the map and the pin is there. It can take up to a minute to show up.
 
 > **Drafts don't show on the map.** Studio saves your changes as you type, but the map only shows pins (and changes) once you click **Publish**.
 
-## Hubs: crowded places
+## Locations and crowded spots
 
-When several pins are too close together to read, turn their Location into a **Hub**: one marker (a folder, with a badge counting what's inside) that opens a panel listing everything there.
+A **Location** is any named place: a city, a region, or something as small as a dragon's lair. Each has:
 
-1. Open the Location under **Locations**, turn on **Show as Hub**, give it an **X** and **Y** (from **Locate**), and optionally a **Hub icon** and **Description**. Publish.
-2. On each pin that belongs there, set **Location** to that place and **Map Visibility** to **Attached to Location**. Publish. The pin's own marker disappears and it shows up in the Hub's panel instead.
+| Field | What to put |
+|---|---|
+| **Name** | Must be unique. |
+| **Map position** (**X**, **Y**) | Where its pins sit. Leave empty for a region with no single spot; its pins then need their own position. |
+| **Map icon** | *Optional.* Shown on its marker. Without one, a folder. |
+| **Description** | Shown in its panel. |
+| **Details** | Short facts about the place, shown as rows in its panel, e.g. *Restorative pool: heals once per long rest*. Use these for things that don't need a pin of their own. |
+| **Connections** | Lines from this place (see *Relationship lines*). |
 
-The panel lists every pin at that Location, grouped by type. Pins there that are still Map Pins are marked *on map*. Click any of them to open its pop-up, which has a **◀ Back to …** button. In any pop-up, the **Location** name is a link to that Location's panel, Hub or not.
+How Locations appear on the map, with no settings to manage:
+- **Two or more pins at a Location's spot** are shown as one Location marker (its icon, with a badge counting what's there). Click it to open its panel.
+- **One pin at a Location's spot** is shown as itself.
+- **A Location with nothing at it yet** gets a plain marker if it has a description, Details or Connections, so it can still be found.
+- **Pins with their own position** always have their own marker.
 
-Network lines from attached pins start at their Hub. A line between two pins in the same Hub would have no length, so it's listed in the Hub's panel under **Lines here** instead.
+When zoomed out, markers that are close together merge into a grey numbered box. Click it to zoom in. Markers on exactly the same spot fan out when you click them.
 
-If you turn **Show as Hub** off while pins are attached to it, Studio warns you: those pins won't appear on the map until it's a Hub again or you switch them back to Map Pin.
+A Location's panel shows its description and Details, then every pin at that Location grouped by type. Click any pin to open its pop-up, which has a **◀ Back to …** button. In any pop-up, the **Location** name is a link to that Location's panel.
 
-**Hidden** pins don't appear anywhere on the map, but the data is still public. For real secrets, use unpublished drafts.
+**Rule of thumb:** give something its own pin if it has a status, links to other records, or players will want to search for it. Otherwise, a Details row on its Location is enough.
 
 ## The network lines
 
@@ -118,22 +130,23 @@ Besides who-reports-to-whom, you can draw any relationship between two records, 
 A record can have as many connections as you like. Each one shows in **both ends'** pop-ups (→ on the record it's on, ← on the other end), and the names there are links.
 
 How lines are placed:
-- Lines from a pin **attached to a Hub** start at the Hub. Lines between two pins in the **same Hub** are listed in the Hub's panel under **Lines here** instead.
-- A line to a **Location** ends at its Hub, or at the Location's **X/Y** if it isn't a Hub (no X/Y, no line; it's still listed in pop-ups).
-- Connections to **Hidden** or unpublished records aren't drawn or listed.
+- A line starts and ends at whatever is drawn for that record: its own marker, its Location's marker, or the numbered box it's merged into when zoomed out. Zoom in and the lines follow.
+- Lines between two pins at the **same Location's spot** would have no length, so they're listed in the Location's panel under **Lines here** instead.
+- A line to a **Location** ends at its marker, or at its **X/Y** (no X/Y, no line; it's still listed in pop-ups).
+- Connections to unpublished records, or to pins with **Show on map** off, aren't drawn or listed.
 - When several lines join the same two points they're bowed apart automatically, so they don't sit on top of each other.
 
 ## The legend
 
 The **Legend** (bottom-left) has two sections, each with **All** / **None** buttons and a ▾ to fold it away:
-- **Pins** shows or hides each pin type and the Hubs.
+- **Pins** shows or hides each pin type, plus **Other places** (Locations with nothing at them yet) when there are any. Location markers and numbered boxes only count what's ticked.
 - **Lines** shows or hides the network lines and each relationship type. A line only shows when the pins at both ends are shown too.
 
-The legend only affects the map: pop-ups and Hub panels always list everything. The map remembers your choices on that browser. On a phone the legend starts minimised.
+The legend only affects the map: pop-ups and Location panels always list everything. The map remembers your choices on that browser. On a phone the legend starts minimised.
 
 ## Moving or removing a pin
 
-- **To move a pin:** get new coordinates with **Locate**, change **X** and **Y**, and click **Publish**.
+- **To move a pin:** change its **Location**, or get new coordinates with **Locate** and change **X** and **Y**. Click **Publish**.
 - **To remove a pin:** open it, open the menu next to **Publish**, and choose **Delete**. If another record links to it (a **Reports to**, a connection, a **Quest giver**…), Studio lists those records and won't delete it until you remove the links.
 - **To hide a pin without deleting it:** use **Unpublish** from the same menu. It stays in Studio as a draft.
 
@@ -141,15 +154,16 @@ The legend only affects the map: pop-ups and Hub panels always list everything. 
 
 | Problem | Fix |
 |---|---|
-| A pin doesn't appear | Check that it's **published**, not just saved as a draft, and that its **Map Visibility** isn't Hidden. If it's Attached, it's inside its Location's Hub (and its Location must be a Hub). Then refresh the map. |
+| A pin doesn't appear | Check that it's **published**, not just saved as a draft, that **Show on map** is ticked, and that its type is ticked in the Legend. It may be inside its Location's marker or a numbered box: zoom in or click it. It also needs a position: its own X/Y, or a Location that has one. Then refresh the map. |
 | A member's line is missing | The pin they report to must also be published. Also check that **Network lines** is ticked and both pin types are shown in the Legend. |
-| A connection's line is missing | Both ends must be published and not Hidden, and a Location end needs a Hub or an X/Y. Check its relationship type and both ends' pin types are ticked in the Legend. If both ends are in the same Hub, it's listed in the Hub's panel instead. |
+| A connection's line is missing | Both ends must be published with **Show on map** ticked, and a Location end needs an X/Y. Check its relationship type and both ends' pin types are ticked in the Legend. If both ends are at the same Location's spot, it's listed in that Location's panel instead. Zoomed out, both ends may be in the same numbered box. |
 | A member shows the plain Member icon | Their rank has no icon, or they have no rank. |
 | A pin shows a red question mark | Neither the pin, its rank nor its Pin Type has an icon. Add one under **Settings → Pin Types**. |
 | An **Error** pop-up saying *Map data could not be loaded* | Sanity didn't answer. Try again in a minute. If the site has moved to a new address, add it under **API → CORS origins** at <https://www.sanity.io/manage/project/ohnkcmr7>. |
 
 ## Good to know
 
+- **Test data:** add `?data=test` to the map's address (e.g. `/one-for-all?data=test`) to see the `development` dataset instead of the real one. The title bar then says *(test data)*.
 - The page is hidden but **not private**. The Sanity dataset is public so the map can read it. Anyone who finds the link can read every published record. To keep something secret from players, leave it as an **unpublished draft**: drafts aren't public.
 - **Locate** works on the live site. You don't need to run anything on your computer to add pins.
 - The Studio's code lives in [`studio/`](../studio/). Run `npm run dev` there to try changes locally at `http://localhost:3333`. **The local Studio edits a test copy of the data (the `development` dataset), not the live map**, so it's safe to experiment. `npx sanity deploy` updates the hosted Studio, which edits the real data.

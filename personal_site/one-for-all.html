@@ -13,6 +13,14 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <!-- Only the animation rules; the cluster icons are styled in style.css -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css"
+      integrity="sha512-mQ77VzAakzdpWdgfL/lM1ksNy89uFgibRQANsNneSTMD/bj0Y/8+94XMwYhnbzx8eki2hrbPpDm0vD0CiT2lcg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <link rel="stylesheet" href="/style.css" />
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"
@@ -21,8 +29,16 @@
       referrerpolicy="no-referrer"
       defer
     ></script>
+    <!-- markers.js reads its cluster tree (__parent/_zoom), so keep this version pinned -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"
+      integrity="sha512-OFs3W4DIZ5ZkrDhBFtsCP6JXtMEDGmhl0QPlmWYBJay40TT1n3gt2Xuw8Pf/iezgW9CdabjkNChRqozl/YADmg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
+    ></script>
     <script src="/script.js" defer></script>
-    <!-- A module, so it runs after the deferred Leaflet script above -->
+    <!-- A module, so it runs after the deferred Leaflet scripts above -->
     <script type="module" src="/one-for-all/map.js"></script>
   </head>
   <body onclick="closeStartMenu()">
@@ -34,7 +50,7 @@
             width="16"
             alt=""
           />
-          One For All
+          <span id="map-title">One For All</span>
         </div>
         <div class="title-controls">
           <span>_</span>
