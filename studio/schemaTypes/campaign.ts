@@ -28,6 +28,14 @@ export const campaign = defineType({
   type: 'document',
   fields: [
     defineField({
+      name: 'lastSession',
+      title: 'Last session',
+      type: 'date',
+      description:
+        "The date of the last session. Pins and Locations created on or after it are tagged New on the map and listed under What's new. Leave empty to turn this off.",
+      options: {dateFormat: 'D MMM YYYY'},
+    }),
+    defineField({
       name: 'partyPin',
       title: 'Party pin',
       type: 'reference',

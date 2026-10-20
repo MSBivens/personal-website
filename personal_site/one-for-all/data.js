@@ -34,6 +34,7 @@ const OWN_Y = `select(visibility == "attached" => null, y)`;
 
 const QUERY = `{
   "campaign": *[_id == "campaign"][0]{
+    lastSession,
     "partyId": partyPin._ref,
     "trail": trail[]{ "locationId": location._ref, x, y, date, note }
   },
@@ -54,7 +55,7 @@ const QUERY = `{
     "typeId": type._ref,
     "locationId": location._ref,
     "icon": icon.asset->${ASSET},
-    "status": status->{ title, style, badge },
+    "status": status->{ title, style, badge, openThread },
     "details": details[defined(value)]{ label, value },
     "connections": ${CONNECTIONS},
     type._ref == "${TYPE.member}" => {

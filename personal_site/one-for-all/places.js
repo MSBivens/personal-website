@@ -2,7 +2,7 @@
 // position of their own), one Location marker with a count stands in for them all; it also
 // marks a Location with nothing at it yet but something to read. Its panel is in panel.js.
 import { toLatLng, isLocating } from "./view.js";
-import { sanityIcon } from "./icons.js";
+import { NEW_TAG, sanityIcon } from "./icons.js";
 import { placesById } from "./state.js";
 import { nameLabel, selectedLayer } from "./markers.js";
 import { showPlace } from "./panel.js";
@@ -56,7 +56,8 @@ function placeMarker(place) {
 }
 
 // `count`: the records the marker stands for right now (0 for a Location with nothing here).
-export function setPlaceIcon(place, count) {
+// `fresh`: something there is new since the last session.
+export function setPlaceIcon(place, count, fresh = false) {
   const { marker, location } = place;
   const content = document.createElement("span");
   content.className = "place-icon";
@@ -64,6 +65,8 @@ export function setPlaceIcon(place, count) {
   if (count) {
     content.append(Object.assign(document.createElement("span"), { className: "place-count", textContent: count }));
   }
+  if (fresh) content.insertAdjacentHTML("beforeend", NEW_TAG);
+  marker.isNew = fresh;
   marker.records = Math.max(count, 1);
   marker.label = count ? `${location.name}, ${count} records` : location.name;
   marker.options.title = count ? `${location.name} (${count})` : location.name;

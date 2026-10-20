@@ -103,6 +103,35 @@
           />
           <span class="btn-label">Records</span>
         </button>
+        <button
+          type="button"
+          class="win-btn toolbar-btn"
+          id="new-button"
+          aria-haspopup="dialog"
+          title="What's been added since the last session"
+          hidden
+        >
+          <img
+            src="https://win98icons.alexmeub.com/icons/png/message_envelope_open-0.png"
+            width="16"
+            height="16"
+            alt=""
+          />
+          <span class="btn-label"><span class="label-long">What's new</span><span class="label-short">New</span></span>
+          <span class="count-badge" id="new-count" hidden></span>
+        </button>
+        <button
+          type="button"
+          class="win-btn toolbar-btn"
+          id="threads-button"
+          aria-haspopup="dialog"
+          aria-pressed="false"
+          title="Things the party could still pursue"
+          hidden
+        >
+          <img src="https://win98icons.alexmeub.com/icons/png/notepad-0.png" width="16" height="16" alt="" />
+          <span class="btn-label"><span class="label-long">Open threads</span><span class="label-short">Threads</span></span>
+        </button>
         <!-- Phones only: the Find box opens on its own row, and the Legend as a sheet -->
         <button
           type="button"
@@ -155,6 +184,11 @@
 
       <div class="map-viewer">
         <div id="map" aria-label="Map of Faerûn"></div>
+
+        <div id="threads-chip" class="threads-chip" role="status" hidden>
+          Showing open threads only
+          <button type="button" class="win-btn" id="threads-chip-off">Show all</button>
+        </div>
 
         <aside id="record-panel" class="prop-window record-panel" aria-labelledby="panel-name" hidden>
           <div class="title-bar">
@@ -226,6 +260,14 @@
           <div class="records-filters">
             <label>Type <select id="records-type"></select></label>
             <label>Status <select id="records-status"></select></label>
+            <label
+              >Show
+              <select id="records-show">
+                <option value="">Everything</option>
+                <option value="new">New since last session</option>
+                <option value="open">Open threads</option>
+              </select></label
+            >
           </div>
           <div class="records-table-wrap">
             <table class="records-table">
@@ -244,6 +286,27 @@
           <div class="records-footer">
             <span id="records-count" class="records-count" aria-live="polite"></span>
             <button type="button" class="win-btn records-close">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="list-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="list-title">
+      <div class="prop-window list-window">
+        <div class="title-bar">
+          <span id="list-title"></span>
+          <div class="title-controls">
+            <button type="button" class="list-close" aria-label="Close">X</button>
+          </div>
+        </div>
+        <div class="prop-body">
+          <p id="list-intro" class="list-intro"></p>
+          <div id="list-content"></div>
+          <label id="list-only-row" class="list-only" hidden>
+            <input type="checkbox" id="list-only" /> Show only these on the map
+          </label>
+          <div class="dialog-buttons">
+            <button type="button" class="win-btn list-close">OK</button>
           </div>
         </div>
       </div>
