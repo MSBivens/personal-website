@@ -13,6 +13,7 @@ Everything on the campaign map at `/one-for-all` (pins, Locations and the lines 
 | **Pins** | Every record, in one list per Pin Type plus **All pins**. Use the create button at the top of a type's list and the new pin starts with that type (and its first status) already chosen. |
 | **Locations** | Named places, from cities and regions down to a single lair. A pin's Location is picked from this list, and the pin sits at the Location's spot. |
 | **Party Members** | The player characters. Members link to them (**Recruited By**) and so do Soul Items; each party member's page shows their Soul Item. |
+| **Settings → Campaign Settings** | Which pin is the party, and the party's trail. See *The party* below. |
 | **Settings → Pin Types** | Each type's name, plural, icon, position in the legend, and **Suggested details** (the Details rows a new pin of that type starts with). Add a new type here and it gets its own list and legend entry, no code needed. |
 | **Settings → Statuses** | Each type's statuses and how they look on the map (Normal, Dimmed or Faded). The first one (lowest **Order**) is the default for new pins. |
 | **Settings → Ranks** | Member ranks and their icons. |
@@ -96,6 +97,23 @@ A Location's panel shows its description and Details, then every pin at that Loc
 
 **Rule of thumb:** give something its own pin if it has a status, links to other records, or players will want to search for it. Otherwise, a Details row on its Location is enough.
 
+## The party
+
+The map opens on the party, zoomed in far enough to read place names, and the **Party** button in the toolbar flies back there. The party pin has a ring around it, sits above everything else, and is never merged into a Location marker or a numbered box.
+
+**Which pin is the party:** set **Party pin** under **Settings → Campaign Settings**.
+
+**Moving the party:** change the party pin's **Location** or **X/Y** and click **Publish**. Its old spot is added to the end of the **Trail** automatically, dated today, so you don't need to do anything else.
+
+**The trail** is the list under **Settings → Campaign Settings → Trail**, oldest first. The map draws a dotted line through the stops to the party pin, with a dot at each stop; hovering a dot shows its date and note. You can edit it freely:
+- **Add past stops by hand** to fill in where the party has been: click **Add item**, pick a **Location** (or fill in **X** and **Y** for a spot that isn't one), and add a **Date** (free text, e.g. *Session 4*) and an optional **Note**.
+- **Drag** stops to put them in order. The line follows the list order.
+- **Edit or delete** any stop, including the ones added automatically.
+
+Stops added automatically show straight away. After editing the list yourself, publish Campaign Settings. Players can hide the trail with **Party trail** in the Legend.
+
+**Where they're heading:** add a **Travel Destination** connection from the party pin to the place (see *Relationship lines*). It's drawn as an arrow.
+
 ## The network lines
 
 Tick **Network lines** in the **Lines** section of the map's **Legend** box (bottom-left) to draw a line from each member to whoever they report to. Lines from members whose status is Dimmed or Faded (e.g. Compromised or Dead) are dashed. Hover over a line to see who it connects.
@@ -140,7 +158,7 @@ How lines are placed:
 
 The **Legend** (bottom-left) has two sections, each with **All** / **None** buttons and a ▾ to fold it away:
 - **Pins** shows or hides each pin type, plus **Other places** (Locations with nothing at them yet) when there are any. Location markers and numbered boxes only count what's ticked.
-- **Lines** shows or hides the network lines and each relationship type. A line only shows when the pins at both ends are shown too.
+- **Lines** shows or hides the party's trail, the network lines and each relationship type. A line only shows when the pins at both ends are shown too.
 
 The legend only affects the map: pop-ups and Location panels always list everything. The map remembers your choices on that browser. On a phone the legend starts minimised.
 

@@ -4,7 +4,7 @@
 // Nearby markers then merge into numbered clusters when zoomed out (Leaflet.markercluster).
 import { map, toLatLng, toImagePoint, isLocating } from "./view.js";
 import { FALLBACK_ICON, pinIcon, sanityIcon } from "./icons.js";
-import { pinsById, placesById, typesById, waypointsById } from "./state.js";
+import { campaign, pinsById, placesById, typesById, waypointsById } from "./state.js";
 import { showPin } from "./popup.js";
 import { setPlaceIcon } from "./places.js";
 import { PLACES, isHidden } from "./filters.js";
@@ -55,6 +55,15 @@ map.getContainer().addEventListener("keydown", (e) => {
   }
 });
 
+// The party pin sits outside the clusters, always on top.
+export const partyLayer = L.layerGroup().addTo(map);
+
+function partyIcon(icon) {
+  const ring = Object.assign(document.createElement("span"), { className: "party-ring" });
+  ring.append(Object.assign(new Image(32, 32), { src: icon.src, alt: "", className: icon.pixelated ? "" : "smooth" }));
+  return L.divIcon({ html: ring, className: "map-pin party-pin", iconSize: [44, 44], iconAnchor: [22, 22] });
+}
+
 /** Where a pin sits: its own X/Y, else its Location's. Null if neither has one. */
 export function positionOf(pin, place) {
   if (Number.isFinite(pin.x) && Number.isFinite(pin.y)) return { x: pin.x, y: pin.y, own: true };
@@ -77,8 +86,10 @@ export function addPin(pin) {
   }
 
   const icon = sanityIcon(pin.icon) || sanityIcon(pin.rank && pin.rank.icon) || type.icon || FALLBACK_ICON;
+  const party = pin.id === campaign.partyId;
   // grouped: sits at its Location's spot, so it can be shown as part of the Location marker.
-  const entry = { pin, type, icon, place, grouped: Boolean(at && !at.own), marker: null, rep: null, reports: [], links: [] };
+  const grouped = Boolean(at && !at.own && !party);
+  const entry = { pin, type, icon, place, grouped, party, marker: null, rep: null, reports: [], links: [] };
   pinsById.set(pin.id, entry);
   if (place) {
     place.entries.push(entry);
@@ -91,10 +102,11 @@ export function addPin(pin) {
   }
 
   const marker = L.marker(toLatLng(at.x, at.y), {
-    icon: pinIcon(icon, isDimmed(pin) ? `is-${pin.status.style}` : ""),
+    icon: party ? partyIcon(icon) : pinIcon(icon, isDimmed(pin) ? `is-${pin.status.style}` : ""),
     title: pin.name,
     alt: pin.name,
     riseOnHover: true,
+    zIndexOffset: party ? 2000 : 0,
   });
   entry.marker = marker;
   marker.on("click", () => {
@@ -135,10 +147,12 @@ export function renderMarkers() {
       layers.push(place.marker);
     }
   }
+  partyLayer.clearLayers();
   for (const entry of pinsById.values()) {
     if (!entry.marker || entry.rep || isHidden(entry.pin.typeId)) continue;
     entry.rep = entry.marker;
-    layers.push(entry.marker);
+    if (entry.party) partyLayer.addLayer(entry.marker);
+    else layers.push(entry.marker);
   }
   clusterGroup.clearLayers();
   clusterGroup.addLayers(layers);
@@ -148,7 +162,7 @@ export function renderMarkers() {
 // cluster tree (`__parent`/`_zoom`, as of 1.5.3) instead of using getVisibleParent, which
 // only knows about markers in view, so lines to off-screen pins would vanish.
 function shownAs(layer) {
-  if (!clusterGroup.hasLayer(layer)) return null;
+  if (!clusterGroup.hasLayer(layer)) return map.hasLayer(layer) ? layer : null; // the party pin
   const zoom = Math.round(map.getZoom());
   let shown = layer;
   while (shown.__parent && shown.__parent._zoom >= zoom) shown = shown.__parent;
@@ -169,9 +183,13 @@ export const entryAnchor = (entry) => anchorOfLayer(entry.rep);
 /** Two line ends drawn at the same marker, cluster or spot (a line would have no length). */
 export const sameSpot = (a, b) => (a.layer && a.layer === b.layer) || (a.x === b.x && a.y === b.y);
 
+// Close enough to read the place names on the map.
+export const READABLE_ZOOM = 4;
+
 /** Zooms in until `layer` is out of any cluster, then calls `done`. */
 export function reveal(layer, done) {
-  if (!layer || !clusterGroup.hasLayer(layer)) return done();
-  map.once("moveend", () => clusterGroup.zoomToShowLayer(layer, done));
-  map.flyTo(layer.getLatLng(), Math.max(map.getZoom(), 4));
+  if (!layer || (!map.hasLayer(layer) && !clusterGroup.hasLayer(layer))) return done();
+  const clustered = clusterGroup.hasLayer(layer);
+  map.once("moveend", () => (clustered ? clusterGroup.zoomToShowLayer(layer, done) : done()));
+  map.flyTo(layer.getLatLng(), Math.max(map.getZoom(), READABLE_ZOOM));
 }

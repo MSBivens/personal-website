@@ -17,6 +17,7 @@ export const legendState = (() => {
   return {
     hidden: new Set(Array.isArray(saved.hidden) ? saved.hidden : []),
     network: saved.network === true,
+    trail: saved.trail !== false, // the party's trail starts shown
     lines: obj(saved.lines), // Relationship Type id → shown? (unset: the type's "Shown by default")
     // On a phone the open legend covers most of the map, so it starts minimised there.
     collapsed: typeof saved.collapsed === "boolean" ? saved.collapsed : matchMedia("(max-width: 600px)").matches,

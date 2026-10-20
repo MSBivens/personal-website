@@ -4,6 +4,7 @@ import { map } from "./view.js";
 import { renderMarkers } from "./markers.js";
 import { drawNetwork } from "./network.js";
 import { drawRelations } from "./lines.js";
+import { drawTrail } from "./trail.js";
 
 export function drawLines() {
   drawRelations(drawNetwork());
@@ -11,6 +12,7 @@ export function drawLines() {
 
 export function render() {
   renderMarkers();
+  drawTrail();
   drawLines();
 }
 

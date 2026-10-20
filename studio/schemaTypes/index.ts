@@ -1,3 +1,4 @@
+import {campaign} from './campaign'
 import {connection} from './connection'
 import {location} from './location'
 import {partyMember} from './partyMember'
@@ -16,4 +17,5 @@ export const schemaTypes = [
   rank,
   relationshipType,
   connection,
+  campaign,
 ]
