@@ -39,6 +39,8 @@ function startLocating() {
   locateToggle.setAttribute("aria-pressed", "true");
   map.getContainer().classList.add("is-locating");
   map.on("click", onLocateClick);
+  // The record panel closes so the whole map can be clicked (panel.js).
+  document.dispatchEvent(new Event("locate-start"));
 }
 
 export function stopLocating() {

@@ -41,7 +41,7 @@
     <!-- A module, so it runs after the deferred Leaflet scripts above -->
     <script type="module" src="/one-for-all/map.js"></script>
   </head>
-  <body onclick="closeStartMenu()">
+  <body class="map-page" onclick="closeStartMenu()">
     <div class="program-window" style="height: calc(100vh - 50px)">
       <div class="title-bar gradient">
         <div style="display: flex; align-items: center; gap: 5px">
@@ -74,7 +74,7 @@
             height="16"
             alt=""
           />
-          Locate
+          <span class="btn-label">Locate</span>
         </button>
         <button
           type="button"
@@ -84,12 +84,134 @@
           hidden
         >
           <img id="party-button-icon" src="" width="16" height="16" alt="" />
-          Party
+          <span class="btn-label">Party</span>
         </button>
+        <button
+          type="button"
+          class="win-btn toolbar-btn"
+          id="records-button"
+          aria-haspopup="dialog"
+          aria-expanded="false"
+          title="List every record"
+          hidden
+        >
+          <img
+            src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png"
+            width="16"
+            height="16"
+            alt=""
+          />
+          <span class="btn-label">Records</span>
+        </button>
+        <button
+          type="button"
+          class="win-btn toolbar-btn"
+          id="new-button"
+          aria-haspopup="dialog"
+          title="What's been added since the last session"
+          hidden
+        >
+          <img
+            src="https://win98icons.alexmeub.com/icons/png/message_envelope_open-0.png"
+            width="16"
+            height="16"
+            alt=""
+          />
+          <span class="btn-label"><span class="label-long">What's new</span><span class="label-short">New</span></span>
+          <span class="count-badge" id="new-count" hidden></span>
+        </button>
+        <button
+          type="button"
+          class="win-btn toolbar-btn"
+          id="threads-button"
+          aria-haspopup="dialog"
+          aria-pressed="false"
+          title="Things the party could still pursue"
+          hidden
+        >
+          <img src="https://win98icons.alexmeub.com/icons/png/notepad-0.png" width="16" height="16" alt="" />
+          <span class="btn-label"><span class="label-long">Open threads</span><span class="label-short">Threads</span></span>
+        </button>
+        <!-- Phones only: the Find box opens on its own row, and the Legend as a sheet -->
+        <button
+          type="button"
+          class="win-btn toolbar-btn phone-only"
+          id="find-toggle"
+          aria-controls="find-box"
+          aria-expanded="false"
+          title="Find a record"
+        >
+          <img
+            src="https://win98icons.alexmeub.com/icons/png/search_file-0.png"
+            width="16"
+            height="16"
+            alt=""
+          />
+          <span class="btn-label">Find</span>
+        </button>
+        <button
+          type="button"
+          class="win-btn toolbar-btn phone-only"
+          id="filters-button"
+          aria-expanded="false"
+          title="Show or hide pins and lines"
+        >
+          <img
+            src="https://win98icons.alexmeub.com/icons/png/check-0.png"
+            width="16"
+            height="16"
+            alt=""
+          />
+          <span class="btn-label">Filters</span>
+        </button>
+        <div class="find-box" id="find-box" role="search">
+          <label for="find-input">Find:</label>
+          <input
+            id="find-input"
+            class="win-input"
+            type="search"
+            placeholder="Name, place or word…  ( / )"
+            autocomplete="off"
+            spellcheck="false"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-expanded="false"
+            aria-controls="find-results"
+          />
+          <ul id="find-results" class="find-results" role="listbox" aria-label="Matching records" hidden></ul>
+        </div>
       </div>
 
       <div class="map-viewer">
         <div id="map" aria-label="Map of Faerûn"></div>
+
+        <div id="threads-chip" class="threads-chip" role="status" hidden>
+          Showing open threads only
+          <button type="button" class="win-btn" id="threads-chip-off">Show all</button>
+        </div>
+
+        <aside id="record-panel" class="prop-window record-panel" aria-labelledby="panel-name" hidden>
+          <div class="title-bar">
+            <span id="panel-name"></span>
+            <div class="title-controls">
+              <button type="button" id="panel-expand" class="panel-expand" aria-label="Expand">▲</button>
+              <button type="button" id="panel-close" aria-label="Close">X</button>
+            </div>
+          </div>
+          <div class="panel-nav">
+            <button type="button" class="win-btn" id="panel-back" disabled>◀ Back</button>
+            <button type="button" class="win-btn" id="panel-forward" disabled>Forward ▶</button>
+            <button type="button" class="win-btn" id="panel-copy-link">Copy link</button>
+          </div>
+          <div id="panel-body" class="prop-body panel-body" tabindex="-1">
+            <div class="pin-type">
+              <img id="panel-icon" src="" width="32" height="32" alt="" />
+              <b id="panel-kind"></b>
+            </div>
+            <hr />
+            <div id="panel-content"></div>
+          </div>
+        </aside>
 
         <div id="locate-panel" class="locate-panel prop-window" hidden>
           <div class="title-bar">
@@ -121,68 +243,70 @@
     </div>
 
     <div
-      id="pin-modal"
+      id="records-modal"
       class="modal"
       role="dialog"
       aria-modal="true"
-      aria-labelledby="pin-name"
+      aria-labelledby="records-title"
     >
-      <div class="prop-window pin-window">
+      <div class="prop-window records-window">
         <div class="title-bar">
-          <span id="pin-name"></span>
+          <span id="records-title">Records</span>
           <div class="title-controls">
-            <button type="button" class="pin-close" aria-label="Close">
-              X
-            </button>
+            <button type="button" class="records-close" aria-label="Close">X</button>
           </div>
         </div>
         <div class="prop-body">
-          <div class="pin-type">
-            <img id="pin-icon" src="" width="32" height="32" alt="" />
-            <b id="pin-type"></b>
+          <div class="records-filters">
+            <label>Type <select id="records-type"></select></label>
+            <label>Status <select id="records-status"></select></label>
+            <label
+              >Show
+              <select id="records-show">
+                <option value="">Everything</option>
+                <option value="new">New since last session</option>
+                <option value="open">Open threads</option>
+              </select></label
+            >
           </div>
-          <hr />
-          <div id="pin-details" class="pin-details"></div>
-          <div id="pin-connections"></div>
-          <div id="pin-description" class="pin-description"></div>
-          <div class="dialog-buttons">
-            <button type="button" class="win-btn" id="pin-back" hidden></button>
-            <button type="button" class="win-btn pin-close" id="pin-ok">
-              OK
-            </button>
+          <div class="records-table-wrap">
+            <table class="records-table">
+              <thead>
+                <tr>
+                  <th data-sort="name" class="records-name"><button type="button">Name</button></th>
+                  <th data-sort="type" class="records-type"><button type="button">Type</button></th>
+                  <th data-sort="location" class="records-location"><button type="button">Location</button></th>
+                  <th data-sort="status" class="records-status"><button type="button">Status</button></th>
+                  <th data-sort="added" class="records-added"><button type="button">Added</button></th>
+                </tr>
+              </thead>
+              <tbody id="records-rows"></tbody>
+            </table>
+          </div>
+          <div class="records-footer">
+            <span id="records-count" class="records-count" aria-live="polite"></span>
+            <button type="button" class="win-btn records-close">OK</button>
           </div>
         </div>
       </div>
     </div>
 
-    <div
-      id="place-modal"
-      class="modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="place-name"
-    >
-      <div class="prop-window place-window">
+    <div id="list-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="list-title">
+      <div class="prop-window list-window">
         <div class="title-bar">
-          <span id="place-name"></span>
+          <span id="list-title"></span>
           <div class="title-controls">
-            <button type="button" class="place-close" aria-label="Close">
-              X
-            </button>
+            <button type="button" class="list-close" aria-label="Close">X</button>
           </div>
         </div>
         <div class="prop-body">
-          <div class="pin-type">
-            <img id="place-icon" src="" width="32" height="32" alt="" />
-            <b id="place-kind"></b>
-          </div>
-          <hr />
-          <div id="place-description" class="pin-description"></div>
-          <div id="place-contents"></div>
+          <p id="list-intro" class="list-intro"></p>
+          <div id="list-content"></div>
+          <label id="list-only-row" class="list-only" hidden>
+            <input type="checkbox" id="list-only" /> Show only these on the map
+          </label>
           <div class="dialog-buttons">
-            <button type="button" class="win-btn place-close" id="place-ok">
-              OK
-            </button>
+            <button type="button" class="win-btn list-close">OK</button>
           </div>
         </div>
       </div>

@@ -1,6 +1,5 @@
 import type {StructureResolver} from 'sanity/structure'
-import {CAMPAIGN_ID} from './schemaTypes/campaign'
-import {API_VERSION} from './schemaTypes/ids'
+import {API_VERSION, CAMPAIGN_ID} from './schemaTypes/ids'
 
 export const structure: StructureResolver = (S, context) =>
   S.list()

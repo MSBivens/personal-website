@@ -123,6 +123,15 @@ function lineRows() {
   return rows;
 }
 
+// On phones the Legend is a sheet along the bottom, opened with the toolbar's Filters button;
+// its minimise button closes the sheet.
+const isPhone = () => matchMedia("(max-width: 600px)").matches;
+const filtersButton = document.getElementById("filters-button");
+function setFiltersOpen(open) {
+  document.body.classList.toggle("filters-open", open);
+  filtersButton.setAttribute("aria-expanded", String(open));
+}
+
 const Legend = L.Control.extend({
   options: { position: "bottomleft" },
 
@@ -146,6 +155,7 @@ const Legend = L.Control.extend({
     };
     syncToggle();
     toggle.addEventListener("click", () => {
+      if (isPhone()) return setFiltersOpen(false);
       body.hidden = !body.hidden;
       legendState.collapsed = body.hidden;
       syncToggle();
@@ -169,4 +179,13 @@ const Legend = L.Control.extend({
 
 export function addLegend() {
   new Legend().addTo(map);
+  filtersButton.addEventListener("click", () => {
+    const open = !document.body.classList.contains("filters-open");
+    setFiltersOpen(open);
+    if (open) {
+      // The sheet always opens expanded, whatever the minimise state was.
+      document.getElementById("legend-body").hidden = false;
+      document.querySelector(".map-legend .title-controls button").textContent = "_";
+    }
+  });
 }

@@ -2,12 +2,12 @@
 // A pin sits at its own X/Y, or at its Location's position if it has none. Pins sharing a
 // Location's spot are drawn as one Location marker (places.js); a lone one is drawn as itself.
 // Nearby markers then merge into numbered clusters when zoomed out (Leaflet.markercluster).
-import { map, toLatLng, toImagePoint, isLocating } from "./view.js";
+import { map, plainText, toLatLng, toImagePoint, isLocating } from "./view.js";
 import { FALLBACK_ICON, pinIcon, sanityIcon } from "./icons.js";
-import { campaign, pinsById, placesById, typesById, waypointsById } from "./state.js";
-import { showPin } from "./popup.js";
+import { campaign, isNew, isOpenThread, pinsById, placesById, typesById, waypointsById } from "./state.js";
+import { showPin } from "./panel.js";
 import { setPlaceIcon } from "./places.js";
-import { PLACES, isHidden } from "./filters.js";
+import { PLACES, isHidden, threadsView } from "./filters.js";
 import { TYPE } from "./data.js";
 
 // Statuses styled Dimmed or Faded grey the pin out (and dash a member's network line).
@@ -33,16 +33,24 @@ for (const name of ["_recursivelyAnimateChildrenIn", "_recursivelyBecomeVisible"
 // A Location marker stands for several records, so clusters count records, not markers.
 const recordsIn = (cluster) => cluster.getAllChildMarkers().reduce((n, m) => n + (m.records || 1), 0);
 
+// Whether a pin is drawn: its type is ticked, and in the Open threads view, it's one of them
+// (the party always shows).
+const isShown = (entry) => !isHidden(entry.pin.typeId) && (!threadsView.on || entry.party || isOpenThread(entry));
+
+// Bigger cluster badges on touch screens, so they're easy to tap.
+const CLUSTER_SIZE = matchMedia("(pointer: coarse)").matches ? 40 : 34;
+
 export const clusterGroup = L.markerClusterGroup({
   maxClusterRadius: 36,
   showCoverageOnHover: false,
   spiderfyDistanceMultiplier: 1.6,
   iconCreateFunction(cluster) {
     const n = recordsIn(cluster);
+    const fresh = cluster.getAllChildMarkers().some((m) => m.isNew);
     return L.divIcon({
       html: `<span class="cluster-count" aria-hidden="true">${n}</span><span class="sr-only">${n} records here. Zoom in to see them.</span>`,
-      className: "map-cluster",
-      iconSize: [34, 34],
+      className: fresh ? "map-cluster has-new" : "map-cluster",
+      iconSize: [CLUSTER_SIZE, CLUSTER_SIZE],
     });
   },
 }).addTo(map);
@@ -63,6 +71,14 @@ function partyIcon(icon) {
   ring.append(Object.assign(new Image(32, 32), { src: icon.src, alt: "", className: icon.pixelated ? "" : "smooth" }));
   return L.divIcon({ html: ring, className: "map-pin party-pin", iconSize: [44, 44], iconAnchor: [22, 22] });
 }
+
+// Names under the markers once you're zoomed in far enough for them to fit.
+const LABEL_ZOOM = 3.5;
+export const nameLabel = (marker, name, gap = 14) =>
+  marker.bindTooltip(plainText(name), { permanent: true, direction: "bottom", offset: [0, gap], className: "map-label" });
+const syncLabels = () => map.getContainer().classList.toggle("show-labels", map.getZoom() >= LABEL_ZOOM);
+map.on("zoomend", syncLabels);
+syncLabels();
 
 /** Where a pin sits: its own X/Y, else its Location's. Null if neither has one. */
 export function positionOf(pin, place) {
@@ -102,19 +118,23 @@ export function addPin(pin) {
   }
 
   const marker = L.marker(toLatLng(at.x, at.y), {
-    icon: party ? partyIcon(icon) : pinIcon(icon, isDimmed(pin) ? `is-${pin.status.style}` : ""),
+    icon: party ? partyIcon(icon) : pinIcon(icon, isDimmed(pin) ? `is-${pin.status.style}` : "", pin.status, isNew(entry)),
     title: pin.name,
-    alt: pin.name,
     riseOnHover: true,
     zIndexOffset: party ? 2000 : 0,
   });
   entry.marker = marker;
+  marker.isNew = isNew(entry);
+  nameLabel(marker, pin.name, party ? 20 : 14);
   marker.on("click", () => {
     if (!isLocating()) showPin(entry);
   });
   // Leaflet 1.9 makes markers focusable but doesn't treat Enter/Space as a click.
   // The element is recreated whenever the marker is re-added, so listen on each add.
+  const ariaLabel = [pin.name, pin.status && pin.status.title].filter(Boolean).join(", ");
   marker.on("add", () => {
+    marker.getElement().setAttribute("aria-label", ariaLabel);
+    marker.getElement().classList.toggle("is-selected", marker === selected);
     marker.getElement().addEventListener("keydown", (e) => {
       if ((e.key === "Enter" || e.key === " ") && !isLocating()) {
         e.preventDefault();
@@ -132,24 +152,24 @@ export function renderMarkers() {
   for (const place of placesById.values()) {
     place.rep = null;
     if (!place.marker) continue;
-    const shown = place.grouped.filter((entry) => entry.marker && !isHidden(entry.pin.typeId));
+    const shown = place.grouped.filter((entry) => entry.marker && isShown(entry));
     if (shown.length > 1) {
-      setPlaceIcon(place, shown.length);
+      setPlaceIcon(place, shown.length, shown.some(isNew));
       place.rep = place.marker;
       for (const entry of shown) entry.rep = place.marker;
       layers.push(place.marker);
     } else if (shown.length === 1) {
       place.rep = shown[0].marker; // added with the other pins below
-    } else if (!place.grouped.length && place.readable && !isHidden(PLACES)) {
+    } else if (!place.grouped.length && place.readable && !isHidden(PLACES) && !threadsView.on) {
       // Nothing here yet, but something to read: a plain Location marker.
-      setPlaceIcon(place, 0);
+      setPlaceIcon(place, 0, isNew(place));
       place.rep = place.marker;
       layers.push(place.marker);
     }
   }
   partyLayer.clearLayers();
   for (const entry of pinsById.values()) {
-    if (!entry.marker || entry.rep || isHidden(entry.pin.typeId)) continue;
+    if (!entry.marker || entry.rep || !isShown(entry)) continue;
     entry.rep = entry.marker;
     if (entry.party) partyLayer.addLayer(entry.marker);
     else layers.push(entry.marker);
@@ -182,6 +202,16 @@ export const entryAnchor = (entry) => anchorOfLayer(entry.rep);
 
 /** Two line ends drawn at the same marker, cluster or spot (a line would have no length). */
 export const sameSpot = (a, b) => (a.layer && a.layer === b.layer) || (a.x === b.x && a.y === b.y);
+
+// The marker standing for the record open in the panel gets a highlight ring. Markers are
+// recreated as clusters change, so each marker re-applies it when it's added.
+let selected = null;
+export const selectedLayer = () => selected;
+export function setSelected(layer) {
+  if (selected && selected.getElement()) selected.getElement().classList.remove("is-selected");
+  selected = layer;
+  if (selected && selected.getElement()) selected.getElement().classList.add("is-selected");
+}
 
 // Close enough to read the place names on the map.
 export const READABLE_ZOOM = 4;

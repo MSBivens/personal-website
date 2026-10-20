@@ -26,14 +26,10 @@ const CONNECTIONS = `connections[defined(type._ref) && defined(to._ref)]{
 
 // Pins with "Show on map" off aren't fetched at all (they're still public through Sanity's
 // API, though). Post Offices always are: lines bend through them.
-// Until production is migrated, the old Map Visibility field stands in for "Show on map",
-// and Attached pins drop the old X/Y they kept from before Hubs, so they sit at their Location.
-const ON_MAP = `coalesce(showOnMap, coalesce(visibility, "pin") != "hidden")`;
-const OWN_X = `select(visibility == "attached" => null, x)`;
-const OWN_Y = `select(visibility == "attached" => null, y)`;
 
 const QUERY = `{
   "campaign": *[_id == "campaign"][0]{
+    lastSession,
     "partyId": partyPin._ref,
     "trail": trail[]{ "locationId": location._ref, x, y, date, note }
   },
@@ -45,16 +41,16 @@ const QUERY = `{
     "shownByDefault": coalesce(shownByDefault, true)
   },
   "locations": *[_type == "location"]{
-    "id": _id, name, description, x, y, "icon": icon.asset->${ASSET},
+    "id": _id, "createdAt": _createdAt, name, description, x, y, "icon": icon.asset->${ASSET},
     "details": details[defined(value)]{ label, value },
     "connections": ${CONNECTIONS}
   },
-  "pins": *[_type == "pin" && (type._ref == "${TYPE.postOffice}" || ${ON_MAP})]{
-    "id": _id, name, description, "x": ${OWN_X}, "y": ${OWN_Y},
+  "pins": *[_type == "pin" && (type._ref == "${TYPE.postOffice}" || showOnMap != false)]{
+    "id": _id, "createdAt": _createdAt, name, description, x, y,
     "typeId": type._ref,
     "locationId": location._ref,
     "icon": icon.asset->${ASSET},
-    "status": status->{ title, style },
+    "status": status->{ title, style, badge, openThread },
     "details": details[defined(value)]{ label, value },
     "connections": ${CONNECTIONS},
     type._ref == "${TYPE.member}" => {

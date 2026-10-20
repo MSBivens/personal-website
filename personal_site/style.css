@@ -523,6 +523,26 @@ html {
   filter: drop-shadow(1px 1px 0 #fff) drop-shadow(-1px -1px 0 #fff);
 }
 
+/* Pin markers: the icon, plus a status badge on the bottom-right corner */
+.map-pin .pin-img {
+  display: block;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.map-pin .status-badge {
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+}
+
+.badge-inline {
+  display: inline-flex;
+  vertical-align: -2px;
+  margin-right: 4px;
+}
+
 /* Icons uploaded larger than 64px are drawn art, not pixel icons, so scale them smoothly */
 .map-pin.smooth,
 .legend-row img.smooth,
@@ -531,13 +551,13 @@ html {
   image-rendering: auto;
 }
 
-/* Statuses with a Dimmed or Faded map style. Repeats the drop-shadow because filter doesn't merge. */
-.map-pin.is-dimmed {
-  filter: grayscale(1) opacity(0.8) drop-shadow(1px 1px 0 #fff) drop-shadow(-1px -1px 0 #fff);
+/* Statuses with a Dimmed or Faded map style grey the icon, but not its badge */
+.map-pin.is-dimmed .pin-img {
+  filter: grayscale(1) opacity(0.8);
 }
 
-.map-pin.is-faded {
-  filter: grayscale(1) opacity(0.45) drop-shadow(1px 1px 0 #fff) drop-shadow(-1px -1px 0 #fff);
+.map-pin.is-faded .pin-img {
+  filter: grayscale(1) opacity(0.45);
 }
 
 .map-pin:focus-visible {
@@ -730,16 +750,6 @@ html {
   text-shadow: 1px 1px 0 #fff;
 }
 
-.pin-window {
-  width: 360px;
-  max-width: calc(100vw - 32px);
-}
-
-.place-window {
-  width: 380px;
-  max-width: calc(100vw - 32px);
-}
-
 .dialog-buttons {
   display: flex;
   justify-content: flex-end;
@@ -747,9 +757,103 @@ html {
   margin-top: 10px;
 }
 
-/* "◀ Back to <Hub>" sits on the left, OK on the right */
-#pin-back {
-  margin-right: auto;
+/* Record panel: a Properties window docked on the right of the map (a sheet along the
+   bottom on phones). The map stays usable around it. */
+.record-panel {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  bottom: 8px;
+  z-index: 1001;
+  width: 340px;
+  max-width: calc(100% - 16px);
+  box-sizing: border-box;
+}
+
+/* .prop-window sets display:flex, which would override the hidden attribute */
+.record-panel[hidden] {
+  display: none;
+}
+
+.record-panel .title-bar span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.panel-nav {
+  display: flex;
+  gap: 4px;
+  padding: 4px 6px;
+  border-bottom: 1px solid #808080;
+  box-shadow: 0 1px 0 #fff;
+}
+
+.panel-nav .win-btn {
+  padding: 1px 8px;
+}
+
+.panel-nav .win-btn:active {
+  padding: 2px 7px 0 9px;
+}
+
+.panel-nav .win-btn:disabled {
+  color: #808080;
+  text-shadow: 1px 1px 0 #fff;
+  cursor: default;
+}
+
+#panel-copy-link {
+  margin-left: auto;
+}
+
+.panel-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.panel-body:focus {
+  outline: none;
+}
+
+.panel-body .pin-description,
+.panel-body .place-records {
+  max-height: none;
+}
+
+.panel-body > #panel-content > * + * {
+  margin-top: 10px;
+}
+
+.title-controls .panel-expand {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .record-panel {
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    max-width: none;
+    height: 50%;
+  }
+
+  .record-panel.is-expanded {
+    height: calc(100% - 8px);
+  }
+
+  .title-controls .panel-expand {
+    display: inline-block;
+  }
+}
+
+/* The marker for the record open in the panel */
+.leaflet-marker-icon.is-selected {
+  outline: 3px solid #ffd700;
+  outline-offset: 3px;
 }
 
 /* Location marker: its icon, with a count badge when it stands for several pins */
@@ -847,6 +951,117 @@ html {
 .party-pin:focus-visible .party-ring {
   outline: 2px dotted var(--win-blue);
   outline-offset: 3px;
+}
+
+/* "New since the last session": a yellow tag on a marker's top-left corner, or inline in lists */
+.new-tag {
+  position: absolute;
+  top: -7px;
+  left: -9px;
+  padding: 0 2px;
+  background: #ffef5c;
+  color: #000;
+  border: 1px solid #000;
+  font: bold 8px/10px "Tahoma", sans-serif;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+
+.new-tag.inline {
+  position: static;
+  display: inline-block;
+  margin-left: 6px;
+  vertical-align: 1px;
+}
+
+/* A cluster with something new inside gets a yellow dot */
+.map-cluster.has-new::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ffef5c;
+  border: 1px solid #000;
+}
+
+/* Count on the What's new button */
+.count-badge {
+  min-width: 14px;
+  padding: 0 3px;
+  box-sizing: border-box;
+  background: #c0392b;
+  color: #fff;
+  border-radius: 7px;
+  font: bold 10px/14px "Tahoma", sans-serif;
+  text-align: center;
+}
+
+.count-badge[hidden] {
+  display: none;
+}
+
+.label-short {
+  display: none;
+}
+
+/* What's new / Open threads window */
+.list-window {
+  width: 400px;
+  max-width: calc(100vw - 32px);
+}
+
+.list-window .prop-body {
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.list-intro {
+  margin: 0 0 8px;
+}
+
+.list-empty {
+  margin: 8px 0;
+  color: #444;
+}
+
+.list-only {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.list-only[hidden] {
+  display: none;
+}
+
+/* Shown while the map is showing open threads only */
+.threads-chip {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 4px 3px 10px;
+  background: #ffffe1;
+  border: 1px solid #000;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.threads-chip[hidden] {
+  display: none;
+}
+
+.threads-chip .win-btn {
+  padding: 1px 8px;
 }
 
 /* Cluster of nearby markers (zoomed out): a raised Win95 button with the record count */
@@ -1064,6 +1279,216 @@ html {
   background: repeating-conic-gradient(var(--win-gray) 0% 25%, #fff 0% 50%) 0 0 / 2px 2px;
 }
 
+/* Find box: a Win95 text box with a drop-down list of matches */
+.map-toolbar {
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.find-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+}
+
+.find-box label {
+  font: 12px "Tahoma", sans-serif;
+}
+
+.find-box input {
+  width: 230px;
+  max-width: 50vw;
+  margin: 0;
+  font-family: "Tahoma", sans-serif;
+  font-size: 12px;
+}
+
+.find-box input:focus-visible {
+  outline: 1px dotted #000;
+  outline-offset: 1px;
+}
+
+.find-results {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1500;
+  width: 320px;
+  max-width: calc(100vw - 24px);
+  max-height: 60vh;
+  overflow-y: auto;
+  margin: 2px 0 0;
+  padding: 2px;
+  list-style: none;
+  background: #fff;
+  border: 2px inset #fff;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+  font-size: 12px;
+}
+
+.find-results[hidden] {
+  display: none;
+}
+
+.find-option {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  column-gap: 6px;
+  align-items: center;
+  padding: 3px 4px;
+  cursor: pointer;
+}
+
+.find-option img {
+  grid-row: span 2;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.find-option img.smooth {
+  image-rendering: auto;
+}
+
+.find-kind {
+  color: #666;
+  font-size: 11px;
+}
+
+.find-option[aria-selected="true"],
+.find-option:hover {
+  background: var(--win-blue);
+  color: #fff;
+}
+
+.find-option[aria-selected="true"] .find-kind,
+.find-option:hover .find-kind {
+  color: #ddd;
+}
+
+.find-none {
+  padding: 3px 4px;
+  color: #666;
+}
+
+/* Records window: an Explorer-style table */
+.records-window {
+  width: 680px;
+  max-width: calc(100vw - 32px);
+}
+
+.records-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-bottom: 8px;
+}
+
+.records-filters select {
+  margin-left: 4px;
+  font: 12px "Tahoma", sans-serif;
+}
+
+.records-table-wrap {
+  max-height: 60vh;
+  overflow: auto;
+  background: #fff;
+  border: 2px inset #fff;
+}
+
+.records-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.records-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 0;
+  background: var(--win-gray);
+  text-align: left;
+}
+
+.records-table th button {
+  width: 100%;
+  padding: 2px 6px;
+  background: var(--win-gray);
+  border: 1px outset #fff;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.records-table th button:focus-visible {
+  outline: 1px dotted #000;
+  outline-offset: -3px;
+}
+
+.records-table th[aria-sort="ascending"] button::after {
+  content: " ▲";
+  font-size: 9px;
+}
+
+.records-table th[aria-sort="descending"] button::after {
+  content: " ▼";
+  font-size: 9px;
+}
+
+.records-table td {
+  padding: 1px 6px;
+  white-space: nowrap;
+}
+
+.records-table td.records-name {
+  padding-left: 2px;
+}
+
+.records-table tbody tr:nth-child(even) {
+  background: #f4f4f4;
+}
+
+.records-added,
+.records-type,
+.records-status {
+  color: #333;
+}
+
+.records-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.records-count {
+  padding: 1px 6px;
+  border: 1px inset #fff;
+}
+
+@media (max-width: 600px) {
+  .records-location,
+  .records-added {
+    display: none;
+  }
+}
+
+/* Names under markers, shown once zoomed in (markers.js toggles .show-labels) */
+#map .leaflet-tooltip.map-label {
+  display: none;
+  padding: 0 3px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid #808080;
+  font: 10px/14px "Tahoma", sans-serif;
+  white-space: nowrap;
+}
+
+#map.show-labels .leaflet-tooltip.map-label {
+  display: block;
+}
+
 .locate-panel {
   position: absolute;
   top: 10px;
@@ -1113,4 +1538,192 @@ html {
   top: 11px;
   width: 100%;
   height: 2px;
+}
+
+/* =========================================
+   MAP ON PHONES: the map fills the screen, with a floating toolbar
+   ========================================= */
+.phone-only {
+  display: none;
+}
+
+/* Zoom with two fingers on touch screens */
+@media (pointer: coarse) {
+  #map .leaflet-control-zoom {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .map-page .program-window {
+    height: 100dvh !important;
+    max-height: none;
+    margin: 0;
+    border: 0;
+    box-shadow: none;
+    position: relative;
+  }
+
+  .map-page .program-window > .title-bar,
+  .map-page .taskbar,
+  .map-page .start-menu {
+    display: none;
+  }
+
+  .map-page .map-viewer {
+    margin: 0;
+    border: 0;
+  }
+
+  .map-page .map-toolbar {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    right: 6px;
+    z-index: 1100;
+    gap: 4px;
+    padding: 3px;
+    background: var(--win-gray);
+    border: 2px outset #fff;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+  }
+
+  /* Icon with a small label underneath, at least 44px to tap */
+  .map-page .toolbar-btn {
+    flex: 1 1 0;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 48px;
+    max-width: 72px;
+    min-height: 44px;
+    justify-content: center;
+    padding: 2px 0;
+    font-size: 10px;
+  }
+
+  .map-page .toolbar-btn:active,
+  .map-page .toolbar-btn[aria-pressed="true"] {
+    padding: 3px 0 1px 1px;
+  }
+
+  .map-page .toolbar-btn img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .map-page .toolbar-btn.phone-only {
+    display: inline-flex;
+  }
+
+  .map-page .label-long {
+    display: none;
+  }
+
+  .map-page .label-short {
+    display: inline;
+  }
+
+  .map-page .toolbar-btn {
+    position: relative;
+  }
+
+  .map-page .count-badge {
+    position: absolute;
+    top: 1px;
+    right: 3px;
+  }
+
+  .map-page .threads-chip {
+    top: 70px;
+  }
+
+  /* Find: its own row under the buttons, opened with the Find button */
+  .map-page .find-box {
+    display: none;
+    flex-basis: 100%;
+    margin: 0;
+  }
+
+  .map-page .find-open .find-box {
+    display: flex;
+  }
+
+  .map-page .find-box label {
+    display: none;
+  }
+
+  .map-page .find-box input {
+    flex: 1;
+    width: auto;
+    max-width: none;
+    min-height: 36px;
+    font-size: 16px; /* stops phones zooming in on the box */
+  }
+
+  .map-page .find-results {
+    left: 0;
+    width: auto;
+  }
+
+  .map-page .find-option {
+    padding: 8px 6px;
+  }
+
+  /* Leaflet's corner controls and the Locate box sit below the toolbar */
+  .map-page .leaflet-top {
+    top: 62px;
+  }
+
+  .map-page .locate-panel {
+    top: 68px;
+  }
+
+  /* The Legend becomes a sheet along the bottom, opened with Filters */
+  .map-page .map-legend {
+    display: none;
+  }
+
+  .map-page.filters-open .map-legend {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1002;
+    max-height: 65dvh;
+    margin: 0;
+    width: auto;
+  }
+
+  .map-page.filters-open .map-legend .prop-body {
+    overflow-y: auto;
+  }
+
+  .map-page .legend-row {
+    padding: 6px 0;
+  }
+
+  /* Records: the whole screen */
+  .map-page .records-window {
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    border: 0;
+  }
+
+  .map-page .records-window .prop-body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .map-page .records-table-wrap {
+    flex: 1;
+    max-height: none;
+  }
+
+  .map-page .records-table td {
+    padding-block: 6px;
+  }
 }

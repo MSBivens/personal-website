@@ -1,7 +1,7 @@
 // Relationship lines: the Connections on pins and Locations, drawn in their Relationship
 // Type's style. Also the line geometry: curves, bowing apart lines that share both ends,
 // and arrowheads.
-import { map, toLatLng } from "./view.js";
+import { map, plainText, toLatLng } from "./view.js";
 import { pinsById, placesById, relTypesById, waypointsById } from "./state.js";
 import { anchorOfLayer, entryAnchor, sameSpot } from "./markers.js";
 import { lineShown } from "./filters.js";
@@ -217,7 +217,7 @@ function drawConnection({ conn, points, bends }) {
     weight: w,
     opacity: 0.95,
     dashArray: dash ? dash.join(" ") : null,
-  }).bindTooltip(tooltipText(conn), { sticky: true });
+  }).bindTooltip(plainText(tooltipText(conn)), { sticky: true });
   if (flowing) {
     // The animation moves the dashes one full pattern length per cycle (see style.css).
     const period = dash.reduce((sum, n) => sum + n, 0);

@@ -1,6 +1,9 @@
 import {defineField, defineType, type NumberRule} from 'sanity'
 import {connectionsField} from './connection'
+import {HereField} from '../components/HereField'
+import {MapPicker} from '../components/MapPicker'
 import {detailsField} from './details'
+import {mentionWarning, overlapWarning} from './warnings'
 import {API_VERSION, publishedId} from './ids'
 
 // Optional, but X and Y go together.
@@ -51,7 +54,7 @@ export const location = defineType({
       title: 'X',
       type: 'number',
       fieldset: 'position',
-      validation: positionRule(4763, 'x'),
+      validation: (rule) => [positionRule(4763, 'x')(rule), overlapWarning(rule)],
     }),
     defineField({
       name: 'y',
@@ -59,6 +62,13 @@ export const location = defineType({
       type: 'number',
       fieldset: 'position',
       validation: positionRule(3185, 'y'),
+    }),
+    defineField({
+      name: 'mapPicker',
+      title: 'Place on map',
+      type: 'string',
+      description: 'Click the map to fill in X and Y.',
+      components: {input: MapPicker},
     }),
     defineField({
       name: 'icon',
@@ -73,6 +83,16 @@ export const location = defineType({
       type: 'text',
       rows: 4,
       description: 'Notes about this place, shown in its panel on the map. Leave a blank line between paragraphs.',
+      validation: mentionWarning,
+    }),
+    // Nothing is stored here; the field lists the pins at this Location.
+    defineField({
+      name: 'here',
+      title: 'Pins here',
+      type: 'string',
+      description: 'Pins whose Location is this one. Add one with a button below; its Location is filled in for you.',
+      readOnly: true,
+      components: {input: HereField},
     }),
     detailsField({
       description:

@@ -12,6 +12,10 @@ export const map = L.map("map", {
   maxBoundsViscosity: 1,
 });
 
+// Leaflet puts tooltip text in as HTML, so names like "<NAME UNKNOWN>" would vanish (or
+// worse). Tooltips get this element instead.
+export const plainText = (text) => Object.assign(document.createElement("span"), { textContent: text });
+
 export const toLatLng = (x, y) => map.unproject([x, y], MAP_IMAGE.maxZoom);
 export const toImagePoint = (latlng) => map.project(latlng, MAP_IMAGE.maxZoom);
 // In locate mode, clicks place the locate mark instead of opening pins.

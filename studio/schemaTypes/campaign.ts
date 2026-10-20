@@ -1,8 +1,8 @@
 import {defineArrayMember, defineField, defineType, type NumberRule} from 'sanity'
+import {MapPicker} from '../components/MapPicker'
 
-// One record (ID `campaign`) for map-wide settings: which pin is the party, and where the
-// party has been. Opened from Settings → Campaign Settings.
-export const CAMPAIGN_ID = 'campaign'
+// One record (ID `campaign`, see ids.ts) for map-wide settings: the last session, which pin is
+// the party, and where the party has been. Opened from Settings → Campaign Settings.
 
 type StopDoc = {location?: {_ref?: string}; x?: number; y?: number}
 
@@ -27,6 +27,14 @@ export const campaign = defineType({
   title: 'Campaign Settings',
   type: 'document',
   fields: [
+    defineField({
+      name: 'lastSession',
+      title: 'Last session',
+      type: 'date',
+      description:
+        "The date of the last session. Pins and Locations created on or after it are tagged New on the map and listed under What's new. Leave empty to turn this off.",
+      options: {dateFormat: 'D MMM YYYY'},
+    }),
     defineField({
       name: 'partyPin',
       title: 'Party pin',
@@ -59,6 +67,12 @@ export const campaign = defineType({
             }),
             defineField({name: 'x', title: 'X', type: 'number', fieldset: 'position', validation: stopPositionRule(4763, 'x')}),
             defineField({name: 'y', title: 'Y', type: 'number', fieldset: 'position', validation: stopPositionRule(3185, 'y')}),
+            defineField({
+              name: 'mapPicker',
+              title: 'Place on map',
+              type: 'string',
+              components: {input: MapPicker},
+            }),
             defineField({
               name: 'date',
               title: 'Date',

@@ -9,8 +9,7 @@
  * Safe to re-run: it never changes Campaign Settings once they exist.
  */
 import {getCliClient} from 'sanity/cli'
-import {CAMPAIGN_ID} from '../schemaTypes/campaign'
-import {API_VERSION} from '../schemaTypes/ids'
+import {API_VERSION, CAMPAIGN_ID} from '../schemaTypes/ids'
 
 const args = process.argv.slice(2)
 const apply = args.includes('--apply')
