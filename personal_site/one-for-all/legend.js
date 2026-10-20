@@ -1,13 +1,14 @@
 // The Legend box. "Pins" shows or hides each Pin Type (and Locations with nothing at them
-// yet); "Lines" shows or hides the network lines and each Relationship Type. Both sections
+// yet); "Lines" shows or hides the party's trail, the network lines and each Relationship Type. Both sections
 // fold away and have All/None. The choices only affect the map: pop-ups and Location panels
 // always list everything. Location markers and clusters count only what's ticked.
 import { map } from "./view.js";
-import { pinsById, placesById, relTypesById, typesById } from "./state.js";
+import { campaign, pinsById, placesById, relTypesById, typesById } from "./state.js";
 import { PLACE_ICON } from "./places.js";
 import { lineSample, relSample } from "./lines.js";
 import { PLACES, legendState, lineShown, saveLegendState } from "./filters.js";
 import { render } from "./render.js";
+import { TRAIL_COLOR } from "./trail.js";
 
 function legendRow(labelContent, checked, onChange) {
   const label = document.createElement("label");
@@ -96,11 +97,20 @@ function pinRows() {
 }
 
 function lineRows() {
-  const rows = [
+  const rows = [];
+  if (campaign.trail.length) {
+    const sample = lineSample({ color: TRAIL_COLOR, width: 3, dash: [0, 6] });
+    rows.push(
+      legendRow([sample, "Party trail"], legendState.trail, (checked) => {
+        legendState.trail = checked;
+      }),
+    );
+  }
+  rows.push(
     legendRow([lineSample({ color: "#000080", width: 2 }), "Network lines"], legendState.network, (checked) => {
       legendState.network = checked;
     }),
-  ];
+  );
   // Relationship Types that are used at least once, in legend order.
   const rels = [...relTypesById.values()].filter((rel) => rel.count).sort((a, b) => (a.legendOrder ?? 0) - (b.legendOrder ?? 0));
   for (const rel of rels) {

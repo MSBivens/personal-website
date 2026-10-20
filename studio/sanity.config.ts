@@ -1,13 +1,14 @@
 import {defineConfig, type InitialValueResolverContext} from 'sanity'
 import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
+import {withPartyTrail} from './actions/partyTrail'
 import {schemaTypes} from './schemaTypes'
 import {API_VERSION, FIXED_TYPE_IDS, randomKey} from './schemaTypes/ids'
 import {structure} from './structure'
 
-// Used by the per-type lists in structure.ts; they need a type, so they're kept out of
-// the global Create menu.
-const LIST_TEMPLATES = ['pin-by-type', 'status-by-type']
+// Kept out of the global Create menu: the per-type lists in structure.ts need a type, and
+// Campaign Settings is a single record opened from Settings.
+const HIDDEN_TEMPLATES = ['pin-by-type', 'status-by-type', 'campaign']
 
 export default defineConfig({
   name: 'default',
@@ -66,12 +67,23 @@ export default defineConfig({
   document: {
     newDocumentOptions: (prev, {creationContext}) =>
       creationContext.type === 'global'
-        ? prev.filter((item) => !LIST_TEMPLATES.includes(item.templateId))
+        ? prev.filter((item) => !HIDDEN_TEMPLATES.includes(item.templateId))
         : prev,
-    // The map's code relies on these Pin Types, so they can be renamed but not removed.
-    actions: (prev, {schemaType, documentId}) =>
-      schemaType === 'pinType' && documentId && FIXED_TYPE_IDS.includes(documentId)
-        ? prev.filter(({action}) => action !== 'delete' && action !== 'unpublish')
-        : prev,
+    actions: (prev, {schemaType, documentId, getClient}) => {
+      // The map's code relies on these Pin Types, so they can be renamed but not removed.
+      // Campaign Settings is a single fixed record.
+      if (
+        (schemaType === 'pinType' && documentId && FIXED_TYPE_IDS.includes(documentId)) ||
+        schemaType === 'campaign'
+      ) {
+        return prev.filter(({action}) => action !== 'delete' && action !== 'unpublish' && action !== 'duplicate')
+      }
+      // Moving the party pin adds its old spot to the party's trail.
+      if (schemaType === 'pin') {
+        const client = getClient({apiVersion: API_VERSION})
+        return prev.map((action) => (action.action === 'publish' ? withPartyTrail(action, client) : action))
+      }
+      return prev
+    },
   },
 })

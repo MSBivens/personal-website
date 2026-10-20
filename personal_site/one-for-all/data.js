@@ -33,6 +33,10 @@ const OWN_X = `select(visibility == "attached" => null, x)`;
 const OWN_Y = `select(visibility == "attached" => null, y)`;
 
 const QUERY = `{
+  "campaign": *[_id == "campaign"][0]{
+    "partyId": partyPin._ref,
+    "trail": trail[]{ "locationId": location._ref, x, y, date, note }
+  },
   "types": *[_type == "pinType"] | order(legendOrder asc){
     "id": _id, title, plural, legendOrder, "icon": icon.asset->${ASSET}
   },

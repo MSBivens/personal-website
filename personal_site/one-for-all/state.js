@@ -1,5 +1,9 @@
 // Shared lookups, filled once the map data has loaded.
 
+// Campaign Settings: which pin is the party, and where the party has been (oldest first).
+// Trail stops: { locationId, x, y, date, note }.
+export const campaign = { partyId: null, trail: [] };
+
 // Pin Type id → { id, title, plural, legendOrder, icon: { src, pixelated } }
 export const typesById = new Map();
 
@@ -7,7 +11,8 @@ export const typesById = new Map();
 // shownByDefault, legendOrder, count: connections of this type }
 export const relTypesById = new Map();
 
-// Pin id → { pin, type, icon, place, grouped, marker, rep, reports, links }
+// Pin id → { pin, type, icon, place, grouped, party, marker, rep, reports, links }
+// `party`: it's the party pin, drawn on top of everything and never grouped.
 // `grouped`: it has no position of its own, so it sits at its Location's spot.
 // `marker`: its own marker (null if it has no position at all).
 // `rep`: what currently stands for it on the map: its own marker, its Location's marker, or

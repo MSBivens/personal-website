@@ -1,4 +1,5 @@
 import type {StructureResolver} from 'sanity/structure'
+import {CAMPAIGN_ID} from './schemaTypes/campaign'
 import {API_VERSION} from './schemaTypes/ids'
 
 export const structure: StructureResolver = (S, context) =>
@@ -55,6 +56,12 @@ export const structure: StructureResolver = (S, context) =>
             .id('settings')
             .title('Settings')
             .items([
+              S.listItem()
+                .id(CAMPAIGN_ID)
+                .title('Campaign Settings')
+                .schemaType('campaign')
+                .child(S.document().schemaType('campaign').documentId(CAMPAIGN_ID)),
+              S.divider(),
               S.documentTypeListItem('pinType').title('Pin Types'),
               S.listItem()
                 .id('statuses')
