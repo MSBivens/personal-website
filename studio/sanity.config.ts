@@ -6,9 +6,29 @@ import {schemaTypes} from './schemaTypes'
 import {API_VERSION, FIXED_TYPE_IDS, randomKey} from './schemaTypes/ids'
 import {structure} from './structure'
 
-// Kept out of the global Create menu: the per-type lists in structure.ts need a type, and
-// Campaign Settings is a single record opened from Settings.
-const HIDDEN_TEMPLATES = ['pin-by-type', 'status-by-type', 'campaign']
+// Kept out of the global Create menu: the per-type lists in structure.ts and a Location's
+// "Add … here" buttons pass their parameters, and Campaign Settings is a single record.
+const HIDDEN_TEMPLATES = ['pin-by-type', 'pin-at-location', 'status-by-type', 'campaign']
+
+// A new pin of a type starts with that type's first status, and a Details row for each of
+// the type's suggested details.
+async function newPinOfType(typeId: string, {getClient}: InitialValueResolverContext) {
+  const {firstStatus, suggested} = await getClient({apiVersion: API_VERSION}).fetch<{
+    firstStatus: string | null
+    suggested: string[] | null
+  }>(
+    `{
+      "firstStatus": *[_type == "pinStatus" && pinType._ref == $typeId] | order(order asc)[0]._id,
+      "suggested": *[_id == $typeId][0].suggestedDetails
+    }`,
+    {typeId},
+  )
+  return {
+    type: {_type: 'reference', _ref: typeId},
+    ...(firstStatus ? {status: {_type: 'reference', _ref: firstStatus}} : {}),
+    ...(suggested?.length ? {details: suggested.map((label) => ({_key: randomKey(), _type: 'detail', label}))} : {}),
+  }
+}
 
 export default defineConfig({
   name: 'default',
@@ -29,27 +49,24 @@ export default defineConfig({
         title: 'Pin',
         schemaType: 'pin',
         parameters: [{name: 'typeId', type: 'string'}],
-        // A new pin starts with the list's type, that type's first status, and a Details
-        // row for each of the type's suggested details.
-        value: async ({typeId}: {typeId: string}, {getClient}: InitialValueResolverContext) => {
-          const {firstStatus, suggested} = await getClient({apiVersion: API_VERSION}).fetch<{
-            firstStatus: string | null
-            suggested: string[] | null
-          }>(
-            `{
-              "firstStatus": *[_type == "pinStatus" && pinType._ref == $typeId] | order(order asc)[0]._id,
-              "suggested": *[_id == $typeId][0].suggestedDetails
-            }`,
-            {typeId},
-          )
-          return {
-            type: {_type: 'reference', _ref: typeId},
-            ...(firstStatus ? {status: {_type: 'reference', _ref: firstStatus}} : {}),
-            ...(suggested?.length
-              ? {details: suggested.map((label) => ({_key: randomKey(), _type: 'detail', label}))}
-              : {}),
-          }
-        },
+        value: ({typeId}: {typeId: string}, context: InitialValueResolverContext) => newPinOfType(typeId, context),
+      },
+      {
+        // From a Location's "Add … here" buttons: the same, with the Location filled in.
+        id: 'pin-at-location',
+        title: 'Pin here',
+        schemaType: 'pin',
+        parameters: [
+          {name: 'typeId', type: 'string'},
+          {name: 'locationId', type: 'string'},
+        ],
+        value: async (
+          {typeId, locationId}: {typeId: string; locationId: string},
+          context: InitialValueResolverContext,
+        ) => ({
+          ...(await newPinOfType(typeId, context)),
+          location: {_type: 'reference', _ref: locationId},
+        }),
       },
       {
         id: 'status-by-type',

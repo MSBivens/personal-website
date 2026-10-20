@@ -9,7 +9,7 @@ const records = new Map(); // slug → record
 export function slugify(name) {
   const slug = String(name || "")
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "") // Faerûn → Faerun
+    .replace(/[\u0300-\u036f]/g, "") // Faerûn → Faerun
     .toLowerCase()
     .replace(/['’]/g, "") // Baldur's → baldurs
     .replace(/[^a-z0-9]+/g, "-")

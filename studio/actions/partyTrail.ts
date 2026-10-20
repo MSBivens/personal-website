@@ -1,6 +1,5 @@
 import type {DocumentActionComponent, DocumentActionProps, SanityClient, SanityDocument} from 'sanity'
-import {CAMPAIGN_ID} from '../schemaTypes/campaign'
-import {randomKey} from '../schemaTypes/ids'
+import {CAMPAIGN_ID, randomKey} from '../schemaTypes/ids'
 
 type PinPosition = {x?: number; y?: number; location?: {_ref?: string}}
 type Spot = {x: number; y: number; locationId?: string}
