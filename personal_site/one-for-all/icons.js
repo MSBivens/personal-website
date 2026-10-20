@@ -1,5 +1,6 @@
 // Marker icons. Which icon a pin gets: its own override, then its rank's (members),
 // then its type's, then FALLBACK_ICON, so a pin is never blank.
+import { badgeSvg } from "./badges.js";
 
 export const ICON_BASE = "https://win98icons.alexmeub.com/icons/png/";
 
@@ -15,15 +16,18 @@ export function sanityIcon(asset) {
   return { src: `${asset.url}?w=64&h=64&fit=max`, pixelated: !(asset.width > 64) };
 }
 
+// A pin marker: its icon, with its status badge (if any) on the bottom-right corner.
 const cache = new Map();
-export function pinIcon(icon, className = "") {
+export function pinIcon(icon, className = "", status = null) {
   const classes = [icon.pixelated ? "" : "smooth", className].filter(Boolean).join(" ");
-  const key = `${icon.src}|${classes}`;
+  const badge = badgeSvg(status);
+  const key = `${icon.src}|${classes}|${badge}`;
   if (!cache.has(key)) {
+    const src = icon.src.replace(/"/g, "&quot;");
     cache.set(
       key,
-      L.icon({
-        iconUrl: icon.src,
+      L.divIcon({
+        html: `<img class="pin-img" src="${src}" alt="" width="32" height="32">${badge}`,
         iconSize: [32, 32],
         iconAnchor: [16, 16],
         className: `map-pin ${classes}`.trim(),

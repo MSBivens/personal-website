@@ -54,7 +54,7 @@ const QUERY = `{
     "typeId": type._ref,
     "locationId": location._ref,
     "icon": icon.asset->${ASSET},
-    "status": status->{ title, style },
+    "status": status->{ title, style, badge },
     "details": details[defined(value)]{ label, value },
     "connections": ${CONNECTIONS},
     type._ref == "${TYPE.member}" => {

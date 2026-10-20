@@ -9,6 +9,7 @@ import { isDimmed, reveal, setSelected } from "./markers.js";
 import { relSample } from "./lines.js";
 import { stopLocating } from "./locate.js";
 import { linkTo, showInAddress } from "./links.js";
+import { badgeElement } from "./badges.js";
 
 const ATTITUDES = { friendly: "Friendly", neutral: "Neutral", hostile: "Hostile", unknown: "Unknown" };
 
@@ -57,6 +58,7 @@ function recordItem(record) {
   button.type = "button";
   button.addEventListener("click", () => goTo(record));
   const item = el("li", "", button);
+  if (isPin) item.append(badgeElement(record.pin.status));
   if (isPin && isDimmed(record.pin)) item.append(el("span", "place-tag", record.pin.status.title));
   return item;
 }
@@ -130,7 +132,7 @@ function pinContent(entry) {
       : "";
     rows.push(detailRow("Rank", img, pin.rank.title || "Unnamed rank"));
   }
-  if (pin.status && pin.status.title) rows.push(detailRow("Status", pin.status.title));
+  if (pin.status && pin.status.title) rows.push(detailRow("Status", badgeElement(pin.status), pin.status.title));
   // Unpublished party members come back as null.
   const recruiters = (pin.recruitedBy || []).filter(Boolean);
   if (recruiters.length) rows.push(detailRow("Recruited by", recruiters.join(", ")));

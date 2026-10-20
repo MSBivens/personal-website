@@ -33,6 +33,9 @@ for (const name of ["_recursivelyAnimateChildrenIn", "_recursivelyBecomeVisible"
 // A Location marker stands for several records, so clusters count records, not markers.
 const recordsIn = (cluster) => cluster.getAllChildMarkers().reduce((n, m) => n + (m.records || 1), 0);
 
+// Bigger cluster badges on touch screens, so they're easy to tap.
+const CLUSTER_SIZE = matchMedia("(pointer: coarse)").matches ? 40 : 34;
+
 export const clusterGroup = L.markerClusterGroup({
   maxClusterRadius: 36,
   showCoverageOnHover: false,
@@ -42,7 +45,7 @@ export const clusterGroup = L.markerClusterGroup({
     return L.divIcon({
       html: `<span class="cluster-count" aria-hidden="true">${n}</span><span class="sr-only">${n} records here. Zoom in to see them.</span>`,
       className: "map-cluster",
-      iconSize: [34, 34],
+      iconSize: [CLUSTER_SIZE, CLUSTER_SIZE],
     });
   },
 }).addTo(map);
@@ -110,9 +113,8 @@ export function addPin(pin) {
   }
 
   const marker = L.marker(toLatLng(at.x, at.y), {
-    icon: party ? partyIcon(icon) : pinIcon(icon, isDimmed(pin) ? `is-${pin.status.style}` : ""),
+    icon: party ? partyIcon(icon) : pinIcon(icon, isDimmed(pin) ? `is-${pin.status.style}` : "", pin.status),
     title: pin.name,
-    alt: pin.name,
     riseOnHover: true,
     zIndexOffset: party ? 2000 : 0,
   });
@@ -123,7 +125,9 @@ export function addPin(pin) {
   });
   // Leaflet 1.9 makes markers focusable but doesn't treat Enter/Space as a click.
   // The element is recreated whenever the marker is re-added, so listen on each add.
+  const ariaLabel = [pin.name, pin.status && pin.status.title].filter(Boolean).join(", ");
   marker.on("add", () => {
+    marker.getElement().setAttribute("aria-label", ariaLabel);
     marker.getElement().classList.toggle("is-selected", marker === selected);
     marker.getElement().addEventListener("keydown", (e) => {
       if ((e.key === "Enter" || e.key === " ") && !isLocating()) {
