@@ -1,70 +1,13 @@
-// The Legend box. "Pins" shows or hides each Pin Type and the Hubs; "Lines" shows or hides
-// the network lines and each Relationship Type. Both sections fold away and have All/None.
-// The choices only affect the map: pop-ups and Hub panels always list everything.
+// The Legend box. "Pins" shows or hides each Pin Type (and Locations with nothing at them
+// yet); "Lines" shows or hides the network lines and each Relationship Type. Both sections
+// fold away and have All/None. The choices only affect the map: pop-ups and Location panels
+// always list everything. Location markers and clusters count only what's ticked.
 import { map } from "./view.js";
 import { pinsById, placesById, relTypesById, typesById } from "./state.js";
-import { typeLayers } from "./markers.js";
-import { networkLayer, networkLinks } from "./network.js";
-import { HUB_ICON, hubLayer } from "./hubs.js";
-import { connectionLinks, lineSample, relationLayer, relSample } from "./lines.js";
-
-// Legend key for the Hubs row (Pin Type ids never look like this).
-const HUBS = "hubs";
-
-// v2: types are keyed by their Pin Type id now, so older saved choices don't apply.
-const LEGEND_KEY = "one-for-all-legend-v2";
-const legendState = (() => {
-  let saved = {};
-  try {
-    saved = JSON.parse(localStorage.getItem(LEGEND_KEY)) || {};
-  } catch {}
-  const obj = (value) => (value && typeof value === "object" && !Array.isArray(value) ? value : {});
-  return {
-    hidden: new Set(Array.isArray(saved.hidden) ? saved.hidden : []),
-    network: saved.network === true,
-    lines: obj(saved.lines), // Relationship Type id → shown? (unset: the type's "Shown by default")
-    // On a phone the open legend covers most of the map, so it starts minimised there.
-    collapsed: typeof saved.collapsed === "boolean" ? saved.collapsed : matchMedia("(max-width: 600px)").matches,
-    folded: new Set(Array.isArray(saved.folded) ? saved.folded : []),
-  };
-})();
-
-function saveLegendState() {
-  try {
-    localStorage.setItem(
-      LEGEND_KEY,
-      JSON.stringify({ ...legendState, hidden: [...legendState.hidden], folded: [...legendState.folded] }),
-    );
-  } catch {}
-}
-
-const lineShown = (rel) => legendState.lines[rel.id] ?? rel.shownByDefault !== false;
-
-function refreshMap() {
-  const { hidden } = legendState;
-  for (const [typeId, layer] of typeLayers) {
-    if (hidden.has(typeId)) layer.remove();
-    else layer.addTo(map);
-  }
-  if (hidden.has(HUBS)) hubLayer.remove();
-  else hubLayer.addTo(map);
-
-  // A line shows when both ends are shown: a pin's type must be ticked, and Hubs too if
-  // that end sits in one. Location ends only depend on Hubs.
-  const showing = (entry, hub) => !(entry && hidden.has(entry.pin.typeId)) && !(hub && hidden.has(HUBS));
-  networkLayer.clearLayers();
-  if (legendState.network) {
-    for (const { line, from, to, fromHub, toHub } of networkLinks) {
-      if (showing(from, fromHub) && showing(to, toHub)) networkLayer.addLayer(line);
-    }
-  }
-  relationLayer.clearLayers();
-  for (const { conn, group, a, b } of connectionLinks) {
-    if (lineShown(conn.rel) && showing(conn.from.entry, a.hub) && showing(conn.to.entry, b.hub)) {
-      relationLayer.addLayer(group);
-    }
-  }
-}
+import { PLACE_ICON } from "./places.js";
+import { lineSample, relSample } from "./lines.js";
+import { PLACES, legendState, lineShown, saveLegendState } from "./filters.js";
+import { render } from "./render.js";
 
 function legendRow(labelContent, checked, onChange) {
   const label = document.createElement("label");
@@ -73,7 +16,7 @@ function legendRow(labelContent, checked, onChange) {
   box.addEventListener("change", () => {
     onChange(box.checked);
     saveLegendState();
-    refreshMap();
+    render();
   });
   label.append(box, ...labelContent);
   return label;
@@ -128,7 +71,7 @@ function section(key, title, rows) {
 }
 
 function pinRows() {
-  // Only types that have pins (on the map or inside Hubs), in each type's legend order.
+  // Only types that have pins, in each type's legend order.
   const counts = new Map();
   for (const { pin } of pinsById.values()) counts.set(pin.typeId, (counts.get(pin.typeId) || 0) + 1);
   const types = [...typesById.values()]
@@ -143,10 +86,11 @@ function pinRows() {
     const icon = Object.assign(new Image(16, 16), { src: type.icon.src, alt: "", className: type.icon.pixelated ? "" : "smooth" });
     return legendRow([icon, type.title, count(counts.get(type.id))], !legendState.hidden.has(type.id), toggle(type.id));
   });
-  const hubCount = [...placesById.values()].filter((place) => place.isHub).length;
-  if (hubCount) {
-    const icon = Object.assign(new Image(16, 16), { src: HUB_ICON.src, alt: "" });
-    rows.push(legendRow([icon, "Hubs", count(hubCount)], !legendState.hidden.has(HUBS), toggle(HUBS)));
+  // Locations with nothing at them yet but something to read get a marker of their own.
+  const placeCount = [...placesById.values()].filter((place) => place.marker && !place.grouped.length && place.readable).length;
+  if (placeCount) {
+    const icon = Object.assign(new Image(16, 16), { src: PLACE_ICON.src, alt: "" });
+    rows.push(legendRow([icon, "Other places", count(placeCount)], !legendState.hidden.has(PLACES), toggle(PLACES)));
   }
   return rows;
 }
@@ -215,5 +159,4 @@ const Legend = L.Control.extend({
 
 export function addLegend() {
   new Legend().addTo(map);
-  refreshMap();
 }

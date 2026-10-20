@@ -1,71 +1,83 @@
-// Hubs and Location panels. A Hub is a Location with "Show as Hub" on: one marker standing
-// in for a crowded spot, opening a panel that lists every pin there. Any Location's panel
-// can also be opened from the Location link in a pin's pop-up.
+// Locations: their map marker and their panel. When two or more pins sit at a Location's
+// spot (no position of their own), one Location marker with a count stands in for them all;
+// it also marks a Location with nothing at it yet but something to read. Any Location's panel
+// can be opened from that marker or from the Location link in a pin's pop-up.
 import { toLatLng, isLocating } from "./view.js";
 import { sanityIcon } from "./icons.js";
 import { placesById } from "./state.js";
 import { isDimmed } from "./markers.js";
-import { closePin, connectionSection, paragraphs, pinButton, showPin } from "./popup.js";
+import { closePin, connectionSection, detailRow, paragraphs, pinButton } from "./popup.js";
 import { relSample } from "./lines.js";
 
-export const HUB_ICON = { src: "/one-for-all/icons/hub.png", pixelated: true };
-export const hubLayer = L.layerGroup();
+export const PLACE_ICON = { src: "/one-for-all/icons/hub.png", pixelated: true };
 
 const placeModal = document.getElementById("place-modal");
 let returnFocusTo = null;
 
 export function addPlace(location) {
-  placesById.set(location.id, {
+  const { x, y } = location;
+  const place = {
     location,
-    icon: sanityIcon(location.icon) || HUB_ICON,
-    isHub: Boolean(location.isHub && Number.isFinite(location.x) && Number.isFinite(location.y)),
+    icon: sanityIcon(location.icon) || PLACE_ICON,
+    point: Number.isFinite(x) && Number.isFinite(y) ? { x, y } : null,
+    // Worth a marker of its own even with no pins here.
+    readable: Boolean(
+      (location.description || "").trim() || (location.details || []).length || (location.connections || []).length,
+    ),
     marker: null,
+    rep: null,
     entries: [],
+    grouped: [],
     links: [],
     innerReports: [],
     innerLinks: [],
-  });
+  };
+  if (place.point) place.marker = placeMarker(place);
+  placesById.set(location.id, place);
 }
 
-// Run once every pin has been placed, so each badge can count what's in its Hub.
-export function addHubMarkers() {
-  for (const place of placesById.values()) {
-    if (!place.isHub) continue;
-    const count = place.entries.length;
-    const content = document.createElement("span");
-    content.className = "hub-icon";
-    content.append(
-      Object.assign(new Image(32, 32), { src: place.icon.src, alt: "" }),
-      Object.assign(document.createElement("span"), { className: "hub-count", textContent: count }),
-    );
-    const marker = L.marker(toLatLng(place.location.x, place.location.y), {
-      icon: L.divIcon({
-        html: content,
-        className: `map-pin hub-pin${place.icon.pixelated ? "" : " smooth"}`,
-        iconSize: [32, 32],
-        iconAnchor: [16, 16],
-      }),
-      title: `${place.location.name} (${count})`,
-      riseOnHover: true,
-      // A Hub stands in for its whole spot, so it sits above any Map Pin right next to it.
-      zIndexOffset: 1000,
-    }).addTo(hubLayer);
-    place.marker = marker;
+function placeMarker(place) {
+  const marker = L.marker(toLatLng(place.point.x, place.point.y), {
+    riseOnHover: true,
+    // Stands in for its whole spot, so it sits above any pin right next to it.
+    zIndexOffset: 1000,
+  });
+  marker.on("click", () => {
+    if (!isLocating()) showPlace(place);
+  });
+  marker.on("add", () => {
+    const el = marker.getElement();
+    el.setAttribute("aria-label", marker.label);
+    el.addEventListener("keydown", (e) => {
+      if ((e.key === "Enter" || e.key === " ") && !isLocating()) {
+        e.preventDefault();
+        showPlace(place);
+      }
+    });
+  });
+  return marker;
+}
 
-    marker.on("click", () => {
-      if (!isLocating()) showPlace(place);
-    });
-    marker.on("add", () => {
-      const el = marker.getElement();
-      el.setAttribute("aria-label", `${place.location.name} hub, ${count} ${count === 1 ? "record" : "records"}`);
-      el.addEventListener("keydown", (e) => {
-        if ((e.key === "Enter" || e.key === " ") && !isLocating()) {
-          e.preventDefault();
-          showPlace(place);
-        }
-      });
-    });
+// `count`: the records the marker stands for right now (0 for a Location with nothing here).
+export function setPlaceIcon(place, count) {
+  const { marker, location } = place;
+  const content = document.createElement("span");
+  content.className = "place-icon";
+  content.append(Object.assign(new Image(32, 32), { src: place.icon.src, alt: "" }));
+  if (count) {
+    content.append(Object.assign(document.createElement("span"), { className: "place-count", textContent: count }));
   }
+  marker.records = Math.max(count, 1);
+  marker.label = count ? `${location.name}, ${count} records` : location.name;
+  marker.options.title = count ? `${location.name} (${count})` : location.name;
+  marker.setIcon(
+    L.divIcon({
+      html: content,
+      className: `map-pin place-pin${place.icon.pixelated ? "" : " smooth"}`,
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
+    }),
+  );
 }
 
 const tag = (text) => Object.assign(document.createElement("span"), { className: "place-tag", textContent: text });
@@ -101,7 +113,6 @@ function recordList(place) {
       button.prepend(icon);
       item.append(button);
       if (isDimmed(entry.pin)) item.append(tag(entry.pin.status.title));
-      if (entry.marker) item.append(tag("on map"));
       list.append(item);
     }
     box.append(heading, list);
@@ -109,7 +120,7 @@ function recordList(place) {
   return box;
 }
 
-// Lines between two pins in the same Hub would have no length, so they're listed here:
+// Lines between two pins at the same Location's spot would have no length, so they're listed here:
 // network lines ("reports to") and Connections.
 function innerLineList(place) {
   if (!place.innerReports.length && !place.innerLinks.length) return [];
@@ -150,21 +161,28 @@ const panelLinkFor = (place) => (end) => {
 
 export function showPlace(place, { returnFocus } = {}) {
   closePin({ restoreFocus: false });
-  returnFocusTo = returnFocus !== undefined ? returnFocus : (place.marker && place.marker.getElement()) || null;
+  returnFocusTo = returnFocus !== undefined ? returnFocus : (place.rep && place.rep.getElement()) || null;
   const { location, entries } = place;
   document.getElementById("place-name").textContent = location.name;
   const icon = document.getElementById("place-icon");
   icon.src = place.icon.src;
   icon.classList.toggle("smooth", !place.icon.pixelated);
   document.getElementById("place-kind").textContent =
-    `${place.isHub ? "Hub" : "Location"} · ${entries.length} ${entries.length === 1 ? "record" : "records"}`;
+    `Location · ${entries.length} ${entries.length === 1 ? "record" : "records"}`;
   document.getElementById("place-description").replaceChildren(...paragraphs(location.description));
+  const details = (location.details || [])
+    .filter(({ label, value }) => label && value && value.trim())
+    .map(({ label, value }) => detailRow(label, value.trim()));
   const connections = connectionSection(place.links, panelLinkFor(place)).map((block) => {
     const box = Object.assign(document.createElement("div"), { className: "place-records" });
     box.append(block);
     return box;
   });
-  document.getElementById("place-contents").replaceChildren(recordList(place), ...connections, ...innerLineList(place));
+  const detailBox = details.length ? [Object.assign(document.createElement("div"), { className: "pin-details" })] : [];
+  if (detailBox.length) detailBox[0].append(...details);
+  document
+    .getElementById("place-contents")
+    .replaceChildren(...detailBox, recordList(place), ...connections, ...innerLineList(place));
 
   openModal("place-modal");
   (placeModal.querySelector(".place-item") || document.getElementById("place-ok")).focus();

@@ -3,7 +3,8 @@
 // and arrowheads.
 import { map, toLatLng } from "./view.js";
 import { pinsById, placesById, relTypesById, waypointsById } from "./state.js";
-import { anchorOf } from "./markers.js";
+import { anchorOfLayer, entryAnchor, sameSpot } from "./markers.js";
+import { lineShown } from "./filters.js";
 
 // Same values as studio/schemaTypes/lineStyle.ts.
 const WIDTH_PX = { thin: 2, normal: 3, thick: 5 };
@@ -25,9 +26,10 @@ export const lineWidth = (rel) => WIDTH_PX[rel.width] || WIDTH_PX.normal;
 // Colours come from a fixed palette in Studio; anything else falls back to black.
 export const lineColor = (rel) => (/^#[0-9a-f]{6}$/i.test(rel.color || "") ? rel.color : "#222222");
 
-// Drawn lines, for the legend to filter: { conn, group, a, b }
+// The drawn Connection lines, redrawn whenever markers regroup, and the Connections that
+// can be drawn (both ends have a spot on the map).
 export const relationLayer = L.layerGroup().addTo(map);
-export const connectionLinks = [];
+const drawableConnections = [];
 
 // A small inline picture of a line, for the legend and connection lists.
 const SVG = "http://www.w3.org/2000/svg";
@@ -69,14 +71,19 @@ export function endpointById(id) {
   return null;
 }
 
-// A Location's lines start at its Hub, or at its own X/Y if it isn't a Hub.
+// A Location's lines start at whatever is drawn at its spot (its marker, its one pin, or a
+// cluster), or at its bare X/Y if nothing is.
 function anchorOfEndpoint(end) {
-  if (end.entry) return anchorOf(end.entry);
+  if (end.entry) return entryAnchor(end.entry);
   const { place } = end;
-  const { x, y } = place.location;
-  if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
-  return { x, y, latlng: toLatLng(x, y), hub: place.isHub ? place : null };
+  if (place.rep) return anchorOfLayer(place.rep);
+  if (!place.point) return null;
+  return { ...place.point, latlng: toLatLng(place.point.x, place.point.y), layer: null };
 }
+
+// The Location whose spot an end sits at, if any: a pin without its own position, or the
+// Location itself.
+const spotOf = (end) => (end.entry ? (end.entry.grouped ? end.entry.place : null) : end.place.point ? end.place : null);
 
 const holderOf = (end) => end.entry || end.place;
 
@@ -193,7 +200,7 @@ function tooltipText(conn) {
   return `${conn.rel.title}: ${conn.from.name} → ${conn.to.name}${via}${label}`;
 }
 
-function drawConnection({ conn, points, bends, a, b }) {
+function drawConnection({ conn, points, bends }) {
   const { rel } = conn;
   const w = lineWidth(rel);
   const color = lineColor(rel);
@@ -218,41 +225,49 @@ function drawConnection({ conn, points, bends, a, b }) {
   }
   const group = L.layerGroup([casing, line]);
   if (rel.direction === "arrow") group.addLayer(makeArrow(color, latlngs));
-  connectionLinks.push({ conn, group, a, b });
+  relationLayer.addLayer(group);
 }
 
-// Reads every Connection, records it on both ends (for pop-ups and panels), and draws the
-// ones whose ends are on the map. `networkPairs`: pairKeys already used by network lines.
-export function connectRelationships(networkPairs) {
-  const drawable = [];
+// Reads every Connection once and records it on both ends (for pop-ups and panels).
+// Connections between two records at the same Location's spot are listed in its panel
+// instead of drawn.
+export function collectConnections() {
   const collect = (from, connections) => {
     for (const c of connections || []) {
       const rel = relTypesById.get(c.typeId);
       const to = endpointById(c.to);
-      if (!rel || !to) continue; // relationship or far end unpublished / Hidden
+      if (!rel || !to) continue; // relationship or far end unpublished / off the map
       // Unpublished Post Offices are skipped; the line goes straight past them.
-      const via = (c.via || [])
-        .map((id) => waypointsById.get(id))
-        .filter((po) => po && Number.isFinite(po.x) && Number.isFinite(po.y));
+      const via = (c.via || []).map((id) => waypointsById.get(id)).filter(Boolean);
       const conn = { rel, from, to, via, label: c.label, notes: c.notes };
       holderOf(from).links.push({ conn, dir: "out" });
       holderOf(to).links.push({ conn, dir: "in" });
       rel.count++;
 
-      const a = anchorOfEndpoint(from);
-      const b = anchorOfEndpoint(to);
-      if (!a || !b) continue; // listed in pop-ups, but one end has no spot on the map
-      if (!via.length && a.hub && a.hub === b.hub) {
-        a.hub.innerLinks.push(conn); // both ends in one Hub: listed in its panel instead
-        continue;
-      }
-      if (!via.length && a.x === b.x && a.y === b.y) continue;
-      drawable.push({ conn, points: [a, ...via, b], a, b });
+      const spot = spotOf(from);
+      if (!via.length && spot && spot === spotOf(to)) spot.innerLinks.push(conn);
+      else drawableConnections.push(conn);
     }
   };
   for (const entry of pinsById.values()) collect({ id: entry.pin.id, name: entry.pin.name, entry }, entry.pin.connections);
   for (const place of placesById.values()) {
     collect({ id: place.location.id, name: place.location.name, place }, place.location.connections);
+  }
+}
+
+// Draws the Connections whose type is ticked and whose ends are both on the map right now.
+// `networkPairs`: pairKeys already used by network lines.
+export function drawRelations(networkPairs) {
+  relationLayer.clearLayers();
+  arrows.length = 0;
+  const drawable = [];
+  for (const conn of drawableConnections) {
+    if (!lineShown(conn.rel)) continue;
+    const a = anchorOfEndpoint(conn.from);
+    const b = anchorOfEndpoint(conn.to);
+    if (!a || !b) continue; // listed in pop-ups, but one end isn't drawn
+    if (!conn.via.length && sameSpot(a, b)) continue; // both ends in one cluster
+    drawable.push({ conn, points: [a, ...conn.via, b] });
   }
   assignBends(drawable, networkPairs);
   for (const d of drawable) drawConnection(d);

@@ -2,7 +2,13 @@
 // docs/adding-map-pins.md); the dataset is public, so published records are read
 // straight from Sanity's CDN without a token.
 
-const SANITY = { projectId: "ohnkcmr7", dataset: "production", apiVersion: "2025-02-19" };
+// `?data=test` reads the test copy (the `development` dataset, also public) instead.
+export const TEST_DATA = new URLSearchParams(location.search).get("data") === "test";
+const SANITY = {
+  projectId: "ohnkcmr7",
+  dataset: TEST_DATA ? "development" : "production",
+  apiVersion: "2025-02-19",
+};
 
 // Pin Types the code treats specially. Same IDs as studio/schemaTypes/ids.ts.
 export const TYPE = {
@@ -18,8 +24,14 @@ const CONNECTIONS = `connections[defined(type._ref) && defined(to._ref)]{
   "typeId": type._ref, "to": to._ref, "via": via[]._ref, label, notes
 }`;
 
-// Hidden pins aren't fetched at all (they're still public through Sanity's API, though).
-// A pin without a Map Visibility counts as a Map Pin.
+// Pins with "Show on map" off aren't fetched at all (they're still public through Sanity's
+// API, though). Post Offices always are: lines bend through them.
+// Until production is migrated, the old Map Visibility field stands in for "Show on map",
+// and Attached pins drop the old X/Y they kept from before Hubs, so they sit at their Location.
+const ON_MAP = `coalesce(showOnMap, coalesce(visibility, "pin") != "hidden")`;
+const OWN_X = `select(visibility == "attached" => null, x)`;
+const OWN_Y = `select(visibility == "attached" => null, y)`;
+
 const QUERY = `{
   "types": *[_type == "pinType"] | order(legendOrder asc){
     "id": _id, title, plural, legendOrder, "icon": icon.asset->${ASSET}
@@ -29,12 +41,12 @@ const QUERY = `{
     "shownByDefault": coalesce(shownByDefault, true)
   },
   "locations": *[_type == "location"]{
-    "id": _id, name, description, "isHub": showAsHub == true, x, y, "icon": icon.asset->${ASSET},
+    "id": _id, name, description, x, y, "icon": icon.asset->${ASSET},
+    "details": details[defined(value)]{ label, value },
     "connections": ${CONNECTIONS}
   },
-  "pins": *[_type == "pin" && coalesce(visibility, "pin") != "hidden"]{
-    "id": _id, name, x, y, description,
-    "visibility": coalesce(visibility, "pin"),
+  "pins": *[_type == "pin" && (type._ref == "${TYPE.postOffice}" || ${ON_MAP})]{
+    "id": _id, name, description, "x": ${OWN_X}, "y": ${OWN_Y},
     "typeId": type._ref,
     "locationId": location._ref,
     "icon": icon.asset->${ASSET},
