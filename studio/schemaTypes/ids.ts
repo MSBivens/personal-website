@@ -19,6 +19,9 @@ export const TYPE_IDS = {
   postOffice: 'pinType-postOffice',
 } as const
 
+// Campaign Settings is a single record with this ID (schemaTypes/campaign.ts).
+export const CAMPAIGN_ID = 'campaign'
+
 export const FIXED_TYPE_IDS: string[] = Object.values(TYPE_IDS)
 
 /** The Pin Type a pin (or draft) currently points at, if any. */

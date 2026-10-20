@@ -1,4 +1,5 @@
 import {defineArrayMember, defineField, type ConditionalProperty} from 'sanity'
+import {emptyDetailsWarning} from './warnings'
 
 // Short label/value facts shown as rows in a pop-up or Location panel. Shared by pins and
 // Locations; empty rows are left out on the map.
@@ -9,6 +10,7 @@ export const detailsField = ({description, hidden}: {description: string; hidden
     type: 'array',
     description,
     hidden,
+    validation: emptyDetailsWarning,
     of: [
       defineArrayMember({
         name: 'detail',

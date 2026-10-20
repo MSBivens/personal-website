@@ -23,7 +23,7 @@ findToggle.addEventListener("click", () => setFindOpen(!toolbar.classList.contai
 const fold = (text) =>
   String(text || "")
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase();
 
 let index = [];

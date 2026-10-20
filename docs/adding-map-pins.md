@@ -39,12 +39,9 @@ Click **Publish**.
 
 Most pins don't need coordinates: a pin with a **Location** sits at that Location's spot. You only need X/Y for a Location itself, or for a pin somewhere specific away from its Location (a dungeon in the hills outside town).
 
-1. Open the map (<https://www.msbivens.com/one-for-all>) and click **Locate** in the toolbar above it.
-2. Zoom in on the spot. The closer you zoom, the more precise the pin will be.
-3. Click exactly where the pin should go. A red crosshair marks the spot, and the **Locate** box in the top-right shows text like `X: 1490, Y: 1196`. Add a note if you like (it goes in front of the coordinates), then click **Copy**.
-4. Click **Locate** again, the box's **X**, or press Esc to go back to browsing.
+**In Studio (easiest):** under the X and Y fields of a pin, Location or trail stop, click **Place on map**, zoom in, and click the spot. X and Y fill themselves in. A pin's Location shows as a grey dashed circle, and **Clear** empties X and Y again so the pin goes back to its Location's spot.
 
-You can click again as many times as you like. The box always shows the latest spot. While Locate is on, clicking a pin moves the crosshair instead of opening the pin.
+**On the site:** click **Locate** in the map's toolbar, zoom in, and click the spot. The **Locate** box shows text like `X: 1490, Y: 1196`; add a note if you like, then click **Copy**. Click **Locate** again, the box's **X**, or press Esc to go back to browsing. While Locate is on, clicking a pin moves the crosshair instead of opening the pin.
 
 Players can do this too, so they can send you a spot. The old `?place` link still works and opens the map with Locate already on.
 
@@ -96,6 +93,14 @@ When zoomed out, markers that are close together merge into a grey numbered box.
 A Location's panel shows its description and Details, then every pin at that Location grouped by type. Click any pin to show it. In a pin's panel, the **Location** name is a link to that Location.
 
 **Rule of thumb:** give something its own pin if it has a status, links to other records, or players will want to search for it. Otherwise, a Details row on its Location is enough.
+
+## Studio helpers
+
+- **Pins here** (on every Location page): the pins whose Location is this one, each a link to open it, and an **Add … here** button per pin type that starts a new pin with this Location (and the type's first status and suggested Details) already filled in.
+- **Yellow warnings** point out likely slips. They never stop you publishing:
+  - *This is on top of …*: the pin's own X/Y is within 10 pixels of another record or Location. If it's at that place, give it the Location and leave X/Y empty.
+  - *These Details rows are all empty*: none of them will show on the map. Fill them in or remove them.
+  - *Mentions … but isn't linked*: the description names another pin or Location that this record has no link to (no Location, Reports to, Quest giver or Connection either way). Add one so players can click through.
 
 ## The party
 

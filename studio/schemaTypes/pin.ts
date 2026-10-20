@@ -1,6 +1,8 @@
 import {defineField, defineType, type ConditionalPropertyCallback, type NumberRule} from 'sanity'
 import {connectionsField} from './connection'
+import {MapPicker} from '../components/MapPicker'
 import {detailsField} from './details'
+import {mentionWarning, overlapWarning} from './warnings'
 import {API_VERSION, TYPE_IDS, publishedId, typeIdOf} from './ids'
 
 const MAP_URL = 'https://www.msbivens.com/one-for-all'
@@ -217,7 +219,7 @@ export const pin = defineType({
       title: 'X',
       type: 'number',
       fieldset: 'position',
-      validation: positionRule(4763, 'x'),
+      validation: (rule) => [positionRule(4763, 'x')(rule), overlapWarning(rule)],
     }),
     defineField({
       name: 'y',
@@ -225,6 +227,13 @@ export const pin = defineType({
       type: 'number',
       fieldset: 'position',
       validation: positionRule(3185, 'y'),
+    }),
+    defineField({
+      name: 'mapPicker',
+      title: 'Place on map',
+      type: 'string',
+      description: 'Click the map to fill in X and Y.',
+      components: {input: MapPicker},
     }),
     defineField({
       name: 'icon',
@@ -245,6 +254,7 @@ export const pin = defineType({
       rows: 6,
       description: 'Leave a blank line between paragraphs.',
       hidden: isPostOffice,
+      validation: mentionWarning,
     }),
     connectionsField(isPostOffice),
   ],
