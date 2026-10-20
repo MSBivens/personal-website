@@ -523,6 +523,26 @@ html {
   filter: drop-shadow(1px 1px 0 #fff) drop-shadow(-1px -1px 0 #fff);
 }
 
+/* Pin markers: the icon, plus a status badge on the bottom-right corner */
+.map-pin .pin-img {
+  display: block;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.map-pin .status-badge {
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+}
+
+.badge-inline {
+  display: inline-flex;
+  vertical-align: -2px;
+  margin-right: 4px;
+}
+
 /* Icons uploaded larger than 64px are drawn art, not pixel icons, so scale them smoothly */
 .map-pin.smooth,
 .legend-row img.smooth,
@@ -531,13 +551,13 @@ html {
   image-rendering: auto;
 }
 
-/* Statuses with a Dimmed or Faded map style. Repeats the drop-shadow because filter doesn't merge. */
-.map-pin.is-dimmed {
-  filter: grayscale(1) opacity(0.8) drop-shadow(1px 1px 0 #fff) drop-shadow(-1px -1px 0 #fff);
+/* Statuses with a Dimmed or Faded map style grey the icon, but not its badge */
+.map-pin.is-dimmed .pin-img {
+  filter: grayscale(1) opacity(0.8);
 }
 
-.map-pin.is-faded {
-  filter: grayscale(1) opacity(0.45) drop-shadow(1px 1px 0 #fff) drop-shadow(-1px -1px 0 #fff);
+.map-pin.is-faded .pin-img {
+  filter: grayscale(1) opacity(0.45);
 }
 
 .map-pin:focus-visible {
@@ -1407,4 +1427,170 @@ html {
   top: 11px;
   width: 100%;
   height: 2px;
+}
+
+/* =========================================
+   MAP ON PHONES: the map fills the screen, with a floating toolbar
+   ========================================= */
+.phone-only {
+  display: none;
+}
+
+/* Zoom with two fingers on touch screens */
+@media (pointer: coarse) {
+  #map .leaflet-control-zoom {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .map-page .program-window {
+    height: 100dvh !important;
+    max-height: none;
+    margin: 0;
+    border: 0;
+    box-shadow: none;
+    position: relative;
+  }
+
+  .map-page .program-window > .title-bar,
+  .map-page .taskbar,
+  .map-page .start-menu {
+    display: none;
+  }
+
+  .map-page .map-viewer {
+    margin: 0;
+    border: 0;
+  }
+
+  .map-page .map-toolbar {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    right: 6px;
+    z-index: 1100;
+    gap: 4px;
+    padding: 3px;
+    background: var(--win-gray);
+    border: 2px outset #fff;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+  }
+
+  /* Icon with a small label underneath, at least 44px to tap */
+  .map-page .toolbar-btn {
+    flex: 1 1 0;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 48px;
+    max-width: 72px;
+    min-height: 44px;
+    justify-content: center;
+    padding: 2px 0;
+    font-size: 10px;
+  }
+
+  .map-page .toolbar-btn:active,
+  .map-page .toolbar-btn[aria-pressed="true"] {
+    padding: 3px 0 1px 1px;
+  }
+
+  .map-page .toolbar-btn img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .map-page .toolbar-btn.phone-only {
+    display: inline-flex;
+  }
+
+  /* Find: its own row under the buttons, opened with the Find button */
+  .map-page .find-box {
+    display: none;
+    flex-basis: 100%;
+    margin: 0;
+  }
+
+  .map-page .find-open .find-box {
+    display: flex;
+  }
+
+  .map-page .find-box label {
+    display: none;
+  }
+
+  .map-page .find-box input {
+    flex: 1;
+    width: auto;
+    max-width: none;
+    min-height: 36px;
+    font-size: 16px; /* stops phones zooming in on the box */
+  }
+
+  .map-page .find-results {
+    left: 0;
+    width: auto;
+  }
+
+  .map-page .find-option {
+    padding: 8px 6px;
+  }
+
+  /* Leaflet's corner controls and the Locate box sit below the toolbar */
+  .map-page .leaflet-top {
+    top: 62px;
+  }
+
+  .map-page .locate-panel {
+    top: 68px;
+  }
+
+  /* The Legend becomes a sheet along the bottom, opened with Filters */
+  .map-page .map-legend {
+    display: none;
+  }
+
+  .map-page.filters-open .map-legend {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1002;
+    max-height: 65dvh;
+    margin: 0;
+    width: auto;
+  }
+
+  .map-page.filters-open .map-legend .prop-body {
+    overflow-y: auto;
+  }
+
+  .map-page .legend-row {
+    padding: 6px 0;
+  }
+
+  /* Records: the whole screen */
+  .map-page .records-window {
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    border: 0;
+  }
+
+  .map-page .records-window .prop-body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .map-page .records-table-wrap {
+    flex: 1;
+    max-height: none;
+  }
+
+  .map-page .records-table td {
+    padding-block: 6px;
+  }
 }

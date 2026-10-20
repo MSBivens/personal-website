@@ -3,10 +3,21 @@
 // Press / anywhere on the map page to jump to the box.
 import { pinsById, placesById } from "./state.js";
 import { goTo } from "./panel.js";
+import { badgeElement } from "./badges.js";
 
 const input = document.getElementById("find-input");
 const list = document.getElementById("find-results");
 const MAX_RESULTS = 8;
+
+// On phones the Find box sits on its own row, opened with the Find button.
+const toolbar = input.closest(".map-toolbar");
+const findToggle = document.getElementById("find-toggle");
+function setFindOpen(open) {
+  toolbar.classList.toggle("find-open", open);
+  findToggle.setAttribute("aria-expanded", String(open));
+  if (open) input.focus();
+}
+findToggle.addEventListener("click", () => setFindOpen(!toolbar.classList.contains("find-open")));
 
 // Lower case without accents, so "faerun" finds "Faerûn".
 const fold = (text) =>
@@ -92,6 +103,7 @@ function showResults() {
     const icon = Object.assign(new Image(16, 16), { src: item.icon.src, alt: "" });
     if (!item.icon.pixelated) icon.classList.add("smooth");
     const name = Object.assign(document.createElement("span"), { className: "find-name", textContent: item.name });
+    if (item.record.pin) name.append(" ", badgeElement(item.record.pin.status));
     const kind = Object.assign(document.createElement("span"), { className: "find-kind", textContent: item.kind });
     option.append(icon, name, kind);
     // mousedown, so the pick lands before the box loses focus and closes the list.
@@ -117,12 +129,16 @@ function choose(i) {
   input.value = "";
   closeList();
   input.blur();
+  setFindOpen(false);
   goTo(item.record);
 }
 
 input.addEventListener("input", showResults);
 input.addEventListener("focus", () => input.value.trim() && showResults());
-input.addEventListener("blur", closeList);
+input.addEventListener("blur", (e) => {
+  closeList();
+  if (!input.value.trim() && e.relatedTarget !== findToggle) setFindOpen(false);
+});
 input.addEventListener("keydown", (e) => {
   if (e.key === "ArrowDown" || e.key === "ArrowUp") {
     e.preventDefault();
@@ -140,6 +156,7 @@ input.addEventListener("keydown", (e) => {
     else {
       input.value = "";
       input.blur();
+      setFindOpen(false);
     }
   }
 });
@@ -151,5 +168,5 @@ document.addEventListener("keydown", (e) => {
   if (target.closest && target.closest("input, textarea, select, [contenteditable]")) return;
   if (document.querySelector(".modal[style*='flex']")) return;
   e.preventDefault();
-  input.focus();
+  setFindOpen(true);
 });

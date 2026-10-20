@@ -41,7 +41,7 @@
     <!-- A module, so it runs after the deferred Leaflet scripts above -->
     <script type="module" src="/one-for-all/map.js"></script>
   </head>
-  <body onclick="closeStartMenu()">
+  <body class="map-page" onclick="closeStartMenu()">
     <div class="program-window" style="height: calc(100vh - 50px)">
       <div class="title-bar gradient">
         <div style="display: flex; align-items: center; gap: 5px">
@@ -74,7 +74,7 @@
             height="16"
             alt=""
           />
-          Locate
+          <span class="btn-label">Locate</span>
         </button>
         <button
           type="button"
@@ -84,7 +84,7 @@
           hidden
         >
           <img id="party-button-icon" src="" width="16" height="16" alt="" />
-          Party
+          <span class="btn-label">Party</span>
         </button>
         <button
           type="button"
@@ -101,9 +101,41 @@
             height="16"
             alt=""
           />
-          Records
+          <span class="btn-label">Records</span>
         </button>
-        <div class="find-box" role="search">
+        <!-- Phones only: the Find box opens on its own row, and the Legend as a sheet -->
+        <button
+          type="button"
+          class="win-btn toolbar-btn phone-only"
+          id="find-toggle"
+          aria-controls="find-box"
+          aria-expanded="false"
+          title="Find a record"
+        >
+          <img
+            src="https://win98icons.alexmeub.com/icons/png/search_file-0.png"
+            width="16"
+            height="16"
+            alt=""
+          />
+          <span class="btn-label">Find</span>
+        </button>
+        <button
+          type="button"
+          class="win-btn toolbar-btn phone-only"
+          id="filters-button"
+          aria-expanded="false"
+          title="Show or hide pins and lines"
+        >
+          <img
+            src="https://win98icons.alexmeub.com/icons/png/check-0.png"
+            width="16"
+            height="16"
+            alt=""
+          />
+          <span class="btn-label">Filters</span>
+        </button>
+        <div class="find-box" id="find-box" role="search">
           <label for="find-input">Find:</label>
           <input
             id="find-input"

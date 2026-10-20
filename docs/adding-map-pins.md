@@ -15,7 +15,7 @@ Everything on the campaign map at `/one-for-all` (pins, Locations and the lines 
 | **Party Members** | The player characters. Members link to them (**Recruited By**) and so do Soul Items; each party member's page shows their Soul Item. |
 | **Settings → Campaign Settings** | Which pin is the party, and the party's trail. See *The party* below. |
 | **Settings → Pin Types** | Each type's name, plural, icon, position in the legend, and **Suggested details** (the Details rows a new pin of that type starts with). Add a new type here and it gets its own list and legend entry, no code needed. |
-| **Settings → Statuses** | Each type's statuses and how they look on the map (Normal, Dimmed or Faded). The first one (lowest **Order**) is the default for new pins. |
+| **Settings → Statuses** | Each type's statuses and how they look on the map: a **Badge** (✓ Done, ? Unconfirmed, ! Lead, ☠ Dead, ✕ Failed, or none) on the pin's corner, and a **Map style** (Normal, Dimmed or Faded). Keep Dimmed and Faded for finished things, so what players should still chase stands out. The first status (lowest **Order**) is the default for new pins. |
 | **Settings → Ranks** | Member ranks and their icons. |
 | **Settings → Relationship Types** | The kinds of lines you can draw between records, and how each looks. See *Relationship lines* below. |
 
@@ -56,7 +56,7 @@ Players can do this too, so they can send you a spot. The old `?place` link stil
 | **Type** | One of your Pin Types. |
 | **Location** | The town, region or place it's at. The pin sits at the Location's spot unless you give it its own position. Pick one from your Locations, or create one from the field. |
 | **Show on map** | On by default. Untick it to keep the pin off the map (it's still public; see *Good to know*). |
-| **Status** | One of that type's statuses, e.g. a Member is Active, Compromised or Dead. Statuses with a Dimmed or Faded map style grey the pin out. |
+| **Status** | One of that type's statuses, e.g. a Member is Active, Compromised or Dead. The status's badge shows on the pin's corner, and a Dimmed or Faded map style greys the pin out. |
 | **Rank** | *Members only.* Pick one of your ranks. |
 | **Reports to** | *Members only.* The member or safe house they report to. This draws a network line on the map. |
 | **Recruited By** | *Members only.* The party members who recruited them. Pick one or more. |
@@ -122,6 +122,10 @@ Clicking a marker (or a search result, a Records row, or a link) opens that pin 
 - **◀ Back** and **Forward ▶** step through what you've opened, like a browser.
 - **Also at …** lists the other pins at the same Location, and **Mentioned in** lists records whose description or Details mention this one by name.
 - **Copy link** copies a link straight to this record. **X** or Esc closes the panel.
+
+## On a phone
+
+The map fills the screen. A floating toolbar at the top has **Locate**, **Party**, **Records**, **Find** (opens the search box on its own row) and **Filters** (opens the Legend as a sheet along the bottom; **_** closes it). Zoom with two fingers. The record panel opens as a sheet along the bottom; **▲** makes it taller.
 
 ## Finding things
 

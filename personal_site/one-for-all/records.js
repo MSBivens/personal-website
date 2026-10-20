@@ -2,6 +2,7 @@
 // column heading, narrow it by type and status, and click a name to fly to it and open it.
 import { pinsById, placesById } from "./state.js";
 import { goTo } from "./panel.js";
+import { badgeElement } from "./badges.js";
 
 const modal = document.getElementById("records-modal");
 const toggle = document.getElementById("records-button");
@@ -28,6 +29,7 @@ export function buildRecords() {
       location: entry.place ? entry.place.location.name : "",
       status: (entry.pin.status && entry.pin.status.title) || "",
       statusStyle: entry.pin.status && entry.pin.status.style,
+      statusInfo: entry.pin.status,
       added: entry.pin.createdAt || "",
     })),
     ...[...placesById.values()].map((place) => ({
@@ -100,7 +102,7 @@ function renderRows() {
         cell("records-name", button),
         cell("records-type", row.type),
         cell("records-location", row.location),
-        cell("records-status", row.status),
+        cell("records-status", badgeElement(row.statusInfo), row.status),
         cell("records-added", added),
       );
       return tr;
