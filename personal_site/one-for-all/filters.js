@@ -34,6 +34,9 @@ export function saveLegendState() {
   } catch {}
 }
 
+// "Show only these on the map" in the Open threads window. Not remembered between visits.
+export const threadsView = { on: false };
+
 /** Is this Pin Type (or PLACES) unticked? */
 export const isHidden = (key) => legendState.hidden.has(key);
 

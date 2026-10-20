@@ -4,7 +4,7 @@
 // you've opened, like a browser.
 import { map, isLocating } from "./view.js";
 import { ICON_BASE, sanityIcon } from "./icons.js";
-import { pinsById, placesById } from "./state.js";
+import { isNew, pinsById, placesById } from "./state.js";
 import { isDimmed, reveal, setSelected } from "./markers.js";
 import { relSample } from "./lines.js";
 import { stopLocating } from "./locate.js";
@@ -38,6 +38,7 @@ export function detailRow(label, ...content) {
 }
 
 const nameOf = (record) => (record.pin ? record.pin.name : record.location.name);
+const newTag = () => el("span", "new-tag inline", "NEW");
 
 /** A link-styled button that flies to a record and shows it here. */
 function recordLink(record, text = nameOf(record)) {
@@ -55,6 +56,7 @@ function recordItem(record) {
   if (!icon.pixelated) img.classList.add("smooth");
   if (isPin && isDimmed(record.pin)) img.classList.add(`is-${record.pin.status.style}`);
   const button = el("button", "place-item", img, nameOf(record));
+  if (isNew(record)) button.append(newTag());
   button.type = "button";
   button.addEventListener("click", () => goTo(record));
   const item = el("li", "", button);
@@ -219,6 +221,7 @@ function render(record) {
   document.getElementById("panel-kind").textContent = isPin
     ? record.type.title
     : `Location · ${count} ${count === 1 ? "record" : "records"}`;
+  if (isNew(record)) document.getElementById("panel-kind").append(" ", newTag());
   document.getElementById("panel-content").replaceChildren(...(isPin ? pinContent(record) : placeContent(record)));
   body.scrollTop = 0;
   copyButton.hidden = !(record.pin ? record.pin.id : record.location);

@@ -1,7 +1,7 @@
 // The Find box in the toolbar: type part of a name (or a word from a record's Location,
 // Details, status or description) and pick a result to fly to it and open it.
 // Press / anywhere on the map page to jump to the box.
-import { pinsById, placesById } from "./state.js";
+import { isNew, pinsById, placesById } from "./state.js";
 import { goTo } from "./panel.js";
 import { badgeElement } from "./badges.js";
 
@@ -104,6 +104,7 @@ function showResults() {
     if (!item.icon.pixelated) icon.classList.add("smooth");
     const name = Object.assign(document.createElement("span"), { className: "find-name", textContent: item.name });
     if (item.record.pin) name.append(" ", badgeElement(item.record.pin.status));
+    if (isNew(item.record)) name.append(Object.assign(document.createElement("span"), { className: "new-tag inline", textContent: "NEW" }));
     const kind = Object.assign(document.createElement("span"), { className: "find-kind", textContent: item.kind });
     option.append(icon, name, kind);
     // mousedown, so the pick lands before the box loses focus and closes the list.

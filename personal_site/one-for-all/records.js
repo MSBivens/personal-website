@@ -1,6 +1,6 @@
 // The Records window: every pin and Location in one Explorer-style table. Sort by clicking a
 // column heading, narrow it by type and status, and click a name to fly to it and open it.
-import { pinsById, placesById } from "./state.js";
+import { campaign, isNew, isOpenThread, pinsById, placesById } from "./state.js";
 import { goTo } from "./panel.js";
 import { badgeElement } from "./badges.js";
 
@@ -8,6 +8,7 @@ const modal = document.getElementById("records-modal");
 const toggle = document.getElementById("records-button");
 const typeSelect = document.getElementById("records-type");
 const statusSelect = document.getElementById("records-status");
+const showSelect = document.getElementById("records-show");
 const tbody = document.getElementById("records-rows");
 const countLabel = document.getElementById("records-count");
 const LOCATIONS = "locations"; // type filter value for Locations (Pin Type ids never look like this)
@@ -65,7 +66,10 @@ function fillStatuses() {
 }
 
 const matchesType = (row) => !typeSelect.value || row.typeId === typeSelect.value;
-const matches = (row) => matchesType(row) && (!statusSelect.value || row.status === statusSelect.value);
+const matchesShow = (row) =>
+  !showSelect.value || (showSelect.value === "new" ? isNew(row.record) : isOpenThread(row.record));
+const matches = (row) =>
+  matchesType(row) && (!statusSelect.value || row.status === statusSelect.value) && matchesShow(row);
 
 const COMPARE = {
   name: (a, b) => a.name.localeCompare(b.name),
@@ -93,6 +97,7 @@ function renderRows() {
       if (!row.icon.pixelated) icon.classList.add("smooth");
       if (row.statusStyle && row.statusStyle !== "normal") icon.classList.add(`is-${row.statusStyle}`);
       button.append(icon, row.name);
+      if (isNew(row.record)) button.append(newTag());
       button.addEventListener("click", () => {
         closeRecords({ restoreFocus: false });
         goTo(row.record);
@@ -115,7 +120,13 @@ function renderRows() {
   }
 }
 
+function newTag() {
+  return Object.assign(document.createElement("span"), { className: "new-tag inline", textContent: "NEW" });
+}
+
 function openRecords() {
+  // "New since last session" only means something once a session date is set.
+  showSelect.querySelector('option[value="new"]').disabled = !campaign.lastSession;
   fillStatuses();
   renderRows();
   openModal("records-modal");
@@ -138,6 +149,7 @@ typeSelect.addEventListener("change", () => {
   renderRows();
 });
 statusSelect.addEventListener("change", renderRows);
+showSelect.addEventListener("change", renderRows);
 for (const th of modal.querySelectorAll("th[data-sort]")) {
   th.querySelector("button").addEventListener("click", () => {
     const key = th.dataset.sort;

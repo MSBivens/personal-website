@@ -54,6 +54,14 @@ export const pinStatus = defineType({
       initialValue: 'none',
     }),
     defineField({
+      name: 'openThread',
+      title: 'Open thread',
+      type: 'boolean',
+      description:
+        'Something the party could still pursue (e.g. an Available quest or an Unverified rumor). Listed under Open threads on the map.',
+      initialValue: false,
+    }),
+    defineField({
       name: 'order',
       title: 'Order',
       type: 'number',
@@ -63,13 +71,21 @@ export const pinStatus = defineType({
   ],
   orderings: [{title: 'Order', name: 'orderAsc', by: [{field: 'order', direction: 'asc'}]}],
   preview: {
-    select: {title: 'title', typeTitle: 'pinType.title', style: 'style', badge: 'badge', media: 'pinType.icon'},
-    prepare: ({title, typeTitle, style, badge, media}) => ({
+    select: {
+      title: 'title',
+      typeTitle: 'pinType.title',
+      style: 'style',
+      badge: 'badge',
+      openThread: 'openThread',
+      media: 'pinType.icon',
+    },
+    prepare: ({title, typeTitle, style, badge, openThread, media}) => ({
       title,
       subtitle: [
         typeTitle,
         STYLES.find((s) => s.value === style)?.title,
         badge && badge !== 'none' && BADGES.find((b) => b.value === badge)?.title,
+        openThread && 'Open thread',
       ]
         .filter(Boolean)
         .join(' · '),

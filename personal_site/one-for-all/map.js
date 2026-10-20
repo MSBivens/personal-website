@@ -14,6 +14,7 @@ import { goTo, showError } from "./panel.js";
 import { assignSlugs, recordFromAddress } from "./links.js";
 import { buildSearchIndex } from "./search.js";
 import { buildRecords } from "./records.js";
+import { setUpUpdates } from "./updates.js";
 import "./locate.js";
 
 if (TEST_DATA) {
@@ -39,6 +40,7 @@ loadMapData()
   .then(({ campaign: settings, types, relationshipTypes = [], locations = [], pins }) => {
     campaign.partyId = (settings && settings.partyId) || null;
     campaign.trail = (settings && settings.trail) || [];
+    campaign.lastSession = (settings && settings.lastSession) || null;
     for (const type of types) {
       typesById.set(type.id, { ...type, icon: sanityIcon(type.icon) || FALLBACK_ICON });
     }
@@ -52,6 +54,7 @@ loadMapData()
     assignSlugs();
     buildSearchIndex();
     buildRecords();
+    setUpUpdates();
 
     // A link to a record (#slug) opens it. Otherwise open on the party, close enough to
     // read place names; without a party, the whole map shows.

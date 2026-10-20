@@ -4,10 +4,10 @@
 // Nearby markers then merge into numbered clusters when zoomed out (Leaflet.markercluster).
 import { map, plainText, toLatLng, toImagePoint, isLocating } from "./view.js";
 import { FALLBACK_ICON, pinIcon, sanityIcon } from "./icons.js";
-import { campaign, pinsById, placesById, typesById, waypointsById } from "./state.js";
+import { campaign, isNew, isOpenThread, pinsById, placesById, typesById, waypointsById } from "./state.js";
 import { showPin } from "./panel.js";
 import { setPlaceIcon } from "./places.js";
-import { PLACES, isHidden } from "./filters.js";
+import { PLACES, isHidden, threadsView } from "./filters.js";
 import { TYPE } from "./data.js";
 
 // Statuses styled Dimmed or Faded grey the pin out (and dash a member's network line).
@@ -33,6 +33,10 @@ for (const name of ["_recursivelyAnimateChildrenIn", "_recursivelyBecomeVisible"
 // A Location marker stands for several records, so clusters count records, not markers.
 const recordsIn = (cluster) => cluster.getAllChildMarkers().reduce((n, m) => n + (m.records || 1), 0);
 
+// Whether a pin is drawn: its type is ticked, and in the Open threads view, it's one of them
+// (the party always shows).
+const isShown = (entry) => !isHidden(entry.pin.typeId) && (!threadsView.on || entry.party || isOpenThread(entry));
+
 // Bigger cluster badges on touch screens, so they're easy to tap.
 const CLUSTER_SIZE = matchMedia("(pointer: coarse)").matches ? 40 : 34;
 
@@ -42,9 +46,10 @@ export const clusterGroup = L.markerClusterGroup({
   spiderfyDistanceMultiplier: 1.6,
   iconCreateFunction(cluster) {
     const n = recordsIn(cluster);
+    const fresh = cluster.getAllChildMarkers().some((m) => m.isNew);
     return L.divIcon({
       html: `<span class="cluster-count" aria-hidden="true">${n}</span><span class="sr-only">${n} records here. Zoom in to see them.</span>`,
-      className: "map-cluster",
+      className: fresh ? "map-cluster has-new" : "map-cluster",
       iconSize: [CLUSTER_SIZE, CLUSTER_SIZE],
     });
   },
@@ -113,12 +118,13 @@ export function addPin(pin) {
   }
 
   const marker = L.marker(toLatLng(at.x, at.y), {
-    icon: party ? partyIcon(icon) : pinIcon(icon, isDimmed(pin) ? `is-${pin.status.style}` : "", pin.status),
+    icon: party ? partyIcon(icon) : pinIcon(icon, isDimmed(pin) ? `is-${pin.status.style}` : "", pin.status, isNew(entry)),
     title: pin.name,
     riseOnHover: true,
     zIndexOffset: party ? 2000 : 0,
   });
   entry.marker = marker;
+  marker.isNew = isNew(entry);
   nameLabel(marker, pin.name, party ? 20 : 14);
   marker.on("click", () => {
     if (!isLocating()) showPin(entry);
@@ -146,24 +152,24 @@ export function renderMarkers() {
   for (const place of placesById.values()) {
     place.rep = null;
     if (!place.marker) continue;
-    const shown = place.grouped.filter((entry) => entry.marker && !isHidden(entry.pin.typeId));
+    const shown = place.grouped.filter((entry) => entry.marker && isShown(entry));
     if (shown.length > 1) {
-      setPlaceIcon(place, shown.length);
+      setPlaceIcon(place, shown.length, shown.some(isNew));
       place.rep = place.marker;
       for (const entry of shown) entry.rep = place.marker;
       layers.push(place.marker);
     } else if (shown.length === 1) {
       place.rep = shown[0].marker; // added with the other pins below
-    } else if (!place.grouped.length && place.readable && !isHidden(PLACES)) {
+    } else if (!place.grouped.length && place.readable && !isHidden(PLACES) && !threadsView.on) {
       // Nothing here yet, but something to read: a plain Location marker.
-      setPlaceIcon(place, 0);
+      setPlaceIcon(place, 0, isNew(place));
       place.rep = place.marker;
       layers.push(place.marker);
     }
   }
   partyLayer.clearLayers();
   for (const entry of pinsById.values()) {
-    if (!entry.marker || entry.rep || isHidden(entry.pin.typeId)) continue;
+    if (!entry.marker || entry.rep || !isShown(entry)) continue;
     entry.rep = entry.marker;
     if (entry.party) partyLayer.addLayer(entry.marker);
     else layers.push(entry.marker);

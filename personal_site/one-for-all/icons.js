@@ -16,11 +16,14 @@ export function sanityIcon(asset) {
   return { src: `${asset.url}?w=64&h=64&fit=max`, pixelated: !(asset.width > 64) };
 }
 
+// "New since the last session", on the top-left corner of a marker.
+export const NEW_TAG = '<span class="new-tag" aria-hidden="true">NEW</span>';
+
 // A pin marker: its icon, with its status badge (if any) on the bottom-right corner.
 const cache = new Map();
-export function pinIcon(icon, className = "", status = null) {
+export function pinIcon(icon, className = "", status = null, fresh = false) {
   const classes = [icon.pixelated ? "" : "smooth", className].filter(Boolean).join(" ");
-  const badge = badgeSvg(status);
+  const badge = badgeSvg(status) + (fresh ? NEW_TAG : "");
   const key = `${icon.src}|${classes}|${badge}`;
   if (!cache.has(key)) {
     const src = icon.src.replace(/"/g, "&quot;");

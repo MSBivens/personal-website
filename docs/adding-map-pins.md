@@ -13,9 +13,9 @@ Everything on the campaign map at `/one-for-all` (pins, Locations and the lines 
 | **Pins** | Every record, in one list per Pin Type plus **All pins**. Use the create button at the top of a type's list and the new pin starts with that type (and its first status) already chosen. |
 | **Locations** | Named places, from cities and regions down to a single lair. A pin's Location is picked from this list, and the pin sits at the Location's spot. |
 | **Party Members** | The player characters. Members link to them (**Recruited By**) and so do Soul Items; each party member's page shows their Soul Item. |
-| **Settings → Campaign Settings** | Which pin is the party, and the party's trail. See *The party* below. |
+| **Settings → Campaign Settings** | The **Last session** date, which pin is the party, and the party's trail. See *The party* and *Keeping players up to date* below. |
 | **Settings → Pin Types** | Each type's name, plural, icon, position in the legend, and **Suggested details** (the Details rows a new pin of that type starts with). Add a new type here and it gets its own list and legend entry, no code needed. |
-| **Settings → Statuses** | Each type's statuses and how they look on the map: a **Badge** (✓ Done, ? Unconfirmed, ! Lead, ☠ Dead, ✕ Failed, or none) on the pin's corner, and a **Map style** (Normal, Dimmed or Faded). Keep Dimmed and Faded for finished things, so what players should still chase stands out. The first status (lowest **Order**) is the default for new pins. |
+| **Settings → Statuses** | Each type's statuses and how they look on the map: a **Badge** (✓ Done, ? Unconfirmed, ! Lead, ☠ Dead, ✕ Failed, or none) on the pin's corner, and a **Map style** (Normal, Dimmed or Faded). Keep Dimmed and Faded for finished things, so what players should still chase stands out. Tick **Open thread** on statuses the party could still pursue (e.g. an Available quest). The first status (lowest **Order**) is the default for new pins. |
 | **Settings → Ranks** | Member ranks and their icons. |
 | **Settings → Relationship Types** | The kinds of lines you can draw between records, and how each looks. See *Relationship lines* below. |
 
@@ -125,7 +125,13 @@ Clicking a marker (or a search result, a Records row, or a link) opens that pin 
 
 ## On a phone
 
-The map fills the screen. A floating toolbar at the top has **Locate**, **Party**, **Records**, **Find** (opens the search box on its own row) and **Filters** (opens the Legend as a sheet along the bottom; **_** closes it). Zoom with two fingers. The record panel opens as a sheet along the bottom; **▲** makes it taller.
+The map fills the screen. A floating toolbar at the top has **Locate**, **Party**, **Records**, **New**, **Threads**, **Find** (opens the search box on its own row) and **Filters** (opens the Legend as a sheet along the bottom; **_** closes it). Zoom with two fingers. The record panel opens as a sheet along the bottom; **▲** makes it taller.
+
+## Keeping players up to date
+
+- **What's new** (toolbar, with a count): every pin and Location created on or after the **Last session** date in **Settings → Campaign Settings**. Those records also get a yellow **NEW** tag on the map and in lists, and numbered boxes with something new inside get a yellow dot. Change the date after each session. Leave it empty to turn this off. Editing an old record doesn't make it new.
+- **Open threads** (toolbar): every pin whose status has **Open thread** ticked, grouped by type. Tick **Show only these on the map** to hide everything else (the party stays); the note at the top of the map has **Show all** to switch back.
+- The **Records** window's **Show** list can narrow it to new records or open threads too.
 
 ## Finding things
 
