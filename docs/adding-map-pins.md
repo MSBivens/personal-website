@@ -30,8 +30,8 @@ Members need a rank, so set the ranks up before adding members. Go to **Settings
 | Field | What to put |
 |---|---|
 | **Name** | e.g. `Hand` |
-| **Order** | Where it sits in the hierarchy. `1` is the highest rank. The pop-up uses this to sort "Direct reports". |
-| **Icon** | Upload an image. A square image works best. It's shown as the member's map marker and next to the rank in the pop-up. |
+| **Order** | Where it sits in the hierarchy. `1` is the highest rank. The panel uses this to sort "Direct reports". |
+| **Icon** | Upload an image. A square image works best. It's shown as the member's map marker and next to the rank in the panel. |
 
 Click **Publish**.
 
@@ -52,7 +52,7 @@ Players can do this too, so they can send you a spot. The old `?place` link stil
 
 | Field | What to put |
 |---|---|
-| **Name** | Shown in the pop-up's title bar and when hovering the pin. |
+| **Name** | Shown in the panel's title bar and when hovering the pin. |
 | **Type** | One of your Pin Types. |
 | **Location** | The town, region or place it's at. The pin sits at the Location's spot unless you give it its own position. Pick one from your Locations, or create one from the field. |
 | **Show on map** | On by default. Untick it to keep the pin off the map (it's still public; see *Good to know*). |
@@ -62,9 +62,9 @@ Players can do this too, so they can send you a spot. The old `?place` link stil
 | **Recruited By** | *Members only.* The party members who recruited them. Pick one or more. |
 | **Party member** | *Soul Items only.* Whose Soul Item it is. Each party member can have only one. |
 | **Attitude** | *NPCs only.* Friendly, Neutral, Hostile or Unknown. |
-| **Quest giver** | *Quests only.* The NPC or member who gave it. Shown as a link in the pop-up. |
+| **Quest giver** | *Quests only.* The NPC or member who gave it. Shown as a link in the panel. |
 | **Icon override** | *Optional.* An icon for this pin only. |
-| **Details** | Short labelled facts shown as rows in the pop-up, e.g. *Reward: 500 gp*. A new pin starts with its type's suggested rows (a Quest gets Reward and Objectives); add, rename or remove rows freely. Rows left empty aren't shown. |
+| **Details** | Short labelled facts shown as rows in the panel, e.g. *Reward: 500 gp*. A new pin starts with its type's suggested rows (a Quest gets Reward and Objectives); add, rename or remove rows freely. Rows left empty aren't shown. |
 | **Own position** (**X**, **Y**) | *Optional.* Leave empty to use the Location's spot. Fill in both (from **Locate**) for a spot of its own. A pin on the map needs one or the other: Studio tells you if it has neither. |
 | **Description** | Your notes. Leave a blank line between paragraphs. |
 
@@ -93,7 +93,7 @@ How Locations appear on the map, with no settings to manage:
 
 When zoomed out, markers that are close together merge into a grey numbered box. Click it to zoom in. Markers on exactly the same spot fan out when you click them.
 
-A Location's panel shows its description and Details, then every pin at that Location grouped by type. Click any pin to open its pop-up, which has a **◀ Back to …** button. In any pop-up, the **Location** name is a link to that Location's panel.
+A Location's panel shows its description and Details, then every pin at that Location grouped by type. Click any pin to show it. In a pin's panel, the **Location** name is a link to that Location.
 
 **Rule of thumb:** give something its own pin if it has a status, links to other records, or players will want to search for it. Otherwise, a Details row on its Location is enough.
 
@@ -114,18 +114,27 @@ Stops added automatically show straight away. After editing the list yourself, p
 
 **Where they're heading:** add a **Travel Destination** connection from the party pin to the place (see *Relationship lines*). It's drawn as an arrow.
 
+## The record panel
+
+Clicking a marker (or a search result, a Records row, or a link) opens that pin or Location in a panel docked on the right of the map; on a phone it's a sheet along the bottom (**▲** makes it taller). The map stays usable around it, and the marker it belongs to gets a yellow ring.
+
+- Names in the panel (Location, Reports to, Quest giver, Connections, lists) are links: click one to fly there and show it in the panel.
+- **◀ Back** and **Forward ▶** step through what you've opened, like a browser.
+- **Also at …** lists the other pins at the same Location, and **Mentioned in** lists records whose description or Details mention this one by name.
+- **Copy link** copies a link straight to this record. **X** or Esc closes the panel.
+
 ## Finding things
 
 - **Find** (top-right of the toolbar, or press **/**): type part of a name, or a word from a record's Location, Details, status or description. Pick a result with the mouse or the arrow keys and Enter. The map flies to it, zooming in past any numbered box, and opens it.
 - **Records** (toolbar): every pin and Location in one table. Click a column heading to sort (click **Added** for newest first), narrow it with **Type** and **Status**, and click a name to go to it.
 - **Names on the map** appear under the markers once you zoom in far enough.
-- **Links to a record:** opening a pin or Location puts its name in the address bar (e.g. `…/one-for-all#jenna`), and **Copy link** in its pop-up copies that link. Anyone who opens it lands on that record. Renaming a record changes its link; two records with the same name get `-2`, `-3` and so on.
+- **Links to a record:** opening a pin or Location puts its name in the address bar (e.g. `…/one-for-all#jenna`), and **Copy link** in its panel copies that link. Anyone who opens it lands on that record. Renaming a record changes its link; two records with the same name get `-2`, `-3` and so on.
 
 ## The network lines
 
 Tick **Network lines** in the **Lines** section of the map's **Legend** box (bottom-left) to draw a line from each member to whoever they report to. Lines from members whose status is Dimmed or Faded (e.g. Compromised or Dead) are dashed. Hover over a line to see who it connects.
 
-In a pop-up, the **Reports to** and **Direct reports** names are links. Click one to fly to that pin.
+In a panel, the **Reports to** and **Direct reports** names are links. Click one to fly to that pin.
 
 ## Relationship lines
 
@@ -150,14 +159,14 @@ Besides who-reports-to-whom, you can draw any relationship between two records, 
 | **To** | Any pin or Location. |
 | **Via** | *Optional.* Post Offices the line passes through, in order. Use this for letter routes: the line goes from the sender through each Post Office to the recipient. |
 | **Label** | *Optional.* Shown when hovering the line. |
-| **Notes** | *Optional.* Shown with the connection in pop-ups. |
+| **Notes** | *Optional.* Shown with the connection in panels. |
 
-A record can have as many connections as you like. Each one shows in **both ends'** pop-ups (→ on the record it's on, ← on the other end), and the names there are links.
+A record can have as many connections as you like. Each one shows in **both ends'** panels (→ on the record it's on, ← on the other end), and the names there are links.
 
 How lines are placed:
 - A line starts and ends at whatever is drawn for that record: its own marker, its Location's marker, or the numbered box it's merged into when zoomed out. Zoom in and the lines follow.
 - Lines between two pins at the **same Location's spot** would have no length, so they're listed in the Location's panel under **Lines here** instead.
-- A line to a **Location** ends at its marker, or at its **X/Y** (no X/Y, no line; it's still listed in pop-ups).
+- A line to a **Location** ends at its marker, or at its **X/Y** (no X/Y, no line; it's still listed in panels).
 - Connections to unpublished records, or to pins with **Show on map** off, aren't drawn or listed.
 - When several lines join the same two points they're bowed apart automatically, so they don't sit on top of each other.
 
@@ -167,7 +176,7 @@ The **Legend** (bottom-left) has two sections, each with **All** / **None** butt
 - **Pins** shows or hides each pin type, plus **Other places** (Locations with nothing at them yet) when there are any. Location markers and numbered boxes only count what's ticked.
 - **Lines** shows or hides the party's trail, the network lines and each relationship type. A line only shows when the pins at both ends are shown too.
 
-The legend only affects the map: pop-ups and Location panels always list everything. The map remembers your choices on that browser. On a phone the legend starts minimised.
+The legend only affects the map: the record panel always lists everything. The map remembers your choices on that browser. On a phone the legend starts minimised.
 
 ## Moving or removing a pin
 
@@ -184,7 +193,7 @@ The legend only affects the map: pop-ups and Location panels always list everyth
 | A connection's line is missing | Both ends must be published with **Show on map** ticked, and a Location end needs an X/Y. Check its relationship type and both ends' pin types are ticked in the Legend. If both ends are at the same Location's spot, it's listed in that Location's panel instead. Zoomed out, both ends may be in the same numbered box. |
 | A member shows the plain Member icon | Their rank has no icon, or they have no rank. |
 | A pin shows a red question mark | Neither the pin, its rank nor its Pin Type has an icon. Add one under **Settings → Pin Types**. |
-| An **Error** pop-up saying *Map data could not be loaded* | Sanity didn't answer. Try again in a minute. If the site has moved to a new address, add it under **API → CORS origins** at <https://www.sanity.io/manage/project/ohnkcmr7>. |
+| An **Error** panel saying *Map data could not be loaded* | Sanity didn't answer. Try again in a minute. If the site has moved to a new address, add it under **API → CORS origins** at <https://www.sanity.io/manage/project/ohnkcmr7>. |
 
 ## Good to know
 

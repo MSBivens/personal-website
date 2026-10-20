@@ -1,7 +1,7 @@
 // The Records window: every pin and Location in one Explorer-style table. Sort by clicking a
 // column heading, narrow it by type and status, and click a name to fly to it and open it.
 import { pinsById, placesById } from "./state.js";
-import { goTo } from "./popup.js";
+import { goTo } from "./panel.js";
 
 const modal = document.getElementById("records-modal");
 const toggle = document.getElementById("records-button");

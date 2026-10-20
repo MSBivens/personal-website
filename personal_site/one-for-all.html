@@ -124,6 +124,29 @@
       <div class="map-viewer">
         <div id="map" aria-label="Map of Faerûn"></div>
 
+        <aside id="record-panel" class="prop-window record-panel" aria-labelledby="panel-name" hidden>
+          <div class="title-bar">
+            <span id="panel-name"></span>
+            <div class="title-controls">
+              <button type="button" id="panel-expand" class="panel-expand" aria-label="Expand">▲</button>
+              <button type="button" id="panel-close" aria-label="Close">X</button>
+            </div>
+          </div>
+          <div class="panel-nav">
+            <button type="button" class="win-btn" id="panel-back" disabled>◀ Back</button>
+            <button type="button" class="win-btn" id="panel-forward" disabled>Forward ▶</button>
+            <button type="button" class="win-btn" id="panel-copy-link">Copy link</button>
+          </div>
+          <div id="panel-body" class="prop-body panel-body" tabindex="-1">
+            <div class="pin-type">
+              <img id="panel-icon" src="" width="32" height="32" alt="" />
+              <b id="panel-kind"></b>
+            </div>
+            <hr />
+            <div id="panel-content"></div>
+          </div>
+        </aside>
+
         <div id="locate-panel" class="locate-panel prop-window" hidden>
           <div class="title-bar">
             <span>Locate</span>
@@ -148,76 +171,6 @@
             <div style="text-align: right">
               <button type="button" class="win-btn" id="locate-copy" disabled>Copy</button>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div
-      id="pin-modal"
-      class="modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="pin-name"
-    >
-      <div class="prop-window pin-window">
-        <div class="title-bar">
-          <span id="pin-name"></span>
-          <div class="title-controls">
-            <button type="button" class="pin-close" aria-label="Close">
-              X
-            </button>
-          </div>
-        </div>
-        <div class="prop-body">
-          <div class="pin-type">
-            <img id="pin-icon" src="" width="32" height="32" alt="" />
-            <b id="pin-type"></b>
-          </div>
-          <hr />
-          <div id="pin-details" class="pin-details"></div>
-          <div id="pin-connections"></div>
-          <div id="pin-description" class="pin-description"></div>
-          <div class="dialog-buttons">
-            <button type="button" class="win-btn" id="pin-back" hidden></button>
-            <button type="button" class="win-btn" id="pin-copy-link">Copy link</button>
-            <button type="button" class="win-btn pin-close" id="pin-ok">
-              OK
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div
-      id="place-modal"
-      class="modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="place-name"
-    >
-      <div class="prop-window place-window">
-        <div class="title-bar">
-          <span id="place-name"></span>
-          <div class="title-controls">
-            <button type="button" class="place-close" aria-label="Close">
-              X
-            </button>
-          </div>
-        </div>
-        <div class="prop-body">
-          <div class="pin-type">
-            <img id="place-icon" src="" width="32" height="32" alt="" />
-            <b id="place-kind"></b>
-          </div>
-          <hr />
-          <div id="place-description" class="pin-description"></div>
-          <div id="place-contents"></div>
-          <div class="dialog-buttons">
-            <button type="button" class="win-btn" id="place-copy-link">Copy link</button>
-            <button type="button" class="win-btn place-close" id="place-ok">
-              OK
-            </button>
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@
 // Details, status or description) and pick a result to fly to it and open it.
 // Press / anywhere on the map page to jump to the box.
 import { pinsById, placesById } from "./state.js";
-import { goTo } from "./popup.js";
+import { goTo } from "./panel.js";
 
 const input = document.getElementById("find-input");
 const list = document.getElementById("find-results");

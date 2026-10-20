@@ -5,7 +5,7 @@
 import { map, plainText, toLatLng, toImagePoint, isLocating } from "./view.js";
 import { FALLBACK_ICON, pinIcon, sanityIcon } from "./icons.js";
 import { campaign, pinsById, placesById, typesById, waypointsById } from "./state.js";
-import { showPin } from "./popup.js";
+import { showPin } from "./panel.js";
 import { setPlaceIcon } from "./places.js";
 import { PLACES, isHidden } from "./filters.js";
 import { TYPE } from "./data.js";
@@ -124,6 +124,7 @@ export function addPin(pin) {
   // Leaflet 1.9 makes markers focusable but doesn't treat Enter/Space as a click.
   // The element is recreated whenever the marker is re-added, so listen on each add.
   marker.on("add", () => {
+    marker.getElement().classList.toggle("is-selected", marker === selected);
     marker.getElement().addEventListener("keydown", (e) => {
       if ((e.key === "Enter" || e.key === " ") && !isLocating()) {
         e.preventDefault();
@@ -191,6 +192,16 @@ export const entryAnchor = (entry) => anchorOfLayer(entry.rep);
 
 /** Two line ends drawn at the same marker, cluster or spot (a line would have no length). */
 export const sameSpot = (a, b) => (a.layer && a.layer === b.layer) || (a.x === b.x && a.y === b.y);
+
+// The marker standing for the record open in the panel gets a highlight ring. Markers are
+// recreated as clusters change, so each marker re-applies it when it's added.
+let selected = null;
+export const selectedLayer = () => selected;
+export function setSelected(layer) {
+  if (selected && selected.getElement()) selected.getElement().classList.remove("is-selected");
+  selected = layer;
+  if (selected && selected.getElement()) selected.getElement().classList.add("is-selected");
+}
 
 // Close enough to read the place names on the map.
 export const READABLE_ZOOM = 4;
