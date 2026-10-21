@@ -92,7 +92,32 @@ When zoomed out, markers that are close together merge into a grey numbered box.
 
 A Location's panel shows its description and Details, then every pin at that Location grouped by type. Click any pin to show it. In a pin's panel, the **Location** name is a link to that Location.
 
-**Rule of thumb:** give something its own pin if it has a status, links to other records, or players will want to search for it. Otherwise, a Details row on its Location is enough.
+## Pin, Location or Details row?
+
+When something new comes up in a session, ask what it is:
+
+| It's… | Make it… | Examples |
+|---|---|---|
+| A **place where several things are** | a **Location** (with its own X/Y). Its pins sit on its spot and are listed in its panel. | A city, a lair with a dragon and a pool in it |
+| A **place you track progress on** | a **pin** of a place type (Dungeon, Landmark, Safe House), with its **Location** set to the town or region it's in | Olmen Temple (Partly explored) at Dragon's Head |
+| A **person, creature or group** | a **pin**: Member (in the OFA), NPC (anyone else; set their Attitude) or Enemy (a hostile threat or group) | Jenna, Old Grezzik, DeThicks |
+| A **thing, job or event** | a **pin**: Resource, Soul Item, Quest, Rumor or World Event | Cursed Gold, a thieves' guild job |
+| A **fact about a place or pin** that needs no status, links or searching | a **Details row** on that Location or pin | *Restorative pool: heals once per long rest* |
+
+**Give something its own pin** if it has a status, links to other records, or players will want to search for it. Otherwise a Details row is enough.
+
+**Things found inside a place pin** (e.g. a Soul Item found in a Dungeon): give the thing the same **Location** as the place, and add a **Significant tie** connection from the thing to the place. Both then show at that Location, and each panel links to the other. You don't need to say "found above the Olmen Temple" in the description.
+
+**Regions** (a forest, a stretch of fields) can be Locations without an X/Y; their pins then need their own position. For a **town**, give the Location an X/Y so its pins don't need one.
+
+**People change sides.** When an NPC joins the OFA, change their **Type** to Member and fill in Rank and Reports to. Their other fields and links stay.
+
+**Groups** (a vampire brood, a thieves' guild): one pin for the group (Enemy if hostile, NPC otherwise) at its base, and a **Significant tie** from each known member to it.
+
+**Worked example, the dragon's lair:**
+1. A **Location** "<Dragon>'s Lair" with its own X/Y (use **Place on map**), a description, and a Details row for the restorative pool. If players will want to find the pool again, make it a **Resource** pin there instead.
+2. The dragon: a **Member** (she joined the OFA) with **Location** set to the lair. She sits on the lair's spot with no X/Y of her own.
+3. From the lair's page in Studio, **Pins here → Add Member here / Add Resource here** fills the Location in for you.
 
 ## Studio helpers
 
