@@ -2,7 +2,8 @@ import {defineField, defineType, type ConditionalPropertyCallback, type NumberRu
 import {connectionsField} from './connection'
 import {MapPicker} from '../components/MapPicker'
 import {detailsField} from './details'
-import {mentionWarning, overlapWarning} from './warnings'
+import {mentionWarning, overlapWarning, routeWarning} from './warnings'
+import {PortShipsField} from '../components/PortShipsField'
 import {API_VERSION, TYPE_IDS, publishedId, typeIdOf} from './ids'
 
 const MAP_URL = 'https://www.msbivens.com/one-for-all'
@@ -13,6 +14,9 @@ const onlyFor =
   ({document}) =>
     typeIdOf(document) !== typeId
 const notMember = onlyFor(TYPE_IDS.member)
+// Soul Items and Death Sites both belong to a party member.
+const hasPartyMember = (document: unknown) =>
+  typeIdOf(document) === TYPE_IDS.soulItem || typeIdOf(document) === TYPE_IDS.deathSite
 // Post Offices are only waypoints for communication lines, so they just need a name and a spot.
 const isPostOffice: ConditionalPropertyCallback = ({document}) =>
   typeIdOf(document) === TYPE_IDS.postOffice
@@ -176,13 +180,15 @@ export const pin = defineType({
       title: 'Party member',
       type: 'reference',
       to: [{type: 'partyMember'}],
-      description: 'Whose Soul Item this is. Each party member has one.',
-      hidden: onlyFor(TYPE_IDS.soulItem),
+      description: 'Whose Soul Item this is (each party member has one), or who died here.',
+      hidden: ({document}) => !hasPartyMember(document),
       options: {disableNew: true},
       validation: (rule) =>
         rule.custom(async (value, context) => {
+          if (!hasPartyMember(context.document)) return true
+          if (!value?._ref) return 'Pick the party member.'
+          // A character can die (and be raised) more than once, so only Soul Items are one each.
           if (typeIdOf(context.document) !== TYPE_IDS.soulItem) return true
-          if (!value?._ref) return 'Soul Items need a party member.'
           const id = publishedId(context.document?._id ?? '')
           const other = await context
             .getClient({apiVersion: API_VERSION})
@@ -213,6 +219,52 @@ export const pin = defineType({
         filter: 'type._ref in [$npc, $member]',
         filterParams: {npc: TYPE_IDS.npc, member: TYPE_IDS.member},
       },
+    }),
+    defineField({
+      name: 'captain',
+      title: 'Captain',
+      type: 'reference',
+      to: [{type: 'pin'}],
+      description: 'The NPC, member or enemy who commands this ship. Optional.',
+      hidden: onlyFor(TYPE_IDS.ship),
+      options: {
+        disableNew: true,
+        filter: 'type._ref in [$npc, $member, $enemy]',
+        filterParams: {npc: TYPE_IDS.npc, member: TYPE_IDS.member, enemy: TYPE_IDS.enemy},
+      },
+    }),
+    defineField({
+      name: 'route',
+      title: 'Route',
+      type: 'array',
+      description:
+        'The ports this ship usually calls at, in order. Drag to reorder. A port can appear more than once. Add ports under Pins → Ports.',
+      hidden: onlyFor(TYPE_IDS.ship),
+      of: [
+        {
+          type: 'reference',
+          to: [{type: 'pin'}],
+          options: {disableNew: true, filter: 'type._ref == $port', filterParams: {port: TYPE_IDS.port}},
+        },
+      ],
+      validation: routeWarning,
+    }),
+    defineField({
+      name: 'roundTrip',
+      title: 'Returns to the first port',
+      type: 'boolean',
+      description: 'Tick if the ship sails back to its first port and starts the route again.',
+      hidden: ({document}) =>
+        typeIdOf(document) !== TYPE_IDS.ship || ((document as {route?: unknown[]})?.route?.length ?? 0) < 2,
+    }),
+    // Nothing is stored here; the field lists the ships whose route includes this port.
+    defineField({
+      name: 'shipsHere',
+      title: 'Ships calling here',
+      type: 'string',
+      readOnly: true,
+      hidden: onlyFor(TYPE_IDS.port),
+      components: {input: PortShipsField},
     }),
     defineField({
       name: 'x',
@@ -273,13 +325,15 @@ export const pin = defineType({
       showOnMap: 'showOnMap',
       owner: 'partyMember.name',
       attitude: 'attitude',
+      captain: 'captain.name',
     },
-    prepare({title, typeId, typeTitle, typeIcon, location, statusTitle, statusStyle, rankTitle, rankIcon, icon, showOnMap, owner, attitude}) {
+    prepare({title, typeId, typeTitle, typeIcon, location, statusTitle, statusStyle, rankTitle, rankIcon, icon, showOnMap, owner, attitude, captain}) {
       const isMember = typeId === TYPE_IDS.member
-      // e.g. "Member (Hand)", "Soul Item (Caelmorn)", "NPC (Hostile)"
+      // e.g. "Member (Hand)", "Soul Item (Caelmorn)", "NPC (Hostile)", "Ship (Captain Vex)"
       const extra =
         (isMember && rankTitle) ||
-        (typeId === TYPE_IDS.soulItem && owner) ||
+        ((typeId === TYPE_IDS.soulItem || typeId === TYPE_IDS.deathSite) && owner) ||
+        (typeId === TYPE_IDS.ship && captain) ||
         (typeId === TYPE_IDS.npc && ATTITUDES.find((a) => a.value === attitude)?.title)
       const label = extra ? `${typeTitle} (${extra})` : typeTitle
       // Only call out statuses that change how the pin looks, e.g. "Compromised".

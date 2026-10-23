@@ -757,6 +757,37 @@ html {
   margin-top: 10px;
 }
 
+/* A ship's route: a numbered list of ports */
+.route-list {
+  margin: 0;
+  padding-left: 22px;
+}
+
+.route-list li {
+  padding: 2px 0;
+}
+
+.route-list li .place-tag {
+  margin-left: 6px;
+}
+
+.route-list .route-loop {
+  list-style: none;
+  margin-left: -16px;
+  color: #444;
+}
+
+/* The party roster on the party pin's panel */
+.party-roster .place-list li {
+  gap: 4px;
+  padding: 2px 0;
+}
+
+.party-name {
+  font-weight: bold;
+  margin-right: 4px;
+}
+
 /* Record panel: a Properties window docked on the right of the map (a sheet along the
    bottom on phones). The map stays usable around it. */
 .record-panel {
@@ -841,8 +872,9 @@ html {
     height: 50%;
   }
 
+  /* Stops below the floating toolbar, so the panel's title and buttons stay visible */
   .record-panel.is-expanded {
-    height: calc(100% - 8px);
+    height: calc(100% - 66px);
   }
 
   .title-controls .panel-expand {

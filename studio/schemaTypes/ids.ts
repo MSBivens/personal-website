@@ -17,6 +17,9 @@ export const TYPE_IDS = {
   dungeon: 'pinType-dungeon',
   quest: 'pinType-quest',
   postOffice: 'pinType-postOffice',
+  ship: 'pinType-ship',
+  port: 'pinType-port',
+  deathSite: 'pinType-deathSite',
 } as const
 
 // Campaign Settings is a single record with this ID (schemaTypes/campaign.ts).

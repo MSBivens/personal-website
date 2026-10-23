@@ -12,7 +12,7 @@ Everything on the campaign map at `/one-for-all` (pins, Locations and the lines 
 |---|---|
 | **Pins** | Every record, in one list per Pin Type plus **All pins**. Use the create button at the top of a type's list and the new pin starts with that type (and its first status) already chosen. |
 | **Locations** | Named places, from cities and regions down to a single lair. A pin's Location is picked from this list, and the pin sits at the Location's spot. |
-| **Party Members** | The player characters. Members link to them (**Recruited By**) and so do Soul Items; each party member's page shows their Soul Item. |
+| **Party Members** | The player characters, each with a **Status** (Alive, Away or Dead). Members link to them (**Recruited By**), and so do Soul Items and Death Sites; each party member's page shows their Soul Item and Death Sites. |
 | **Settings → Campaign Settings** | The **Last session** date, which pin is the party, and the party's trail. See *The party* and *Keeping players up to date* below. |
 | **Settings → Pin Types** | Each type's name, plural, icon, position in the legend, and **Suggested details** (the Details rows a new pin of that type starts with). Add a new type here and it gets its own list and legend entry, no code needed. |
 | **Settings → Statuses** | Each type's statuses and how they look on the map: a **Badge** (✓ Done, ? Unconfirmed, ! Lead, ☠ Dead, ✕ Failed, or none) on the pin's corner, and a **Map style** (Normal, Dimmed or Faded). Keep Dimmed and Faded for finished things, so what players should still chase stands out. Tick **Open thread** on statuses the party could still pursue (e.g. an Available quest). The first status (lowest **Order**) is the default for new pins. |
@@ -57,9 +57,10 @@ Players can do this too, so they can send you a spot. The old `?place` link stil
 | **Rank** | *Members only.* Pick one of your ranks. |
 | **Reports to** | *Members only.* The member or safe house they report to. This draws a network line on the map. |
 | **Recruited By** | *Members only.* The party members who recruited them. Pick one or more. |
-| **Party member** | *Soul Items only.* Whose Soul Item it is. Each party member can have only one. |
 | **Attitude** | *NPCs only.* Friendly, Neutral, Hostile or Unknown. |
 | **Quest giver** | *Quests only.* The NPC or member who gave it. Shown as a link in the panel. |
+| **Captain**, **Route**, **Returns to the first port** | *Ships only.* See *Ships and ports*. |
+| **Party member** | *Soul Items and Death Sites.* Whose Soul Item it is (one each), or who died there. |
 | **Icon override** | *Optional.* An icon for this pin only. |
 | **Details** | Short labelled facts shown as rows in the panel, e.g. *Reward: 500 gp*. A new pin starts with its type's suggested rows (a Quest gets Reward and Objectives); add, rename or remove rows freely. Rows left empty aren't shown. |
 | **Own position** (**X**, **Y**) | *Optional.* Leave empty to use the Location's spot. Fill in both (from **Locate**) for a spot of its own. A pin on the map needs one or the other: Studio tells you if it has neither. |
@@ -102,6 +103,8 @@ When something new comes up in a session, ask what it is:
 | A **place you track progress on** | a **pin** of a place type (Dungeon, Landmark, Safe House), with its **Location** set to the town or region it's in | Olmen Temple (Partly explored) at Dragon's Head |
 | A **person, creature or group** | a **pin**: Member (in the OFA), NPC (anyone else; set their Attitude) or Enemy (a hostile threat or group) | Jenna, Old Grezzik, DeThicks |
 | A **thing, job or event** | a **pin**: Resource, Soul Item, Quest, Rumor or World Event | Cursed Gold, a thieves' guild job |
+| A **ship** or a **port** it calls at | a **pin**: Ship or Port (a Port's Location is its town) | The Sea Wyrm, Crimmor Wharf |
+| **Where a party member died** | a **Death Site** pin | Where Illyn fell |
 | A **fact about a place or pin** that needs no status, links or searching | a **Details row** on that Location or pin | *Restorative pool: heals once per long rest* |
 
 **Give something its own pin** if it has a status, links to other records, or players will want to search for it. Otherwise a Details row is enough.
@@ -118,6 +121,32 @@ When something new comes up in a session, ask what it is:
 1. A **Location** "<Dragon>'s Lair" with its own X/Y (use **Place on map**), a description, and a Details row for the restorative pool. If players will want to find the pool again, make it a **Resource** pin there instead.
 2. The dragon: a **Member** (she joined the OFA) with **Location** set to the lair. She sits on the lair's spot with no X/Y of her own.
 3. From the lair's page in Studio, **Pins here → Add Member here / Add Resource here** fills the Location in for you.
+
+## Ships and ports
+
+**Ports** are pins of type **Port**. Set the port's **Location** to its town (it sits on the town's spot), or give it its own X/Y for a lone pier or cove. A town can have more than one. Statuses: Open, Blockaded, Closed.
+
+**Ships** are pins of type **Ship**:
+
+| Field | What to put |
+|---|---|
+| **Captain** | *Optional.* An NPC, Member or Enemy. Their panel then says **Captain of** this ship. |
+| **Route** | The ports it usually calls at, **in order**: click **Add item** and pick a Port; drag to reorder. A port can appear more than once (Baldur's Gate → Crimmor → Baldur's Gate → …). |
+| **Returns to the first port** | Tick it if the ship sails back to the start and goes round again. The panel then ends the route with "↻ back to …". |
+| **Location** / **X, Y** | Where the ship is now, like any pin: the town it's docked at, or its own X/Y out at sea. |
+| **Status** | Docked, At sea, Missing or Sunk. |
+
+On the map, a ship's panel shows its captain and its numbered route (each port a link), and a port's panel lists **Ships calling here** with where it comes in each route (e.g. *stop 2 of 4*). Routes aren't drawn as lines. In Studio, each Port's page lists the ships that call there. Find a ship by typing its name, its captain or any of its ports.
+
+Studio warns (yellow) if a route lists the same port twice in a row, or ends at its first port while **Returns to the first port** is ticked.
+
+## Party members
+
+Each Party Member has a **Status**: **Alive** (with the party), **Away** (not with the party right now) or **Dead**.
+
+To mark **where a party member died**, add a **Death Site** pin: choose the **Party member**, set its **Location** or X/Y, and fill in **When** and **Cause** if you like. It shows a ☠ badge. A character can have more than one Death Site (raised and fallen again); the Death Sites stay as history whatever their status is now, and a Death Site for someone who has since been raised says **Now: Alive**.
+
+On the map, the **party pin's** panel lists everyone under **In the party**, **Away** and **Fallen**, with their Soul Item and (for Away or Fallen members) a "died at" link to their latest Death Site. Elsewhere, their names say **(Away)** or **(Dead)**, e.g. in a member's **Recruited by**. Each party member's page in Studio lists their Death Sites.
 
 ## Studio helpers
 
