@@ -5,11 +5,13 @@
 import { map, isLocating } from "./view.js";
 import { ICON_BASE, sanityIcon } from "./icons.js";
 import { isNew, pinsById, placesById } from "./state.js";
+import { TYPE } from "./data.js";
 import { isDimmed, reveal, setSelected } from "./markers.js";
 import { relSample } from "./lines.js";
 import { stopLocating } from "./locate.js";
 import { linkTo, showInAddress } from "./links.js";
 import { badgeElement } from "./badges.js";
+import { partyById, partyName } from "./party.js";
 
 const ATTITUDES = { friendly: "Friendly", neutral: "Neutral", hostile: "Hostile", unknown: "Unknown" };
 
@@ -135,10 +137,22 @@ function pinContent(entry) {
     rows.push(detailRow("Rank", img, pin.rank.title || "Unnamed rank"));
   }
   if (pin.status && pin.status.title) rows.push(detailRow("Status", badgeElement(pin.status), pin.status.title));
-  // Unpublished party members come back as null.
-  const recruiters = (pin.recruitedBy || []).filter(Boolean);
-  if (recruiters.length) rows.push(detailRow("Recruited by", recruiters.join(", ")));
-  if (pin.partyMember) rows.push(detailRow("Party member", pin.partyMember));
+  // Unpublished party members aren't in partyById.
+  const recruiters = (pin.recruitedBy || []).map((id) => partyById.get(id)).filter(Boolean);
+  if (recruiters.length) rows.push(detailRow("Recruited by", recruiters.map(partyName).join(", ")));
+  const owner = partyById.get(pin.partyMemberId);
+  if (owner) {
+    rows.push(detailRow("Party member", partyName(owner)));
+    // A Death Site for someone who has since been raised (or is away).
+    if (entry.type.id === TYPE.deathSite && owner.status !== "dead") {
+      rows.push(detailRow("Now", owner.status === "away" ? "Away" : "Alive"));
+    }
+  }
+  if (entry.captain) rows.push(detailRow("Captain", recordLink(entry.captain)));
+  if (entry.captainOf && entry.captainOf.length) {
+    const ships = entry.captainOf.flatMap((ship, i) => (i ? [", ", recordLink(ship)] : [recordLink(ship)]));
+    rows.push(detailRow("Captain of", ...ships));
+  }
   if (pin.attitude) rows.push(detailRow("Attitude", ATTITUDES[pin.attitude] || pin.attitude));
   const giver = pinsById.get(pin.questGiver);
   if (giver) rows.push(detailRow("Quest giver", recordLink(giver)));
@@ -153,11 +167,66 @@ function pinContent(entry) {
   const hereToo = at ? at.entries.filter((other) => other !== entry) : [];
   return [
     rows.length ? el("div", "pin-details", ...rows) : "",
+    ...routeBox(entry),
+    ...shipsHereBox(entry),
+    ...(entry.party ? partyBox() : []),
     ...connectionSection(entry.links),
     el("div", "pin-description", ...paragraphs(pin.description)),
     ...listBox(at ? `Also at ${at.location.name}` : "Here too", hereToo),
     ...listBox("Mentioned in", mentionsOf(entry)),
   ];
+}
+
+/* ---------- Ships, ports and the party ---------- */
+// A ship's route, numbered, with "↻ back to …" when it loops to its first port.
+function routeBox(ship) {
+  if (!ship.route || !ship.route.length) return [];
+  const stop = (port) => {
+    const town = port.place ? el("span", "place-tag", port.place.location.name) : "";
+    return el("li", "", recordLink(port), town);
+  };
+  const items = ship.route.map(stop);
+  if (ship.pin.roundTrip && ship.route.length > 1) {
+    items.push(el("li", "route-loop", "↻ back to ", recordLink(ship.route[0])));
+  }
+  return [el("div", "place-records", el("div", "place-group", `Route (${ship.route.length} ${ship.route.length === 1 ? "stop" : "stops"})`), el("ol", "route-list", ...items))];
+}
+
+// On a Port: the ships that call here, and where this port comes in each route.
+function shipsHereBox(port) {
+  if (!port.shipsHere || !port.shipsHere.length) return [];
+  const items = [...port.shipsHere]
+    .sort((a, b) => a.ship.pin.name.localeCompare(b.ship.pin.name))
+    .map(({ ship, stops }) => {
+      const item = recordItem(ship);
+      item.append(el("span", "place-tag", `stop ${stops.join(" & ")} of ${ship.route.length}`));
+      return item;
+    });
+  return [el("div", "place-records", el("div", "place-group", `Ships calling here (${items.length})`), el("ul", "place-list", ...items))];
+}
+
+// On the party pin: everyone in the party, by status, with their Soul Item and where they fell.
+function partyBox() {
+  const members = [...partyById.values()].sort((a, b) => a.name.localeCompare(b.name));
+  if (!members.length) return [];
+  const groups = [
+    ["In the party", members.filter((m) => m.status !== "away" && m.status !== "dead")],
+    ["Away", members.filter((m) => m.status === "away")],
+    ["Fallen", members.filter((m) => m.status === "dead")],
+  ];
+  const box = el("div", "place-records party-roster");
+  for (const [heading, group] of groups) {
+    if (!group.length) continue;
+    const items = group.map((member) => {
+      const item = el("li", "", el("span", "party-name", member.name));
+      if (member.soulItem) item.append(el("span", "place-tag", "Soul Item: "), recordLink(member.soulItem));
+      const fell = member.deathSites[member.deathSites.length - 1];
+      if (fell && member.status !== "alive") item.append(el("span", "place-tag", "died at "), recordLink(fell));
+      return item;
+    });
+    box.append(el("div", "place-group", `${heading} (${group.length})`), el("ul", "place-list", ...items));
+  }
+  return [box];
 }
 
 // Lines between two records at the same Location's spot would have no length, so they're

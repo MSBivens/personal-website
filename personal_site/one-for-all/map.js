@@ -8,6 +8,8 @@ import { READABLE_ZOOM, addPin } from "./markers.js";
 import { addPlace } from "./places.js";
 import { collectNetwork } from "./network.js";
 import { collectConnections } from "./lines.js";
+import { collectShips } from "./ships.js";
+import { collectParty } from "./party.js";
 import { addLegend } from "./legend.js";
 import { render } from "./render.js";
 import { goTo, showError } from "./panel.js";
@@ -37,7 +39,7 @@ function setUpPartyButton(party) {
 }
 
 loadMapData()
-  .then(({ campaign: settings, types, relationshipTypes = [], locations = [], pins }) => {
+  .then(({ campaign: settings, party: partyMembers = [], types, relationshipTypes = [], locations = [], pins }) => {
     campaign.partyId = (settings && settings.partyId) || null;
     campaign.trail = (settings && settings.trail) || [];
     campaign.lastSession = (settings && settings.lastSession) || null;
@@ -48,6 +50,8 @@ loadMapData()
     for (const location of locations) addPlace(location);
     for (const pin of pins) addPin(pin);
     collectNetwork();
+    collectShips();
+    collectParty(partyMembers);
     collectConnections();
     addLegend();
     render();

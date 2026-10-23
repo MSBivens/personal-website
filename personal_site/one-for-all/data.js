@@ -17,6 +17,9 @@ export const TYPE = {
   soulItem: "pinType-soulItem",
   quest: "pinType-quest",
   postOffice: "pinType-postOffice",
+  ship: "pinType-ship",
+  port: "pinType-port",
+  deathSite: "pinType-deathSite",
 };
 
 const ASSET = `{ url, extension, "width": metadata.dimensions.width }`;
@@ -33,6 +36,7 @@ const QUERY = `{
     "partyId": partyPin._ref,
     "trail": trail[]{ "locationId": location._ref, x, y, date, note }
   },
+  "party": *[_type == "partyMember"]{ "id": _id, name, status },
   "types": *[_type == "pinType"] | order(legendOrder asc){
     "id": _id, title, plural, legendOrder, "icon": icon.asset->${ASSET}
   },
@@ -56,9 +60,10 @@ const QUERY = `{
     type._ref == "${TYPE.member}" => {
       "reportsTo": reportsTo._ref,
       "rank": rank->{ title, order, "icon": icon.asset->${ASSET} },
-      "recruitedBy": recruitedBy[]->name
+      "recruitedBy": recruitedBy[]._ref
     },
-    type._ref == "${TYPE.soulItem}" => { "partyMember": partyMember->name },
+    type._ref in ["${TYPE.soulItem}", "${TYPE.deathSite}"] => { "partyMemberId": partyMember._ref },
+    type._ref == "${TYPE.ship}" => { "captain": captain._ref, "route": route[]._ref, roundTrip },
     type._ref == "${TYPE.npc}" => { attitude },
     type._ref == "${TYPE.quest}" => { "questGiver": questGiver._ref }
   }

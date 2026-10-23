@@ -2,6 +2,7 @@
 // Details, status or description) and pick a result to fly to it and open it.
 // Press / anywhere on the map page to jump to the box.
 import { isNew, pinsById, placesById } from "./state.js";
+import { partyById } from "./party.js";
 import { goTo } from "./panel.js";
 import { badgeElement } from "./badges.js";
 
@@ -41,6 +42,10 @@ export function buildSearchIndex() {
       extra: [
         entry.place && entry.place.location.name,
         entry.pin.status && entry.pin.status.title,
+        // A ship is found by its captain and its ports; Soul Items and Death Sites by whose they are.
+        entry.captain && entry.captain.pin.name,
+        ...(entry.route || []).map((port) => port.pin.name),
+        partyById.get(entry.pin.partyMemberId) && partyById.get(entry.pin.partyMemberId).name,
         ...detailText(entry.pin.details),
         entry.pin.description,
       ],

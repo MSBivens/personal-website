@@ -42,6 +42,22 @@ export const overlapWarning = (rule: NumberRule) =>
     })
     .warning()
 
+/** On a ship's Route: the same port twice in a row, or a loop that already ends where it starts. */
+export const routeWarning = (rule: ArrayRule<unknown[]>) =>
+  rule
+    .custom((stops, context) => {
+      const refs = ((stops ?? []) as {_ref?: string}[]).map((stop) => stop._ref)
+      if (refs.some((ref, i) => i > 0 && ref && ref === refs[i - 1])) {
+        return 'The same port is listed twice in a row. Remove one, or put another port between them.'
+      }
+      const roundTrip = (context.document as {roundTrip?: boolean} | undefined)?.roundTrip
+      if (roundTrip && refs.length > 1 && refs[0] === refs[refs.length - 1]) {
+        return 'The route already ends at its first port, and "Returns to the first port" is ticked too. Untick it, or remove the last stop.'
+      }
+      return true
+    })
+    .warning()
+
 /** On Details: every row is empty, so nothing shows on the map. */
 export const emptyDetailsWarning = (rule: ArrayRule<unknown[]>) =>
   rule
